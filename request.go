@@ -17,6 +17,9 @@ import (
 // These config with patterns bind config, ReqType and RespType together.
 // Set a config instance in Request as input, all patterns in Request are defined.
 type ReqConfig[ReqType, RespType any] struct {
+	// ex. https://www.example.com
+	BaseUrl string
+
 	// ex. /path/to/service
 	Path string
 
@@ -42,7 +45,10 @@ type ReqConfig[ReqType, RespType any] struct {
 	CexCustomCodes map[int]string
 }
 
-type BaseConfig struct {
+type ReqBaseConfig struct {
+	// ex. https://www.example.com
+	BaseUrl string
+
 	// ex. /path/to/service
 	Path string
 
@@ -54,8 +60,9 @@ type BaseConfig struct {
 	IsUserData bool
 }
 
-func (rc ReqConfig[ReqType, RespType]) BaseConfig() BaseConfig {
-	return BaseConfig{
+func (rc ReqConfig[ReqType, RespType]) BaseConfig() ReqBaseConfig {
+	return ReqBaseConfig{
+		BaseUrl:    rc.BaseUrl,
 		Path:       rc.Path,
 		Method:     rc.Method,
 		IsUserData: rc.IsUserData,
@@ -66,7 +73,7 @@ type ReqOpt func(*resty.Client, *resty.Request)
 
 // ReqHandler should be implemented in all cex package
 type ReqHandler interface {
-	MakeReq(config BaseConfig, reqData any, opts ...ReqOpt) (*resty.Request, error)
+	MakeReq(config ReqBaseConfig, reqData any, opts ...ReqOpt) (*resty.Request, error)
 	CheckResp(*resty.Response, *resty.Request) error
 }
 
