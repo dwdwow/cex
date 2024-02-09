@@ -1,6 +1,7 @@
 package bnc
 
 import (
+	"fmt"
 	"github.com/dwdwow/cex"
 	"github.com/dwdwow/s2m"
 	"github.com/go-resty/resty/v2"
@@ -34,7 +35,21 @@ func (u User) MakeReq(config cex.ReqBaseConfig, reqData any, opts ...cex.ReqOpt)
 }
 
 func (u User) makePublicReq(config cex.ReqBaseConfig, reqData any, opts ...cex.ReqOpt) (*resty.Request, error) {
-	// TODO
+	m, err := s2m.ToStrMap(reqData)
+	if err != nil {
+		return nil, fmt.Errorf("bnc: make public request, %w", err)
+	}
+	val := url.Values{}
+	for k, v := range m {
+		val.Set(k, v)
+	}
+	clt := resty.New().
+		SetBaseURL(config.BaseUrl)
+	req := clt.R().
+		SetQueryString(val.Encode())
+	for _, opt := range opts {
+		opt(clt, req)
+	}
 	return nil, nil
 }
 
@@ -67,7 +82,7 @@ func (u User) sign(data any) (query string, err error) {
 }
 
 func signReqData(data any, key string) (query string, err error) {
-	m, err := s2m.ToStrMapWithErr(data)
+	m, err := s2m.ToStrMap(data)
 	if err != nil {
 		return
 	}
