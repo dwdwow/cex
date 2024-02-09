@@ -30,6 +30,15 @@ const (
 	OrderStatusErr             OrderStatus = "ERR"
 )
 
+type OrderErr struct {
+	Err  string `json:"err" bson:"err"`
+	Time int64  `json:"time" bson:"time"`
+}
+
+func (oe OrderErr) Error() error {
+	return errors.New(oe.Err)
+}
+
 type Order struct {
 	// popular by user self
 	Asset    string  `json:"asset" bson:"asset"`
@@ -66,5 +75,5 @@ type Order struct {
 
 	RawOrder any `json:"rawOrder" bson:"rawOrder"`
 
-	Err error `json:"err" bson:"err"`
+	Err OrderErr `json:"err" bson:"err"`
 }
