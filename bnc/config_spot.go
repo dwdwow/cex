@@ -43,12 +43,12 @@ type CoinNetworkInfo struct {
 }
 
 var CoinInfoConfig = cex.ReqConfig[any, CoinInfo]{
-	BaseUrl:          ApiBaseUrl,
-	Path:             SapiV1 + "/capital/config/getall",
-	Method:           http.MethodGet,
-	IsUserData:       true,
-	UserTimeInterval: 0,
-	IpTimeInterval:   0,
-	StatusCodes:      HttpErrCodes,
-	CexCustomCodes:   map[int]string{},
+	BaseUrl:               ApiBaseUrl,
+	Path:                  SapiV1 + "/capital/config/getall",
+	Method:                http.MethodGet,
+	IsUserData:            true,
+	UserTimeInterval:      0,
+	IpTimeInterval:        0,
+	HttpStatusCodeChecker: HttpStatusCodeChecker,
+	CexCustomCodeChecker:  CustomRespCodeChecker,
 }

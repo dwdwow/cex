@@ -8,6 +8,8 @@ import (
 	"reflect"
 )
 
+type RespCodeChecker func(int) error
+
 // ReqConfig save some read-only info.
 // ReqType and RespType are not used in ReqConfig,
 // but in practice, it is very useful.
@@ -39,10 +41,10 @@ type ReqConfig[ReqType, RespType any] struct {
 	IpTimeInterval int64
 
 	// status code and its status message
-	StatusCodes map[int]string
+	HttpStatusCodeChecker RespCodeChecker
 
 	// cex self custom codes and its meaning
-	CexCustomCodes map[int]string
+	CexCustomCodeChecker RespCodeChecker
 }
 
 type ReqBaseConfig struct {

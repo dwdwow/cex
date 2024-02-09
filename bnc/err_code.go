@@ -1,6 +1,10 @@
 package bnc
 
-import "net/http"
+import (
+	"errors"
+	"fmt"
+	"net/http"
+)
 
 // HttpErrCodes
 // HTTP 5XX return codes are used for internal errors;
@@ -14,4 +18,19 @@ var HttpErrCodes = map[int]string{
 	409:                        "CancelReplace Order Partially Succeeds",
 	http.StatusTooManyRequests: "Too Many Requests",
 	http.StatusTeapot:          "IP Banned",
+}
+
+func HttpStatusCodeChecker(code int) error {
+	if code == 200 || code >= 500 {
+		return nil
+	}
+	errMsg, ok := HttpErrCodes[code]
+	if ok {
+		return errors.New(errMsg)
+	}
+	return fmt.Errorf("bnc: http status code %v is unknown", code)
+}
+
+func CustomRespCodeChecker(code int) error {
+	return nil
 }
