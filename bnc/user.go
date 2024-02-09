@@ -27,12 +27,12 @@ func (u User) sign(data any) (query string, err error) {
 }
 
 func signReqData(data any, key string) (query string, err error) {
-	val := url.Values{
-		"timestamp": []string{strconv.FormatInt(time.Now().UnixMilli(), 10)},
-	}
 	m, err := s2m.ToStrMapWithErr(data)
 	if err != nil {
 		return
+	}
+	val := url.Values{
+		"timestamp": []string{strconv.FormatInt(time.Now().UnixMilli(), 10)},
 	}
 	for k, v := range m {
 		val.Set(k, v)
