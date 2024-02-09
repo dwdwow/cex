@@ -32,37 +32,37 @@ const (
 
 type Order struct {
 	// popular by user self
-	Asset    string  `json:"asset"`
-	Quote    string  `json:"quote"`
-	OriQty   float64 `json:"oriQty"`
-	OriPrice float64 `json:"oriPrice"`
+	Asset    string  `json:"asset" bson:"asset"`
+	Quote    string  `json:"quote" bson:"quote"`
+	OriQty   float64 `json:"oriQty" bson:"oriQty"`
+	OriPrice float64 `json:"oriPrice" bson:"oriPrice"`
 
 	// popular by user or code
-	Cex       Cex       `json:"cex"`
-	PairType  PairType  `json:"pairType"`
-	TradeType TradeType `json:"tradeType"`
-	TradeSide TradeSide `json:"tradeSide"`
+	Cex       Cex       `json:"cex" bson:"cex"`
+	PairType  PairType  `json:"pairType" bson:"pairType"`
+	TradeType TradeType `json:"tradeType" bson:"tradeType"`
+	TradeSide TradeSide `json:"tradeSide" bson:"tradeSide"`
 
 	// popular by code
-	Symbol        string `json:"symbol"`
-	TimeInForce   string `json:"timeInForce"`
-	ClientOrderId string `json:"clientOrderId"`
-	SendTsMilli   int64  `json:"sendTsMilli"`
-	RspTsMilli    int64  `json:"rspTsMilli"`
-	LocalId       string `json:"localId"`
-	ApiKey        string `json:"apiKey"`
+	Symbol        string `json:"symbol" bson:"symbol"`
+	TimeInForce   string `json:"timeInForce" bson:"timeInForce"`
+	ClientOrderId string `json:"clientOrderId" bson:"clientOrderId"`
+	SendTsMilli   int64  `json:"sendTsMilli" bson:"sendTsMilli"`
+	RspTsMilli    int64  `json:"rspTsMilli" bson:"rspTsMilli"`
+	LocalId       string `json:"localId" bson:"localId"`
+	ApiKey        string `json:"apiKey" bson:"apiKey"`
 
 	// popular by cex server response
-	OrderId string      `json:"orderId"`
-	Status  OrderStatus `json:"status"`
+	OrderId string      `json:"orderId" bson:"orderId"`
+	Status  OrderStatus `json:"status" bson:"status"`
 
 	// popular as order result
-	FilledQty      float64 `json:"filledQty"`
-	FilledAvgPrice float64 `json:"filledAvgPrice"`
-	FilledQuote    float64 `json:"filledQuote"`
+	FilledQty      float64 `json:"filledQty" bson:"filledQty"`
+	FilledAvgPrice float64 `json:"filledAvgPrice" bson:"filledAvgPrice"`
+	FilledQuote    float64 `json:"filledQuote" bson:"filledQuote"`
 
 	// calculate as raw order or popular code
-	FeeTier float64 `json:"feeTier"`
+	FeeTier float64 `json:"feeTier" bson:"feeTier"`
 
-	Err error `json:"err"`
+	Err error `json:"err" bson:"err"`
 }
