@@ -22,6 +22,9 @@ type FuTrader interface {
 
 type Trader interface {
 	Trade(*Order) error
+	Update(*Order) error
+	Cancel(*Order) error
+	Wait(*Order) error
 	SpotTrader
 	FuTrader
 }
