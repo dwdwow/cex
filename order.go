@@ -64,5 +64,7 @@ type Order struct {
 	// calculate as raw order or popular code
 	FeeTier float64 `json:"feeTier" bson:"feeTier"`
 
+	RawOrder any `json:"rawOrder" bson:"rawOrder"`
+
 	Err error `json:"err" bson:"err"`
 }
