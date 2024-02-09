@@ -52,16 +52,16 @@ type Order struct {
 	LocalId       string `json:"localId" bson:"localId"`
 	ApiKey        string `json:"apiKey" bson:"apiKey"`
 
-	// popular by cex server response
+	// popular as response
 	OrderId string      `json:"orderId" bson:"orderId"`
 	Status  OrderStatus `json:"status" bson:"status"`
 
-	// popular as order result
+	// popular a order result
 	FilledQty      float64 `json:"filledQty" bson:"filledQty"`
 	FilledAvgPrice float64 `json:"filledAvgPrice" bson:"filledAvgPrice"`
 	FilledQuote    float64 `json:"filledQuote" bson:"filledQuote"`
 
-	// calculate as raw order or popular code
+	// calculate as raw order or popular by code
 	FeeTier float64 `json:"feeTier" bson:"feeTier"`
 
 	RawOrder any `json:"rawOrder" bson:"rawOrder"`
