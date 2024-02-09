@@ -49,6 +49,6 @@ var CoinInfoConfig = cex.ReqConfig[any, CoinInfo]{
 	IsUserData:       true,
 	UserTimeInterval: 0,
 	IpTimeInterval:   0,
-	StatusCodes:      nil,
-	CexCustomCodes:   nil,
+	StatusCodes:      HttpErrCodes,
+	CexCustomCodes:   map[int]string{},
 }
