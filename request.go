@@ -10,15 +10,18 @@ import (
 
 type RespCodeChecker func(int) error
 
+// ReqDataTypeEmpty means that no request data.
+type ReqDataTypeEmpty any
+
 // ReqConfig save some read-only info.
-// ReqType and RespType are not used in ReqConfig,
+// ReqDataType and RespDataType are not used in ReqConfig,
 // but in practice, it is very useful.
 // In practice, we call Request to query cex data,
-// but we should know config, ReqType and RespType simultaneously.
+// but we should know config, ReqDataType and RespDataType simultaneously.
 // We have many config implementations in all cex packages.
-// These config with patterns bind config, ReqType and RespType together.
+// These config with patterns bind config, ReqDataType and RespDataType together.
 // Set a config instance in Request as input, all patterns in Request are defined.
-type ReqConfig[ReqType, RespType any] struct {
+type ReqConfig[ReqDataType, RespDataType any] struct {
 	// ex. https://www.example.com
 	BaseUrl string
 
@@ -62,7 +65,7 @@ type ReqBaseConfig struct {
 	IsUserData bool
 }
 
-func (rc ReqConfig[ReqType, RespType]) BaseConfig() ReqBaseConfig {
+func (rc ReqConfig[ReqDataType, RespDataType]) BaseConfig() ReqBaseConfig {
 	return ReqBaseConfig{
 		BaseUrl:    rc.BaseUrl,
 		Path:       rc.Path,
@@ -79,8 +82,8 @@ type ReqHandler interface {
 	CheckResp(*resty.Response, *resty.Request) error
 }
 
-func Request[ReqType, RespType any](config ReqConfig[ReqType, RespType], reqData ReqType, handler ReqHandler, opts ...ReqOpt) (RespType, error) {
-	respData := new(RespType)
+func Request[ReqDataType, RespDataType any](config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, handler ReqHandler, opts ...ReqOpt) (RespDataType, error) {
+	respData := new(RespDataType)
 	req, err := handler.MakeReq(config.BaseConfig(), reqData, opts...)
 	if err != nil {
 		return *respData, err
@@ -126,7 +129,7 @@ func Request[ReqType, RespType any](config ReqConfig[ReqType, RespType], reqData
 		return *respData, fmt.Errorf("cex: response data type %v is not supported", respType.Kind())
 	}
 
-	res, ok := anyRes.(RespType)
+	res, ok := anyRes.(RespDataType)
 
 	if !ok {
 		err = fmt.Errorf("cex: cannot convert to %T", res)
