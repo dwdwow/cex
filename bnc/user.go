@@ -24,7 +24,7 @@ func NewUser(apiKey, secretKey string) User {
 	}
 }
 
-// ============================== req handler start ==============================
+// ============================== requester start ==============================
 
 func (u User) MakeReq(config cex.ReqBaseConfig, reqData any, opts ...cex.ReqOpt) (*resty.Request, error) {
 	if config.IsUserData {
@@ -73,7 +73,7 @@ func (u User) CheckResp(response *resty.Response, request *resty.Request) error 
 	return nil
 }
 
-// ============================== req handler end ==============================
+// ============================== requester end ==============================
 
 // ============================== sign start ==============================
 

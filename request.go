@@ -65,14 +65,14 @@ type ReqConfig[ReqDataType, RespDataType any] struct {
 // ReqOpt is function option that can custom request.
 type ReqOpt func(*resty.Client, *resty.Request)
 
-// Reqer should be implemented in all cex package
-type Reqer interface {
+// Requester should be implemented in all cex package
+type Requester interface {
 	MakeReq(config ReqBaseConfig, reqData any, opts ...ReqOpt) (*resty.Request, error)
 	CheckResp(*resty.Response, *resty.Request) error
 }
 
 // Request is the core method in cex.
-func Request[ReqDataType, RespDataType any](handler Reqer, config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, opts ...ReqOpt) (RespDataType, error) {
+func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, opts ...ReqOpt) (RespDataType, error) {
 	respData := new(RespDataType)
 	req, err := handler.MakeReq(config.ReqBaseConfig, reqData, opts...)
 	if err != nil {
