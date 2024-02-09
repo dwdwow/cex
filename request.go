@@ -8,20 +8,19 @@ import (
 	"reflect"
 )
 
+// RespCodeChecker checks http and cex custom codes.
+// All cex package should have two implementations of this function type,
+// one is http's, another is cex's.
 type RespCodeChecker func(int) error
 
-// ReqDataTypeEmpty means that no request data.
-type ReqDataTypeEmpty any
+// EmptyReqData means that no request data.
+// If a ReqConfig ReqDataType is this,
+// reqData should be nil.
+type EmptyReqData any
 
-// ReqConfig save some read-only info.
-// ReqDataType and RespDataType are not used in ReqConfig,
-// but in practice, it is very useful.
-// In practice, we call Request to query cex data,
-// but we should know config, ReqDataType and RespDataType simultaneously.
-// We have many config implementations in all cex packages.
-// These config with patterns bind config, ReqDataType and RespDataType together.
-// Set a config instance in Request as input, all patterns in Request are defined.
-type ReqConfig[ReqDataType, RespDataType any] struct {
+// ReqBaseConfig save some read-only info.
+// This struct is the real contain of ReqConfig.
+type ReqBaseConfig struct {
 	// ex. https://www.example.com
 	BaseUrl string
 
@@ -50,41 +49,32 @@ type ReqConfig[ReqDataType, RespDataType any] struct {
 	CexCustomCodeChecker RespCodeChecker
 }
 
-type ReqBaseConfig struct {
-	// ex. https://www.example.com
-	BaseUrl string
-
-	// ex. /path/to/service
-	Path string
-
-	// http method, GET, POST...
-	// better to use const method value in http package directly
-	Method string
-
-	// if true, should use api key
-	IsUserData bool
+// ReqConfig is wrapper of ReqBaseConfig.
+// This struct makes it convenient to call Request.
+// ReqDataType and RespDataType are not used in ReqConfig,
+// but in practice, it is very useful.
+// In practice, we call Request to query cex data,
+// but we should know config, ReqDataType and RespDataType simultaneously.
+// We have many config implementations in all cex packages.
+// These config with patterns bind config, ReqDataType and RespDataType together.
+// Set a config instance in Request as input, all patterns in Request are defined.
+type ReqConfig[ReqDataType, RespDataType any] struct {
+	ReqBaseConfig
 }
 
-func (rc ReqConfig[ReqDataType, RespDataType]) BaseConfig() ReqBaseConfig {
-	return ReqBaseConfig{
-		BaseUrl:    rc.BaseUrl,
-		Path:       rc.Path,
-		Method:     rc.Method,
-		IsUserData: rc.IsUserData,
-	}
-}
-
+// ReqOpt is function option that can custom request.
 type ReqOpt func(*resty.Client, *resty.Request)
 
-// ReqHandler should be implemented in all cex package
-type ReqHandler interface {
+// Reqer should be implemented in all cex package
+type Reqer interface {
 	MakeReq(config ReqBaseConfig, reqData any, opts ...ReqOpt) (*resty.Request, error)
 	CheckResp(*resty.Response, *resty.Request) error
 }
 
-func Request[ReqDataType, RespDataType any](config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, handler ReqHandler, opts ...ReqOpt) (RespDataType, error) {
+// Request is the core method in cex.
+func Request[ReqDataType, RespDataType any](handler Reqer, config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, opts ...ReqOpt) (RespDataType, error) {
 	respData := new(RespDataType)
-	req, err := handler.MakeReq(config.BaseConfig(), reqData, opts...)
+	req, err := handler.MakeReq(config.ReqBaseConfig, reqData, opts...)
 	if err != nil {
 		return *respData, err
 	}
