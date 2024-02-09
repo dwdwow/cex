@@ -28,9 +28,3 @@ type ReqConfig[ReqData, RespData any] struct {
 }
 
 type ReqMaker[ReqData, RespData any] func(config ReqConfig[ReqData, RespData], reqData ReqData)
-
-func reqMaker[ReqData, RespData any](config ReqConfig[ReqData, RespData], reqData ReqData) {
-
-}
-
-//func a()
