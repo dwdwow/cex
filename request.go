@@ -66,13 +66,13 @@ type ReqOpt func(*resty.Client, *resty.Request)
 
 // ReqHandler should be implemented in all cex package
 type ReqHandler interface {
-	Make(config BaseConfig, reqData any, opts ...ReqOpt) (*resty.Request, error)
-	Check(*resty.Response, *resty.Request) error
+	MakeReq(config BaseConfig, reqData any, opts ...ReqOpt) (*resty.Request, error)
+	CheckResp(*resty.Response, *resty.Request) error
 }
 
 func Request[ReqType, RespType any](config ReqConfig[ReqType, RespType], reqData ReqType, handler ReqHandler, opts ...ReqOpt) (RespType, error) {
 	respData := new(RespType)
-	req, err := handler.Make(config.BaseConfig(), reqData, opts...)
+	req, err := handler.MakeReq(config.BaseConfig(), reqData, opts...)
 	if err != nil {
 		return *respData, err
 	}
@@ -93,7 +93,7 @@ func Request[ReqType, RespType any](config ReqConfig[ReqType, RespType], reqData
 		return *respData, fmt.Errorf("cex: http method %v is not supported", config.Method)
 	}
 
-	if err = handler.Check(resp, req); err != nil {
+	if err = handler.CheckResp(resp, req); err != nil {
 		return *respData, fmt.Errorf("cex: check response, %w", err)
 	}
 
