@@ -26,6 +26,19 @@ func NewUser(apiKey, secretKey string) User {
 // ============================== req handler start ==============================
 
 func (u User) MakeReq(config cex.ReqBaseConfig, reqData any, opts ...cex.ReqOpt) (*resty.Request, error) {
+	if config.IsUserData {
+		return u.makePrivateReq(config, reqData, opts...)
+	} else {
+		return u.makePublicReq(config, reqData, opts...)
+	}
+}
+
+func (u User) makePublicReq(config cex.ReqBaseConfig, reqData any, opts ...cex.ReqOpt) (*resty.Request, error) {
+	// TODO
+	return nil, nil
+}
+
+func (u User) makePrivateReq(config cex.ReqBaseConfig, reqData any, opts ...cex.ReqOpt) (*resty.Request, error) {
 	query, err := u.sign(reqData)
 	if err != nil {
 		return nil, err
