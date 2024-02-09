@@ -5,4 +5,6 @@ go 1.21.6
 require (
 	github.com/dwdwow/rest v0.0.1 // indirect
 	github.com/dwdwow/s2m v0.0.1 // indirect
+	github.com/go-resty/resty/v2 v2.11.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 )
