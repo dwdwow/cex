@@ -47,8 +47,8 @@ type Order struct {
 	Symbol        string `json:"symbol" bson:"symbol"`
 	TimeInForce   string `json:"timeInForce" bson:"timeInForce"`
 	ClientOrderId string `json:"clientOrderId" bson:"clientOrderId"`
-	SendTsMilli   int64  `json:"sendTsMilli" bson:"sendTsMilli"`
-	RspTsMilli    int64  `json:"rspTsMilli" bson:"rspTsMilli"`
+	SendTime      int64  `json:"sendTime" bson:"sendTime"`
+	RespTime      int64  `json:"respTime" bson:"respTime"`
 	LocalId       string `json:"localId" bson:"localId"`
 	ApiKey        string `json:"apiKey" bson:"apiKey"`
 
