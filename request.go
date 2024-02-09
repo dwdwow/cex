@@ -101,20 +101,27 @@ func Request[ReqType, RespType any](config ReqConfig[ReqType, RespType], reqData
 
 	respType := reflect.TypeOf(respData).Elem()
 
-	var result any
+	var anyRes any
 
 	switch respType.Kind() {
 	case reflect.String:
-		result = any(string(respBody))
+		anyRes = any(string(respBody))
 	case reflect.Map, reflect.Struct:
 		err = json.Unmarshal(respBody, respData)
 		if err != nil {
 			err = fmt.Errorf("cex: unmarshal response body, %w", err)
+			return *respData, err
 		}
-		result = any(*respData)
+		anyRes = any(*respData)
 	default:
 		return *respData, fmt.Errorf("cex: response data type %v is not supported", respType.Kind())
 	}
 
-	return result.(RespType), err
+	res, ok := anyRes.(RespType)
+
+	if !ok {
+		err = fmt.Errorf("cex: cannot convert to %T", res)
+	}
+
+	return res, err
 }
