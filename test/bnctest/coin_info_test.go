@@ -25,5 +25,5 @@ func TestCoinInfo(t *testing.T) {
 		panic(err)
 	}
 	data, _ := json.MarshalIndent(respData, "", "  ")
-	fmt.Sprintln(string(data))
+	fmt.Println(string(data))
 }
