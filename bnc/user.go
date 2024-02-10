@@ -93,7 +93,7 @@ func signReqData(data any, key string) (query string, err error) {
 		val.Set(k, v)
 	}
 	query = val.Encode()
-	sig := cex.SignByHmacSHA512ToHex(query, key)
+	sig := cex.SignByHmacSHA256ToHex(query, key)
 	query += "&signature=" + sig
 	return
 }
