@@ -113,7 +113,7 @@ func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[
 	switch respType.Kind() {
 	case reflect.String:
 		anyRes = any(string(respBody))
-	case reflect.Map, reflect.Struct:
+	case reflect.Slice, reflect.Struct, reflect.Map:
 		err = json.Unmarshal(respBody, respData)
 		if err != nil {
 			err = fmt.Errorf("cex: unmarshal response body, %w", err)
