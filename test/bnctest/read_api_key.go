@@ -2,6 +2,7 @@ package bnctest
 
 import (
 	"github.com/dwdwow/cex"
+	"gopkg.in/yaml.v3"
 	"os"
 )
 
