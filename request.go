@@ -95,6 +95,10 @@ func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[
 		return *respData, fmt.Errorf("cex: http method %v is not supported", config.Method)
 	}
 
+	if err != nil {
+		return *respData, fmt.Errorf("cex: response err: %w", err)
+	}
+
 	if err = handler.CheckResp(resp, req); err != nil {
 		return *respData, fmt.Errorf("cex: check response, %w", err)
 	}
