@@ -91,12 +91,13 @@ func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[
 		resp, err = req.Delete(config.Path)
 	default:
 	}
-	if resp == nil {
-		return *respData, fmt.Errorf("cex: http method %v is not supported", config.Method)
-	}
 
 	if err != nil {
 		return *respData, fmt.Errorf("cex: response err: %w", err)
+	}
+
+	if resp == nil {
+		return *respData, fmt.Errorf("cex: http method %v is not supported", config.Method)
 	}
 
 	if err = handler.CheckResp(resp, req); err != nil {
