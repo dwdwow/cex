@@ -42,7 +42,7 @@ type CoinNetworkInfo struct {
 	Busy                    bool   `json:"busy"`
 }
 
-var CoinInfoConfig = cex.ReqConfig[cex.EmptyReqData, CoinInfo]{
+var CoinInfoConfig = cex.ReqConfig[cex.EmptyReqData, []CoinInfo]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:               ApiBaseUrl,
 		Path:                  SapiV1 + "/capital/config/getall",
