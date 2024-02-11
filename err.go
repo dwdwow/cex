@@ -3,10 +3,14 @@ package cex
 import "errors"
 
 var (
-	ErrTooFrequency    = errors.New("cex: too frequency")
-	ErrIpBanned        = errors.New("cex: ip is banned")
-	ErrOutOfRecvWindow = errors.New("cex: out of recv window")
+	ErrHttpUnknown  = errors.New("cex std err: http unknown error")
+	ErrBadRequest   = errors.New("cex std err: http bad request")
+	ErrForbidden    = errors.New("cex std err: http forbidden")
+	ErrNotFound     = errors.New("cex std err: http not found")
+	ErrTooFrequency = errors.New("cex std err: http too frequency")
+	ErrIpBanned     = errors.New("cex std err: http ip is banned")
 
-	ErrInsufficientBalance = errors.New("cex: insufficient balance")
-	ErrOrderRejected       = errors.New("cex: order is rejected")
+	ErrInvalidTimestamp    = errors.New("cex stg err: invalid timestamp")
+	ErrInsufficientBalance = errors.New("cex stg err: insufficient balance")
+	ErrOrderRejected       = errors.New("cex stg err: order is rejected")
 )

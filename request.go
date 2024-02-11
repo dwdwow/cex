@@ -2,6 +2,7 @@ package cex
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"net/http"
@@ -71,12 +72,39 @@ type Requester interface {
 	CheckResp(*resty.Response, *resty.Request) error
 }
 
+type ReqErr struct {
+	Response *resty.Response
+
+	// http error info
+	StatusCode int
+	Status     string
+	Err        error
+
+	// cex error info
+	CexCode int
+	CexMsg  string
+}
+
+func (e ReqErr) Error() string {
+	return fmt.Sprintf(
+		"http status code: %v, status: %v, err: %v; cex code: %v, cex msg: %v",
+		e.StatusCode, e.Status, e.Err, e.CexCode, e.CexMsg,
+	)
+}
+
+func (e ReqErr) Is(target error) bool {
+	return e.Err != nil && errors.Is(e, target)
+}
+
 // Request is the core method in cex.
-func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, opts ...ReqOpt) (*resty.Response, RespDataType, error) {
+func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, opts ...ReqOpt) (*resty.Response, RespDataType, ReqErr) {
+	reqErr := ReqErr{}
+
 	respData := new(RespDataType)
 	req, err := handler.MakeReq(config.ReqBaseConfig, reqData, opts...)
 	if err != nil {
-		return nil, *respData, err
+		reqErr.Err = err
+		return nil, *respData, reqErr
 	}
 
 	var resp *resty.Response
@@ -92,18 +120,23 @@ func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[
 	default:
 	}
 
+	reqErr.Response = resp
+
 	if err != nil {
-		return resp, *respData, fmt.Errorf("cex: response err: %w", err)
+		reqErr.Err = fmt.Errorf("cex: response err: %w", err)
+		return resp, *respData, reqErr
 	}
 
 	if resp == nil {
 		// should not be here
 		// if getting here, resty has bug
-		return resp, *respData, fmt.Errorf("cex: http method %v is not supported", config.Method)
+		reqErr.Err = fmt.Errorf("cex: http method %v is not supported", config.Method)
+		return resp, *respData, reqErr
 	}
 
 	if err = handler.CheckResp(resp, req); err != nil {
-		return resp, *respData, fmt.Errorf("cex: check response, %w", err)
+		reqErr.Err = fmt.Errorf("cex: check response, %w", err)
+		return resp, *respData, reqErr
 	}
 
 	respBody := resp.Body()
@@ -118,19 +151,20 @@ func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[
 	case reflect.Slice, reflect.Struct, reflect.Map:
 		err = json.Unmarshal(respBody, respData)
 		if err != nil {
-			err = fmt.Errorf("cex: unmarshal response body, %w", err)
-			return resp, *respData, err
+			reqErr.Err = fmt.Errorf("cex: unmarshal response body, %w", err)
+			return resp, *respData, reqErr
 		}
 		anyRes = any(*respData)
 	default:
-		return resp, *respData, fmt.Errorf("cex: response data type %v is not supported", respType.Kind())
+		reqErr.Err = fmt.Errorf("cex: response data type %v is not supported", respType.Kind())
+		return resp, *respData, reqErr
 	}
 
 	res, ok := anyRes.(RespDataType)
 
 	if !ok {
-		err = fmt.Errorf("cex: cannot convert to %T", res)
+		reqErr.Err = fmt.Errorf("cex: cannot convert to %T", res)
 	}
 
-	return resp, res, err
+	return resp, res, reqErr
 }

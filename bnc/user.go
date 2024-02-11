@@ -77,8 +77,12 @@ func (u User) CheckResp(resp *resty.Response, req *resty.Request) error {
 	}
 
 	// check http code
-	if resp.StatusCode() != 200 {
-		return fmt.Errorf("bnc: http error, msg %v, code %v", resp.Status(), resp.StatusCode())
+	httpCode := resp.StatusCode()
+	if httpCode != 200 {
+		cexStdErr := HttpStatusCodeChecker(httpCode)
+		if cexStdErr != nil {
+			return fmt.Errorf("bnc: http code: %v, status: %v, err: %w", httpCode, resp.Status(), cexStdErr)
+		}
 	}
 
 	// check binance error code
