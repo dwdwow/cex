@@ -2,10 +2,6 @@ package cex
 
 import "errors"
 
-var (
-	ErrOrderRejected = errors.New("cex: order is rejected")
-)
-
 type TradeType string
 
 const (
