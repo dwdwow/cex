@@ -72,11 +72,11 @@ type Requester interface {
 }
 
 // Request is the core method in cex.
-func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, opts ...ReqOpt) (RespDataType, error) {
+func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, opts ...ReqOpt) (*resty.Response, RespDataType, error) {
 	respData := new(RespDataType)
 	req, err := handler.MakeReq(config.ReqBaseConfig, reqData, opts...)
 	if err != nil {
-		return *respData, err
+		return nil, *respData, err
 	}
 
 	var resp *resty.Response
@@ -93,17 +93,17 @@ func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[
 	}
 
 	if err != nil {
-		return *respData, fmt.Errorf("cex: response err: %w", err)
+		return resp, *respData, fmt.Errorf("cex: response err: %w", err)
 	}
 
 	if resp == nil {
 		// should not be here
 		// if getting here, resty has bug
-		return *respData, fmt.Errorf("cex: http method %v is not supported", config.Method)
+		return resp, *respData, fmt.Errorf("cex: http method %v is not supported", config.Method)
 	}
 
 	if err = handler.CheckResp(resp, req); err != nil {
-		return *respData, fmt.Errorf("cex: check response, %w", err)
+		return resp, *respData, fmt.Errorf("cex: check response, %w", err)
 	}
 
 	respBody := resp.Body()
@@ -119,11 +119,11 @@ func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[
 		err = json.Unmarshal(respBody, respData)
 		if err != nil {
 			err = fmt.Errorf("cex: unmarshal response body, %w", err)
-			return *respData, err
+			return resp, *respData, err
 		}
 		anyRes = any(*respData)
 	default:
-		return *respData, fmt.Errorf("cex: response data type %v is not supported", respType.Kind())
+		return resp, *respData, fmt.Errorf("cex: response data type %v is not supported", respType.Kind())
 	}
 
 	res, ok := anyRes.(RespDataType)
@@ -132,5 +132,5 @@ func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[
 		err = fmt.Errorf("cex: cannot convert to %T", res)
 	}
 
-	return res, err
+	return resp, res, err
 }

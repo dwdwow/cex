@@ -20,7 +20,7 @@ func readApiKey() cex.Api {
 func TestCoinInfo(t *testing.T) {
 	apiKey := readApiKey()
 	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	respData, err := cex.Request(user, bnc.CoinInfoConfig, nil)
+	_, respData, err := cex.Request(user, bnc.CoinInfoConfig, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -31,7 +31,7 @@ func TestCoinInfo(t *testing.T) {
 func TestSpotAccount(t *testing.T) {
 	apiKey := readApiKey()
 	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	respData, err := cex.Request(user, bnc.SpotAccountConfig, nil)
+	_, respData, err := cex.Request(user, bnc.SpotAccountConfig, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -42,7 +42,7 @@ func TestSpotAccount(t *testing.T) {
 func TestUniversalTransfer(t *testing.T) {
 	apiKey := readApiKey()
 	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	respData, err := cex.Request(user, bnc.UniversalTransferConfig, bnc.UniversalTransferReq{
+	_, respData, err := cex.Request(user, bnc.UniversalTransferConfig, bnc.UniversalTransferReq{
 		Type:       bnc.TranType_MAIN_UMFUTURE,
 		Asset:      "USDT",
 		Amount:     10,

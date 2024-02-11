@@ -79,7 +79,7 @@ func (u User) CheckResp(resp *resty.Response, req *resty.Request) error {
 	if codeMsg.Code >= 0 {
 		return nil
 	}
-	return fmt.Errorf("bnc: msg:%v, code: %v", codeMsg.Msg, codeMsg.Code)
+	return fmt.Errorf("bnc: msg: %v, code: %v", codeMsg.Msg, codeMsg.Code)
 }
 
 // ============================== requester end ==============================
