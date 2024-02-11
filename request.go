@@ -181,6 +181,7 @@ func request[ReqDataType, RespDataType any](reqMaker ReqMaker, config ReqConfig[
 		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: http method %v is not supported", config.Method))
 	}
 
+	// Ignore resty error, if response is not nil.
 	// Resty will return err if status code > 399.
 	// But the request with a response status code that bigger than 399
 	// may not be failed.
@@ -195,7 +196,8 @@ func request[ReqDataType, RespDataType any](reqMaker ReqMaker, config ReqConfig[
 	}
 
 	if resp == nil {
-		// If getting here, resty may have bugs.
+		// If getting here, err and resp are all nil.
+		// Resty may have bugs.
 		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: resp and err are all nil, resty may have bugs"))
 	}
 
