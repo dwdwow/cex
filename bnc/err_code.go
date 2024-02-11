@@ -12,11 +12,11 @@ import (
 // It is important to NOT treat this as a failure operation;
 // the execution status is UNKNOWN and could have been a success.
 var httpErrCodes = map[int]error{
-	http.StatusForbidden:       cex.ErrForbidden,
-	http.StatusBadRequest:      cex.ErrBadRequest,
-	http.StatusNotFound:        cex.ErrNotFound,
-	http.StatusTooManyRequests: cex.ErrTooFrequency,
-	http.StatusTeapot:          cex.ErrIpBanned,
+	http.StatusForbidden:       cex.ErrHttpForbidden,
+	http.StatusBadRequest:      cex.ErrHttpBadRequest,
+	http.StatusNotFound:        cex.ErrHttpNotFound,
+	http.StatusTooManyRequests: cex.ErrHttpTooFrequency,
+	http.StatusTeapot:          cex.ErrHttpIpBanned,
 
 	409: errors.New("cancelReplace order partially succeeds"),
 }

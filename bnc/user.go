@@ -28,7 +28,7 @@ func NewUser(apiKey, secretKey string) User {
 
 // ============================== requester start ==============================
 
-func (u User) MakeReq(config cex.ReqBaseConfig, reqData any, opts ...cex.ReqOpt) (*resty.Request, error) {
+func (u User) Make(config cex.ReqBaseConfig, reqData any, opts ...cex.ReqOpt) (*resty.Request, error) {
 	if config.IsUserData {
 		return u.makePrivateReq(config, reqData, opts...)
 	} else {
@@ -71,7 +71,7 @@ func (u User) makePrivateReq(config cex.ReqBaseConfig, reqData any, opts ...cex.
 	return req, nil
 }
 
-func (u User) CheckResp(resp *resty.Response, req *resty.Request) error {
+func (u User) HandleResp(resp *resty.Response, req *resty.Request) error {
 	if resp == nil {
 		return errors.New("bnc: response checker: response is nil")
 	}

@@ -3,14 +3,18 @@ package cex
 import "errors"
 
 var (
-	ErrHttpUnknown  = errors.New("cex std err: http unknown error")
-	ErrBadRequest   = errors.New("cex std err: http bad request")
-	ErrForbidden    = errors.New("cex std err: http forbidden")
-	ErrNotFound     = errors.New("cex std err: http not found")
-	ErrTooFrequency = errors.New("cex std err: http too frequency")
-	ErrIpBanned     = errors.New("cex std err: http ip is banned")
+	ErrJsonMarshal   = errors.New("json marshal err")
+	ErrJsonUnmarshal = errors.New("json unmarshal err")
+	ErrS2M           = errors.New("s2m err")
 
-	ErrInvalidTimestamp    = errors.New("cex stg err: invalid timestamp")
-	ErrInsufficientBalance = errors.New("cex stg err: insufficient balance")
-	ErrOrderRejected       = errors.New("cex stg err: order is rejected")
+	ErrHttpUnknown      = errors.New("http unknown error")
+	ErrHttpBadRequest   = errors.New("http bad request")
+	ErrHttpForbidden    = errors.New("http forbidden")
+	ErrHttpNotFound     = errors.New("http not found")
+	ErrHttpTooFrequency = errors.New("http too frequency")
+	ErrHttpIpBanned     = errors.New("http ip is banned")
+
+	ErrInvalidTimestamp    = errors.New("invalid timestamp")
+	ErrInsufficientBalance = errors.New("insufficient balance")
+	ErrOrderRejected       = errors.New("order is rejected")
 )

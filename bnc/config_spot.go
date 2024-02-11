@@ -44,14 +44,12 @@ type CoinNetworkInfo struct {
 
 var CoinInfoConfig = cex.ReqConfig[cex.EmptyReqData, []CoinInfo]{
 	ReqBaseConfig: cex.ReqBaseConfig{
-		BaseUrl:               ApiBaseUrl,
-		Path:                  SapiV1 + "/capital/config/getall",
-		Method:                http.MethodGet,
-		IsUserData:            true,
-		UserTimeInterval:      0,
-		IpTimeInterval:        0,
-		HttpStatusCodeChecker: HttpStatusCodeChecker,
-		CexCustomCodeChecker:  CustomRespCodeChecker,
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/capital/config/getall",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
 	},
 }
 
@@ -85,14 +83,12 @@ type SpotAccount struct {
 
 var SpotAccountConfig = cex.ReqConfig[cex.EmptyReqData, SpotAccount]{
 	ReqBaseConfig: cex.ReqBaseConfig{
-		BaseUrl:               ApiBaseUrl,
-		Path:                  ApiV3 + "/account",
-		Method:                http.MethodGet,
-		IsUserData:            true,
-		UserTimeInterval:      0,
-		IpTimeInterval:        0,
-		HttpStatusCodeChecker: HttpStatusCodeChecker,
-		CexCustomCodeChecker:  CustomRespCodeChecker,
+		BaseUrl:          ApiBaseUrl,
+		Path:             ApiV3 + "/account",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
 	},
 }
 
@@ -110,14 +106,12 @@ type UniversalTransferResp struct {
 
 var UniversalTransferConfig = cex.ReqConfig[UniversalTransferReq, UniversalTransferResp]{
 	ReqBaseConfig: cex.ReqBaseConfig{
-		BaseUrl:               ApiBaseUrl,
-		Path:                  SapiV1 + "/asset/transfer",
-		Method:                http.MethodPost,
-		IsUserData:            true,
-		UserTimeInterval:      0,
-		IpTimeInterval:        0,
-		HttpStatusCodeChecker: HttpStatusCodeChecker,
-		CexCustomCodeChecker:  CustomRespCodeChecker,
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/asset/transfer",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
 	},
 }
 
@@ -144,13 +138,11 @@ type FlexibleProduct struct {
 
 var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListReq, []FlexibleProduct]{
 	ReqBaseConfig: cex.ReqBaseConfig{
-		BaseUrl:               ApiBaseUrl,
-		Path:                  SapiV1 + "/simple-earn/flexible/list",
-		Method:                http.MethodGet,
-		IsUserData:            true,
-		UserTimeInterval:      0,
-		IpTimeInterval:        0,
-		HttpStatusCodeChecker: HttpStatusCodeChecker,
-		CexCustomCodeChecker:  CustomRespCodeChecker,
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/simple-earn/flexible/list",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
 	},
 }

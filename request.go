@@ -9,46 +9,63 @@ import (
 	"reflect"
 )
 
-// RespCodeChecker checks http and cex custom codes.
-// All cex package should have two implementations of this function type,
-// one is http's, another is cex's.
-type RespCodeChecker func(int) error
+// ReqBaseConfig save some read-only info.
+// This struct is the real contain of ReqConfig.
+type ReqBaseConfig struct {
+	// ex. https://www.example.com
+	BaseUrl string `json:"baseUrl" bson:"baseUrl"`
+
+	// ex. /path/to/service
+	Path string `json:"path" bson:"path"`
+
+	// http method, GET, POST...
+	// better to use const method value in http package directly
+	Method string `json:"method" bson:"method"`
+
+	// if true, should use api key
+	IsUserData bool `json:"isUserData" bson:"isUserData"`
+
+	// one user can rest every UserTimeInterval.
+	// unit is millisecond
+	UserTimeInterval int64 `json:"userTimeInterval" bson:"userTimeInterval"`
+
+	// one ip can reset every IpTimeInterval
+	// unit is millisecond
+	IpTimeInterval int64 `json:"ipTimeInterval" bson:"ipTimeInterval"`
+}
+
+// HTTPStatusCodeChecker checks HTTP status code.
+// If request is failed, return error.
+type HTTPStatusCodeChecker func(int) error
+
+// RespBodyUnmarshalerError contains cex own diy error code and msg.
+// Why should specific this struct? See RespBodyUnmarshaler.
+type RespBodyUnmarshalerError struct {
+	CexErrCode int
+	CexErrMsg  string
+
+	// Err is unmarshal error or cex err.
+	Err error
+}
+
+func (e *RespBodyUnmarshalerError) Error() string {
+	return fmt.Sprintf("code: %v, msg: %v, err: %v", e.CexErrCode, e.CexErrMsg, e.Err)
+}
+
+func (e *RespBodyUnmarshalerError) Is(target error) bool {
+	return e.Err != nil && errors.Is(e.Err, target)
+}
+
+// RespBodyUnmarshaler unmarshal HTTP response body.
+// Cex may have its own diy error code and msg.
+// Generally, these infos are contained in body,
+// so should get these infos by unmarshalling.
+type RespBodyUnmarshaler[D any] func([]byte) (D, *RespBodyUnmarshalerError)
 
 // EmptyReqData means that no request data.
 // If a ReqConfig ReqDataType is this,
 // reqData should be nil.
 type EmptyReqData any
-
-// ReqBaseConfig save some read-only info.
-// This struct is the real contain of ReqConfig.
-type ReqBaseConfig struct {
-	// ex. https://www.example.com
-	BaseUrl string
-
-	// ex. /path/to/service
-	Path string
-
-	// http method, GET, POST...
-	// better to use const method value in http package directly
-	Method string
-
-	// if true, should use api key
-	IsUserData bool
-
-	// one user can rest every UserTimeInterval.
-	// unit is millisecond
-	UserTimeInterval int64
-
-	// one ip can reset every IpTimeInterval
-	// unit is millisecond
-	IpTimeInterval int64
-
-	// status code and its status message
-	HttpStatusCodeChecker RespCodeChecker
-
-	// cex self custom codes and its meaning
-	CexCustomCodeChecker RespCodeChecker
-}
 
 // ReqConfig is wrapper of ReqBaseConfig.
 // This struct makes it convenient to call Request.
@@ -61,50 +78,74 @@ type ReqBaseConfig struct {
 // Set a config instance in Request as input, all patterns in Request are defined.
 type ReqConfig[ReqDataType, RespDataType any] struct {
 	ReqBaseConfig
+	// status code and its status message
+	HTTPStatusCodeChecker HTTPStatusCodeChecker
+	RespBodyUnmarshaler   RespBodyUnmarshaler[RespDataType]
 }
 
 // ReqOpt is function option that can custom request.
 type ReqOpt func(*resty.Client, *resty.Request)
 
-// Requester should be implemented in all cex package
-type Requester interface {
-	MakeReq(config ReqBaseConfig, reqData any, opts ...ReqOpt) (*resty.Request, error)
-	CheckResp(*resty.Response, *resty.Request) error
+// ReqMaker should be implemented in all cex package
+type ReqMaker interface {
+	Make(config ReqBaseConfig, reqData any, opts ...ReqOpt) (*resty.Request, error)
+	//HandleResp(*resty.Response, *resty.Request) error
 }
 
-type ReqErr struct {
-	Response *resty.Response
-
-	// http error info
+// HTTPError contains raw info and cex package custom http error.
+type HTTPError struct {
 	StatusCode int
 	Status     string
 	Err        error
-
-	// cex error info
-	CexCode int
-	CexMsg  string
 }
 
-func (e ReqErr) Error() string {
+func (e *HTTPError) Error() string {
 	return fmt.Sprintf(
-		"http status code: %v, status: %v, err: %v; cex code: %v, cex msg: %v",
-		e.StatusCode, e.Status, e.Err, e.CexCode, e.CexMsg,
+		"code: %v, status: %v, httperr: %v",
+		e.StatusCode, e.Status, e.Err,
 	)
 }
 
-func (e ReqErr) Is(target error) bool {
-	return e.Err != nil && errors.Is(e, target)
+func (e *HTTPError) Is(target error) bool {
+	return e.Err != nil && errors.Is(e.Err, target)
 }
 
-// Request is the core method in cex.
-func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, opts ...ReqOpt) (*resty.Response, RespDataType, ReqErr) {
-	reqErr := ReqErr{}
+// RequestError contains detailed error info.
+// Structured error info is better.
+type RequestError struct {
+	ReqBaseConfig            ReqBaseConfig
+	HTTPError                *HTTPError
+	RespBodyUnmarshalerError *RespBodyUnmarshalerError
+	Err                      error
+}
 
-	respData := new(RespDataType)
-	req, err := handler.MakeReq(config.ReqBaseConfig, reqData, opts...)
+func (e *RequestError) Error() string {
+	return fmt.Sprintf(
+		"%v %v%v, %v",
+		e.ReqBaseConfig.Method,
+		e.ReqBaseConfig.BaseUrl,
+		e.ReqBaseConfig.Path,
+		e.Err,
+	)
+}
+
+func (e *RequestError) Is(target error) bool {
+	return e.Err != nil && errors.Is(e.Err, target)
+}
+
+func (e *RequestError) SetErr(err error) *RequestError {
+	e.Err = err
+	return e
+}
+
+// Request is the core of cex query.
+func Request[ReqDataType, RespDataType any](reqMaker ReqMaker, config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, opts ...ReqOpt) (*resty.Response, RespDataType, *RequestError) {
+	reqErr := &RequestError{ReqBaseConfig: config.ReqBaseConfig}
+	respData := *new(RespDataType)
+
+	req, err := reqMaker.Make(config.ReqBaseConfig, reqData, opts...)
 	if err != nil {
-		reqErr.Err = err
-		return nil, *respData, reqErr
+		return nil, respData, reqErr.SetErr(fmt.Errorf("cex: make request, %w", err))
 	}
 
 	var resp *resty.Response
@@ -118,28 +159,64 @@ func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[
 	case http.MethodDelete:
 		resp, err = req.Delete(config.Path)
 	default:
+		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: http method %v is not supported", config.Method))
 	}
 
-	reqErr.Response = resp
-
-	if err != nil {
-		reqErr.Err = fmt.Errorf("cex: response err: %w", err)
-		return resp, *respData, reqErr
+	// Resty will return err if status code > 399.
+	// But the request with a response status code that bigger than 399
+	// may not be failed.
+	// ex. For binance, response status code that bigger than 500 means
+	// that the status is unknown, and users can ignore.
+	// So if one err is returned, check that resp is nil or not.
+	// If resp is nil, return directly.
+	// Otherwise, go on.
+	if err != nil && resp == nil {
+		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: request err: %w", err))
 	}
 
 	if resp == nil {
-		// should not be here
-		// if getting here, resty has bug
-		reqErr.Err = fmt.Errorf("cex: http method %v is not supported", config.Method)
-		return resp, *respData, reqErr
+		// If getting here, resty may have bugs.
+		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: resp and err are all nil, resty may have bugs"))
 	}
 
-	if err = handler.CheckResp(resp, req); err != nil {
-		reqErr.Err = fmt.Errorf("cex: check response, %w", err)
-		return resp, *respData, reqErr
+	if config.HTTPStatusCodeChecker == nil {
+		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: config http status code checker is nil"))
 	}
 
-	respBody := resp.Body()
+	if config.RespBodyUnmarshaler == nil {
+		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: config resp body unmarshaler is nil"))
+	}
+
+	errHttp := config.HTTPStatusCodeChecker(resp.StatusCode())
+
+	respData, errBodyUnmarshal := config.RespBodyUnmarshaler(resp.Body())
+
+	// some cex may set detailed error msg in body
+	if errHttp != nil || errBodyUnmarshal != nil {
+		if errHttp != nil {
+			reqErr.HTTPError = &HTTPError{
+				StatusCode: resp.StatusCode(),
+				Status:     resp.Status(),
+				Err:        errHttp,
+			}
+		}
+
+		if errBodyUnmarshal != nil {
+			reqErr.RespBodyUnmarshalerError = errBodyUnmarshal
+		}
+
+		reqErr.Err = fmt.Errorf("cex: request, http err: %w, body unmarshal err: %w", errHttp, errBodyUnmarshal)
+	}
+
+	if reqErr.Err != nil {
+		reqErr = nil
+	}
+
+	return resp, respData, reqErr
+}
+
+func StdRespDataUnmarshaler[D any](data []byte) (D, error) {
+	respData := new(D)
 
 	respType := reflect.TypeOf(respData).Elem()
 
@@ -147,24 +224,23 @@ func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[
 
 	switch respType.Kind() {
 	case reflect.String:
-		anyRes = any(string(respBody))
+		anyRes = any(string(data))
 	case reflect.Slice, reflect.Struct, reflect.Map:
-		err = json.Unmarshal(respBody, respData)
+		err := json.Unmarshal(data, respData)
 		if err != nil {
-			reqErr.Err = fmt.Errorf("cex: unmarshal response body, %w", err)
-			return resp, *respData, reqErr
+			return *respData, fmt.Errorf("unmarshal response body, %w", err)
 		}
 		anyRes = any(*respData)
 	default:
-		reqErr.Err = fmt.Errorf("cex: response data type %v is not supported", respType.Kind())
-		return resp, *respData, reqErr
+		return *respData, fmt.Errorf("response data type %v is not supported", respType.Kind())
 	}
 
-	res, ok := anyRes.(RespDataType)
+	res, ok := anyRes.(D)
 
+	var err error
 	if !ok {
-		reqErr.Err = fmt.Errorf("cex: cannot convert to %T", res)
+		err = fmt.Errorf("cex: cannot convert to %T", res)
 	}
 
-	return resp, res, reqErr
+	return res, err
 }
