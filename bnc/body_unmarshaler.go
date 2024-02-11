@@ -10,7 +10,7 @@ func GeneralBodyUnmarshaler[D any](body []byte) (D, *cex.RespBodyUnmarshalerErro
 	d := new(D)
 	codeMsg := new(CodeMsg)
 	if err := json.Unmarshal(body, codeMsg); err == nil {
-		if code := codeMsg.Code; code >= 0 {
+		if code := codeMsg.Code; code < 0 {
 			msg := codeMsg.Msg
 			errCtm := cexCustomErrCodes[code]
 			if errCtm == nil {
