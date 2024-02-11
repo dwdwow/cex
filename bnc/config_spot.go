@@ -95,3 +95,28 @@ var SpotAccountConfig = cex.ReqConfig[cex.EmptyReqData, SpotAccount]{
 		CexCustomCodeChecker:  CustomRespCodeChecker,
 	},
 }
+
+type UniversalTransferReq struct {
+	Type       TranType `s2m:"type,omitempty"`
+	Asset      string   `s2m:"asset,omitempty"`
+	Amount     float64  `s2m:"amount,omitempty"`
+	FromSymbol string   `s2m:"fromSymbol,omitempty"`
+	ToSymbol   string   `s2m:"toSymbol,omitempty"`
+}
+
+type UniversalTransferResp struct {
+	TranId int64 `json:"tranId,omitempty"`
+}
+
+var UniversalTransferConfig = cex.ReqConfig[UniversalTransferReq, UniversalTransferResp]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:               ApiBaseUrl,
+		Path:                  SapiV1 + "/asset/transfer",
+		Method:                http.MethodPost,
+		IsUserData:            true,
+		UserTimeInterval:      0,
+		IpTimeInterval:        0,
+		HttpStatusCodeChecker: HttpStatusCodeChecker,
+		CexCustomCodeChecker:  CustomRespCodeChecker,
+	},
+}
