@@ -31,7 +31,7 @@ import (
 // Callers just need to find target ReqConfig in the target exchange package,
 // and add opts appending needs, Request will do other things.
 //
-// Structured request error, RequestError, will help caller to check more
+// Structured request error, RequestError, will help callers to check more
 // details of error occurred during resting.
 func Request[ReqDataType, RespDataType any](
 	reqMaker ReqMaker,
