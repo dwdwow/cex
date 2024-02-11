@@ -150,7 +150,7 @@ func Request[ReqDataType, RespDataType any](reqMaker ReqMaker, config ReqConfig[
 	var err *RequestError
 	for i := 0; i < 3; i++ {
 		resp, data, err = request(reqMaker, config, reqData, opts...)
-		if err.Is(ErrInvalidTimestamp) {
+		if err != nil && err.Is(ErrInvalidTimestamp) {
 			continue
 		}
 		break
