@@ -109,6 +109,7 @@ func (u User) sign(data any) (query string, err error) {
 func signReqData(data any, key string) (query string, err error) {
 	m, err := s2m.ToStrMap(data)
 	if err != nil {
+		err = fmt.Errorf("%w: %w", cex.ErrS2M, err)
 		return
 	}
 	val := url.Values{

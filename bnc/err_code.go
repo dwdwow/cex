@@ -6,6 +6,10 @@ import (
 	"net/http"
 )
 
+var (
+	ErrPartiallySucceeds = errors.New("cancelReplace order partially succeeds")
+)
+
 // httpErrCodes
 // HTTP 5XX return codes are used for internal errors;
 // the issue is on Binance's side.
@@ -18,10 +22,13 @@ var httpErrCodes = map[int]error{
 	http.StatusTooManyRequests: cex.ErrHttpTooFrequency,
 	http.StatusTeapot:          cex.ErrHttpIpBanned,
 
-	409: errors.New("cancelReplace order partially succeeds"),
+	409: ErrPartiallySucceeds,
 }
 
 func HttpStatusCodeChecker(code int) error {
+	// If status code >= 500, status is unknown.
+	// Binance document indicate that user can ignore.
+	// https://binance-docs.github.io/apidocs/spot/en/#general-api-information
 	if code == 200 || code >= 500 {
 		return nil
 	}
@@ -30,8 +37,4 @@ func HttpStatusCodeChecker(code int) error {
 		return err
 	}
 	return cex.ErrHttpUnknown
-}
-
-func CustomRespCodeChecker(code int) error {
-	return nil
 }

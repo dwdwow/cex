@@ -167,6 +167,7 @@ func Request[ReqDataType, RespDataType any](reqMaker ReqMaker, config ReqConfig[
 	// may not be failed.
 	// ex. For binance, response status code that bigger than 500 means
 	// that the status is unknown, and users can ignore.
+	// https://binance-docs.github.io/apidocs/spot/en/#general-api-information
 	// So if one err is returned, check that resp is nil or not.
 	// If resp is nil, return directly.
 	// Otherwise, go on.
