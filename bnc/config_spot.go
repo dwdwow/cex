@@ -51,6 +51,8 @@ var CoinInfoConfig = cex.ReqConfig[cex.EmptyReqData, []CoinInfo]{
 		UserTimeInterval: 0,
 		IpTimeInterval:   0,
 	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   GeneralBodyUnmarshaler[[]CoinInfo],
 }
 
 type SpotBalance struct {
@@ -90,6 +92,8 @@ var SpotAccountConfig = cex.ReqConfig[cex.EmptyReqData, SpotAccount]{
 		UserTimeInterval: 0,
 		IpTimeInterval:   0,
 	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   GeneralBodyUnmarshaler[SpotAccount],
 }
 
 type UniversalTransferReq struct {
@@ -113,6 +117,8 @@ var UniversalTransferConfig = cex.ReqConfig[UniversalTransferReq, UniversalTrans
 		UserTimeInterval: 0,
 		IpTimeInterval:   0,
 	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   GeneralBodyUnmarshaler[UniversalTransferResp],
 }
 
 type FlexibleProductListReq struct {
@@ -145,4 +151,6 @@ var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListReq, []FlexibleProd
 		UserTimeInterval: 0,
 		IpTimeInterval:   0,
 	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   GeneralBodyUnmarshaler[[]FlexibleProduct],
 }

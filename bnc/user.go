@@ -79,7 +79,7 @@ func (u User) HandleResp(resp *resty.Response, req *resty.Request) error {
 	// check http code
 	httpCode := resp.StatusCode()
 	if httpCode != 200 {
-		cexStdErr := HttpStatusCodeChecker(httpCode)
+		cexStdErr := HTTPStatusCodeChecker(httpCode)
 		if cexStdErr != nil {
 			return fmt.Errorf("bnc: http code: %v, status: %v, err: %w", httpCode, resp.Status(), cexStdErr)
 		}

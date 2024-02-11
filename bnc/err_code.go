@@ -25,7 +25,7 @@ var httpErrCodes = map[int]error{
 	409: ErrPartiallySucceeds,
 }
 
-func HttpStatusCodeChecker(code int) error {
+func HTTPStatusCodeChecker(code int) error {
 	// If status code >= 500, status is unknown.
 	// Binance document indicate that user can ignore.
 	// https://binance-docs.github.io/apidocs/spot/en/#general-api-information
