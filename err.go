@@ -5,6 +5,8 @@ import "errors"
 // These std errors should be wrapped by other errors,
 // which can help callers to analyse error details.
 var (
+	ErrUnexpected = errors.New("unexpected")
+
 	ErrJsonMarshal   = errors.New("json marshal err")
 	ErrJsonUnmarshal = errors.New("json unmarshal err")
 	ErrS2M           = errors.New("s2m switch err")

@@ -8,20 +8,35 @@ import (
 
 func GeneralBodyUnmarshaler[D any](body []byte) (D, *cex.RespBodyUnmarshalerError) {
 	d := new(D)
-	codeMsg := new(CodeMsg)
-	if err := json.Unmarshal(body, codeMsg); err == nil {
-		if code := codeMsg.Code; code < 0 {
-			msg := codeMsg.Msg
-			errCtm := cexCustomErrCodes[code]
-			if errCtm == nil {
-				errCtm = fmt.Errorf("%v: %v", code, msg)
-			}
-			return *d, &cex.RespBodyUnmarshalerError{
-				CexErrCode: code,
-				CexErrMsg:  msg,
-				Err:        errCtm,
-			}
+	codeMsg := CodeMsg{}
+
+	if err := json.Unmarshal(body, &codeMsg); err != nil {
+		return cex.StdRespDataUnmarshaler[D](body)
+	}
+
+	code := codeMsg.Code
+	msg := codeMsg.Msg
+
+	if code >= 0 {
+		// should not get here
+		return *d, &cex.RespBodyUnmarshalerError{
+			CexErrCode: code,
+			CexErrMsg:  msg,
+			Err: fmt.Errorf(
+				"bnc: %w: code: %v, msg: %v",
+				cex.ErrUnexpected, code, msg,
+			),
 		}
 	}
-	return cex.StdRespDataUnmarshaler[D](body)
+
+	errCtm := cexCustomErrCodes[code]
+	if errCtm == nil {
+		errCtm = fmt.Errorf("%v, %v", code, msg)
+	}
+
+	return *d, &cex.RespBodyUnmarshalerError{
+		CexErrCode: code,
+		CexErrMsg:  msg,
+		Err:        fmt.Errorf("bnc: %v", errCtm),
+	}
 }
