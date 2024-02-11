@@ -2,6 +2,7 @@ package bnc
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/dwdwow/cex"
 	"github.com/dwdwow/s2m"
@@ -71,9 +72,20 @@ func (u User) makePrivateReq(config cex.ReqBaseConfig, reqData any, opts ...cex.
 }
 
 func (u User) CheckResp(resp *resty.Response, req *resty.Request) error {
+	if resp == nil {
+		return errors.New("bnc: response checker: response is nil")
+	}
+
+	// check http code
+	if resp.StatusCode() != 200 {
+		return fmt.Errorf("bnc: http error, msg %v, code %v", resp.Status(), resp.StatusCode())
+	}
+
+	// check binance error code
 	body := resp.Body()
 	codeMsg := new(CodeMsg)
 	if err := json.Unmarshal(body, codeMsg); err != nil {
+		// nil err means body is not CodeMsg
 		return nil
 	}
 	if codeMsg.Code >= 0 {
