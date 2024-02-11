@@ -9,6 +9,121 @@ import (
 	"reflect"
 )
 
+// =========================================================== \\
+// +++                                                     +++ \\
+// +++               Cex REST Core: Request                +++ \\
+// +++                                                     +++ \\
+// =========================================================== \\
+
+// Request is the core of cex REST.
+// All cex REST should implement some interfaces to adapt Request.
+func Request[ReqDataType, RespDataType any](
+	reqMaker ReqMaker,
+	config ReqConfig[ReqDataType, RespDataType],
+	reqData ReqDataType,
+	opts ...ReqOpt,
+) (*resty.Response, RespDataType, *RequestError) {
+	var resp *resty.Response
+	var data RespDataType
+	var err *RequestError
+	for i := 0; i < 3; i++ {
+		resp, data, err = request(reqMaker, config, reqData, opts...)
+		if err != nil && err.Is(ErrInvalidTimestamp) {
+			continue
+		}
+		break
+	}
+	return resp, data, err
+}
+
+func request[ReqDataType, RespDataType any](
+	reqMaker ReqMaker,
+	config ReqConfig[ReqDataType, RespDataType],
+	reqData ReqDataType,
+	opts ...ReqOpt,
+) (*resty.Response, RespDataType, *RequestError) {
+	reqErr := &RequestError{ReqBaseConfig: config.ReqBaseConfig}
+	respData := *new(RespDataType)
+
+	req, err := reqMaker.Make(config.ReqBaseConfig, reqData, opts...)
+	if err != nil {
+		return nil, respData, reqErr.SetErr(fmt.Errorf("cex: make request, %w", err))
+	}
+
+	var resp *resty.Response
+	switch config.Method {
+	case http.MethodGet:
+		resp, err = req.Get(config.Path)
+	case http.MethodPost:
+		resp, err = req.Post(config.Path)
+	case http.MethodPut:
+		resp, err = req.Put(config.Path)
+	case http.MethodDelete:
+		resp, err = req.Delete(config.Path)
+	default:
+		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: http method %v is not supported", config.Method))
+	}
+
+	// Ignore resty error, if response is not nil.
+	// Resty will return err if status code > 399.
+	// But the request with a response status code that bigger than 399
+	// may not be failed.
+	// ex. For binance, response status code that bigger than 500 means
+	// that the status is unknown, and users can ignore.
+	// https://binance-docs.github.io/apidocs/spot/en/#general-api-information
+	// So if one err is returned, check that resp is nil or not.
+	// If resp is nil, return directly.
+	// Otherwise, go on.
+	if err != nil && resp == nil {
+		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: request err: %w", err))
+	}
+
+	if resp == nil {
+		// If getting here, err and resp are all nil.
+		// Resty may have bugs.
+		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: resp and err are all nil, resty may have bugs"))
+	}
+
+	if config.HTTPStatusCodeChecker == nil {
+		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: config http status code checker is nil"))
+	}
+
+	if config.RespBodyUnmarshaler == nil {
+		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: config resp body unmarshaler is nil"))
+	}
+
+	errHttp := config.HTTPStatusCodeChecker(resp.StatusCode())
+
+	respData, errBodyUnmarshal := config.RespBodyUnmarshaler(resp.Body())
+
+	// some cex may set detailed error msg in body
+	if errHttp != nil || errBodyUnmarshal != nil {
+		if errHttp != nil {
+			reqErr.HTTPError = &HTTPError{
+				StatusCode: resp.StatusCode(),
+				Status:     resp.Status(),
+				Err:        errHttp,
+			}
+		}
+
+		if errBodyUnmarshal != nil {
+			reqErr.RespBodyUnmarshalerError = errBodyUnmarshal
+		}
+
+		reqErr.Err = fmt.Errorf("cex: request, http err: %w, body unmarshal err: %w", errHttp, errBodyUnmarshal)
+	}
+
+	if reqErr.Err == nil {
+		reqErr = nil
+	}
+
+	return resp, respData, reqErr
+}
+
+// ===========================================================
+// Core Types
+// -----------------------------------------------------------
+
 // ReqBaseConfig save some read-only info.
 // This struct is the real contain of ReqConfig.
 type ReqBaseConfig struct {
@@ -143,99 +258,13 @@ func (e *RequestError) SetErr(err error) *RequestError {
 	return e
 }
 
-// Request is the core of cex query.
-func Request[ReqDataType, RespDataType any](reqMaker ReqMaker, config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, opts ...ReqOpt) (*resty.Response, RespDataType, *RequestError) {
-	var resp *resty.Response
-	var data RespDataType
-	var err *RequestError
-	for i := 0; i < 3; i++ {
-		resp, data, err = request(reqMaker, config, reqData, opts...)
-		if err != nil && err.Is(ErrInvalidTimestamp) {
-			continue
-		}
-		break
-	}
-	return resp, data, err
-}
+// -----------------------------------------------------------
+// Core Types
+// ===========================================================
 
-func request[ReqDataType, RespDataType any](reqMaker ReqMaker, config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, opts ...ReqOpt) (*resty.Response, RespDataType, *RequestError) {
-	reqErr := &RequestError{ReqBaseConfig: config.ReqBaseConfig}
-	respData := *new(RespDataType)
-
-	req, err := reqMaker.Make(config.ReqBaseConfig, reqData, opts...)
-	if err != nil {
-		return nil, respData, reqErr.SetErr(fmt.Errorf("cex: make request, %w", err))
-	}
-
-	var resp *resty.Response
-	switch config.Method {
-	case http.MethodGet:
-		resp, err = req.Get(config.Path)
-	case http.MethodPost:
-		resp, err = req.Post(config.Path)
-	case http.MethodPut:
-		resp, err = req.Put(config.Path)
-	case http.MethodDelete:
-		resp, err = req.Delete(config.Path)
-	default:
-		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: http method %v is not supported", config.Method))
-	}
-
-	// Ignore resty error, if response is not nil.
-	// Resty will return err if status code > 399.
-	// But the request with a response status code that bigger than 399
-	// may not be failed.
-	// ex. For binance, response status code that bigger than 500 means
-	// that the status is unknown, and users can ignore.
-	// https://binance-docs.github.io/apidocs/spot/en/#general-api-information
-	// So if one err is returned, check that resp is nil or not.
-	// If resp is nil, return directly.
-	// Otherwise, go on.
-	if err != nil && resp == nil {
-		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: request err: %w", err))
-	}
-
-	if resp == nil {
-		// If getting here, err and resp are all nil.
-		// Resty may have bugs.
-		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: resp and err are all nil, resty may have bugs"))
-	}
-
-	if config.HTTPStatusCodeChecker == nil {
-		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: config http status code checker is nil"))
-	}
-
-	if config.RespBodyUnmarshaler == nil {
-		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: config resp body unmarshaler is nil"))
-	}
-
-	errHttp := config.HTTPStatusCodeChecker(resp.StatusCode())
-
-	respData, errBodyUnmarshal := config.RespBodyUnmarshaler(resp.Body())
-
-	// some cex may set detailed error msg in body
-	if errHttp != nil || errBodyUnmarshal != nil {
-		if errHttp != nil {
-			reqErr.HTTPError = &HTTPError{
-				StatusCode: resp.StatusCode(),
-				Status:     resp.Status(),
-				Err:        errHttp,
-			}
-		}
-
-		if errBodyUnmarshal != nil {
-			reqErr.RespBodyUnmarshalerError = errBodyUnmarshal
-		}
-
-		reqErr.Err = fmt.Errorf("cex: request, http err: %w, body unmarshal err: %w", errHttp, errBodyUnmarshal)
-	}
-
-	if reqErr.Err == nil {
-		reqErr = nil
-	}
-
-	return resp, respData, reqErr
-}
+// ===========================================================
+// Resp Data Unmarshaler
+// -----------------------------------------------------------
 
 func StdRespDataUnmarshaler[D any](data []byte) (D, *RespBodyUnmarshalerError) {
 	errUnmar := new(RespBodyUnmarshalerError)
