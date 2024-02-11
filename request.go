@@ -15,8 +15,24 @@ import (
 // +++                                                     +++ \\
 // =========================================================== \\
 
+// ===========================================================
+// Request
+// -----------------------------------------------------------
+
 // Request is the core of cex REST.
-// All cex REST should implement some interfaces to adapt Request.
+// This method is convenient for developers and callers.
+//
+// Developers just need to implement a simple ReqMaker to custom request creating,
+// and implement a HTTPStatusCodeChecker and some simple RespBodyUnmarshaler -s
+// to custom response analysing.
+// After above works, whenever add new REST api, developer could just add
+// new ReqConfig, and some very simple REST functions in exchange packages.
+//
+// Callers just need to find target ReqConfig in the target exchange package,
+// and add opts appending needs, Request will do other things.
+//
+// Structured request error, RequestError, will help caller to check more
+// details of error occurred during resting.
 func Request[ReqDataType, RespDataType any](
 	reqMaker ReqMaker,
 	config ReqConfig[ReqDataType, RespDataType],
@@ -79,6 +95,7 @@ func request[ReqDataType, RespDataType any](
 	}
 
 	if resp == nil {
+		// Should not get here.
 		// If getting here, err and resp are all nil.
 		// Resty may have bugs.
 		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: resp and err are all nil, resty may have bugs"))
@@ -96,7 +113,8 @@ func request[ReqDataType, RespDataType any](
 
 	respData, errBodyUnmarshal := config.RespBodyUnmarshaler(resp.Body())
 
-	// some cex may set detailed error msg in body
+	// some cex may set detailed error msg in body, while request failed
+	// so, collect http status and body data together
 	if errHttp != nil || errBodyUnmarshal != nil {
 		if errHttp != nil {
 			reqErr.HTTPError = &HTTPError{
@@ -119,6 +137,10 @@ func request[ReqDataType, RespDataType any](
 
 	return resp, respData, reqErr
 }
+
+// -----------------------------------------------------------
+// Request
+// ===========================================================
 
 // ===========================================================
 // Core Types
@@ -153,6 +175,52 @@ type ReqBaseConfig struct {
 // If request is failed, return error.
 type HTTPStatusCodeChecker func(int) error
 
+// RespBodyUnmarshaler unmarshal HTTP response body.
+// Cex may have its own diy error code and msg.
+// Generally, these infos are contained in body,
+// so should get these infos by unmarshalling.
+type RespBodyUnmarshaler[D any] func([]byte) (D, *RespBodyUnmarshalerError)
+
+// EmptyReqData means that no request data.
+// If a ReqConfig ReqDataType is this,
+// reqData should be nil.
+type EmptyReqData any
+
+// ReqConfig is wrapper of ReqBaseConfig.
+// This struct makes it convenient to call Request.
+// ReqDataType and RespDataType are not used in ReqConfig,
+// but in practice, it is very useful.
+// In practice, we call Request to query cex data,
+// but we should know ReqBaseConfig, ReqDataType and RespDataType simultaneously.
+// We have many config implementations in all cex packages.
+// These config with patterns bind ReqBaseConfig,
+// ReqDataType and RespDataType together.
+// Set a ReqBaseConfig instance as input of Request,
+// all Request patterns are defined.
+type ReqConfig[ReqDataType, RespDataType any] struct {
+	ReqBaseConfig
+	// status code and its status message
+	HTTPStatusCodeChecker HTTPStatusCodeChecker
+	RespBodyUnmarshaler   RespBodyUnmarshaler[RespDataType]
+}
+
+// ReqOpt is function option that can custom request.
+type ReqOpt func(*resty.Client, *resty.Request)
+
+// ReqMaker should be implemented in all cex package
+type ReqMaker interface {
+	Make(config ReqBaseConfig, reqData any, opts ...ReqOpt) (*resty.Request, error)
+	//HandleResp(*resty.Response, *resty.Request) error
+}
+
+// -----------------------------------------------------------
+// Core Types
+// ===========================================================
+
+// ===========================================================
+// Custom Errors
+// -----------------------------------------------------------
+
 // RespBodyUnmarshalerError contains cex own diy error code and msg.
 // Why should specific this struct? See RespBodyUnmarshaler.
 type RespBodyUnmarshalerError struct {
@@ -174,42 +242,6 @@ func (e *RespBodyUnmarshalerError) Is(target error) bool {
 func (e *RespBodyUnmarshalerError) SetErr(err error) *RespBodyUnmarshalerError {
 	e.Err = err
 	return e
-}
-
-// RespBodyUnmarshaler unmarshal HTTP response body.
-// Cex may have its own diy error code and msg.
-// Generally, these infos are contained in body,
-// so should get these infos by unmarshalling.
-type RespBodyUnmarshaler[D any] func([]byte) (D, *RespBodyUnmarshalerError)
-
-// EmptyReqData means that no request data.
-// If a ReqConfig ReqDataType is this,
-// reqData should be nil.
-type EmptyReqData any
-
-// ReqConfig is wrapper of ReqBaseConfig.
-// This struct makes it convenient to call Request.
-// ReqDataType and RespDataType are not used in ReqConfig,
-// but in practice, it is very useful.
-// In practice, we call Request to query cex data,
-// but we should know config, ReqDataType and RespDataType simultaneously.
-// We have many config implementations in all cex packages.
-// These config with patterns bind config, ReqDataType and RespDataType together.
-// Set a config instance in Request as input, all patterns in Request are defined.
-type ReqConfig[ReqDataType, RespDataType any] struct {
-	ReqBaseConfig
-	// status code and its status message
-	HTTPStatusCodeChecker HTTPStatusCodeChecker
-	RespBodyUnmarshaler   RespBodyUnmarshaler[RespDataType]
-}
-
-// ReqOpt is function option that can custom request.
-type ReqOpt func(*resty.Client, *resty.Request)
-
-// ReqMaker should be implemented in all cex package
-type ReqMaker interface {
-	Make(config ReqBaseConfig, reqData any, opts ...ReqOpt) (*resty.Request, error)
-	//HandleResp(*resty.Response, *resty.Request) error
 }
 
 // HTTPError contains raw info and cex package custom http error.
@@ -259,7 +291,7 @@ func (e *RequestError) SetErr(err error) *RequestError {
 }
 
 // -----------------------------------------------------------
-// Core Types
+// Custom Errors
 // ===========================================================
 
 // ===========================================================
@@ -297,3 +329,7 @@ func StdRespDataUnmarshaler[D any](data []byte) (D, *RespBodyUnmarshalerError) {
 
 	return res, errUnmar
 }
+
+// -----------------------------------------------------------
+// Resp Data Unmarshaler
+// ===========================================================
