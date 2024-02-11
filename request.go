@@ -145,6 +145,20 @@ func (e *RequestError) SetErr(err error) *RequestError {
 
 // Request is the core of cex query.
 func Request[ReqDataType, RespDataType any](reqMaker ReqMaker, config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, opts ...ReqOpt) (*resty.Response, RespDataType, *RequestError) {
+	var resp *resty.Response
+	var data RespDataType
+	var err *RequestError
+	for i := 0; i < 3; i++ {
+		resp, data, err = request(reqMaker, config, reqData, opts...)
+		if err.Is(ErrInvalidTimestamp) {
+			continue
+		}
+		break
+	}
+	return resp, data, err
+}
+
+func request[ReqDataType, RespDataType any](reqMaker ReqMaker, config ReqConfig[ReqDataType, RespDataType], reqData ReqDataType, opts ...ReqOpt) (*resty.Response, RespDataType, *RequestError) {
 	reqErr := &RequestError{ReqBaseConfig: config.ReqBaseConfig}
 	respData := *new(RespDataType)
 
