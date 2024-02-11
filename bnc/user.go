@@ -1,6 +1,7 @@
 package bnc
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/dwdwow/cex"
 	"github.com/dwdwow/s2m"
@@ -69,8 +70,16 @@ func (u User) makePrivateReq(config cex.ReqBaseConfig, reqData any, opts ...cex.
 	return req, nil
 }
 
-func (u User) CheckResp(response *resty.Response, request *resty.Request) error {
-	return nil
+func (u User) CheckResp(resp *resty.Response, req *resty.Request) error {
+	body := resp.Body()
+	codeMsg := new(CodeMsg)
+	if err := json.Unmarshal(body, codeMsg); err != nil {
+		return nil
+	}
+	if codeMsg.Code >= 0 {
+		return nil
+	}
+	return fmt.Errorf("bnc: msg:%v, code: %v", codeMsg.Msg, codeMsg.Code)
 }
 
 // ============================== requester end ==============================

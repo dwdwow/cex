@@ -242,3 +242,8 @@ const (
 	LTVAdDeriAdditional LTVAdjustDeriction = "ADDITIONAL"
 	LTVAdDeriReduced    LTVAdjustDeriction = "REDUCED"
 )
+
+type CodeMsg struct {
+	Code int    `json:"code,omitempty"`
+	Msg  string `json:"msg,omitempty"`
+}
