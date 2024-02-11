@@ -56,6 +56,11 @@ func (e *RespBodyUnmarshalerError) Is(target error) bool {
 	return e.Err != nil && errors.Is(e.Err, target)
 }
 
+func (e *RespBodyUnmarshalerError) SetErr(err error) *RespBodyUnmarshalerError {
+	e.Err = err
+	return e
+}
+
 // RespBodyUnmarshaler unmarshal HTTP response body.
 // Cex may have its own diy error code and msg.
 // Generally, these infos are contained in body,
@@ -209,14 +214,15 @@ func Request[ReqDataType, RespDataType any](reqMaker ReqMaker, config ReqConfig[
 		reqErr.Err = fmt.Errorf("cex: request, http err: %w, body unmarshal err: %w", errHttp, errBodyUnmarshal)
 	}
 
-	if reqErr.Err != nil {
+	if reqErr.Err == nil {
 		reqErr = nil
 	}
 
 	return resp, respData, reqErr
 }
 
-func StdRespDataUnmarshaler[D any](data []byte) (D, error) {
+func StdRespDataUnmarshaler[D any](data []byte) (D, *RespBodyUnmarshalerError) {
+	errUnmar := new(RespBodyUnmarshalerError)
 	respData := new(D)
 
 	respType := reflect.TypeOf(respData).Elem()
@@ -229,19 +235,20 @@ func StdRespDataUnmarshaler[D any](data []byte) (D, error) {
 	case reflect.Slice, reflect.Struct, reflect.Map:
 		err := json.Unmarshal(data, respData)
 		if err != nil {
-			return *respData, fmt.Errorf("unmarshal response body, %w", err)
+			return *respData, errUnmar.SetErr(fmt.Errorf("%w: unmarshal response body, %w", ErrJsonUnmarshal, err))
 		}
 		anyRes = any(*respData)
 	default:
-		return *respData, fmt.Errorf("response data type %v is not supported", respType.Kind())
+		return *respData, errUnmar.SetErr(fmt.Errorf("response data type %v is not supported", respType.Kind()))
 	}
 
 	res, ok := anyRes.(D)
 
-	var err error
 	if !ok {
-		err = fmt.Errorf("cex: cannot convert to %T", res)
+		errUnmar.Err = fmt.Errorf("cex: cannot convert to %T", res)
+	} else {
+		errUnmar = nil
 	}
 
-	return res, err
+	return res, errUnmar
 }

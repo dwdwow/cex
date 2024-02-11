@@ -2,10 +2,12 @@ package cex
 
 import "errors"
 
+// These std errors should be wrapped by other errors,
+// which can help callers to analyse error details.
 var (
 	ErrJsonMarshal   = errors.New("json marshal err")
 	ErrJsonUnmarshal = errors.New("json unmarshal err")
-	ErrS2M           = errors.New("s2m err")
+	ErrS2M           = errors.New("s2m switch err")
 
 	ErrHttpUnknown      = errors.New("http unknown error")
 	ErrHttpBadRequest   = errors.New("http bad request")

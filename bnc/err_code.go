@@ -38,3 +38,7 @@ func HttpStatusCodeChecker(code int) error {
 	}
 	return cex.ErrHttpUnknown
 }
+
+var cexCustomErrCodes = map[int]error{
+	-1021: cex.ErrInvalidTimestamp,
+}
