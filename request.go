@@ -97,6 +97,8 @@ func Request[ReqDataType, RespDataType any](handler Requester, config ReqConfig[
 	}
 
 	if resp == nil {
+		// should not be here
+		// if getting here, resty has bug
 		return *respData, fmt.Errorf("cex: http method %v is not supported", config.Method)
 	}
 

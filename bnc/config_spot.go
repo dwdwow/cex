@@ -61,7 +61,7 @@ type SpotBalance struct {
 	Locked float64 `json:"locked,string"`
 }
 
-type SpotAccountInfo struct {
+type SpotAccount struct {
 	MakerCommission  float64 `json:"makerCommission" bson:"makerCommission"`
 	TakerCommission  float64 `json:"takerCommission" bson:"takerCommission"`
 	BuyerCommission  float64 `json:"buyerCommission" bson:"buyerCommission"`
@@ -83,10 +83,10 @@ type SpotAccountInfo struct {
 	Permissions                []TradeType   `json:"permissions" bson:"permissions"`
 }
 
-var SpotAccountConfig = cex.ReqConfig[cex.EmptyReqData, SpotAccountInfo]{
+var SpotAccountConfig = cex.ReqConfig[cex.EmptyReqData, SpotAccount]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:               ApiBaseUrl,
-		Path:                  SapiV1 + "/account",
+		Path:                  ApiV3 + "/account",
 		Method:                http.MethodGet,
 		IsUserData:            true,
 		UserTimeInterval:      0,
