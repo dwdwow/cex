@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"github.com/dwdwow/cex"
 	"github.com/dwdwow/cex/bnc"
+	"github.com/dwdwow/cex/test/cextest"
 	"testing"
 )
 
 func readApiKey() cex.Api {
-	apiKeys := MustReadApiKey()
+	apiKeys := cextest.MustReadApiKey()
 	apiKey, ok := apiKeys[cex.BINANCE]
 	if !ok {
 		panic("no binance api key")

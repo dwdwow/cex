@@ -1,4 +1,4 @@
-package bnctest
+package cextest
 
 import (
 	"github.com/dwdwow/cex"
