@@ -54,3 +54,44 @@ var CoinInfoConfig = cex.ReqConfig[cex.EmptyReqData, []CoinInfo]{
 		CexCustomCodeChecker:  CustomRespCodeChecker,
 	},
 }
+
+type SpotBalance struct {
+	Asset  string  `json:"asset"`
+	Free   float64 `json:"free,string"`
+	Locked float64 `json:"locked,string"`
+}
+
+type SpotAccountInfo struct {
+	MakerCommission  float64 `json:"makerCommission" bson:"makerCommission"`
+	TakerCommission  float64 `json:"takerCommission" bson:"takerCommission"`
+	BuyerCommission  float64 `json:"buyerCommission" bson:"buyerCommission"`
+	SellerCommission float64 `json:"sellerCommission" bson:"sellerCommission"`
+	CommissionRates  struct {
+		Maker  float64 `json:"maker,string" bson:"maker"`
+		Taker  float64 `json:"taker,string" bson:"taker"`
+		Buyer  float64 `json:"buyer,string" bson:"buyer"`
+		Seller float64 `json:"seller,string" bson:"seller"`
+	} `json:"commissionRates" bson:"commissionRates"`
+	CanTrade                   bool          `json:"canTrade" bson:"canTrade"`
+	CanWithdraw                bool          `json:"canWithdraw" bson:"canWithdraw"`
+	CanDeposit                 bool          `json:"canDeposit" bson:"canDeposit"`
+	Brokered                   bool          `json:"brokered" bson:"brokered"`
+	RequireSelfTradePrevention bool          `json:"requireSelfTradePrevention" bson:"requireSelfTradePrevention"`
+	UpdateTime                 int64         `json:"updateTime" bson:"updateTime"`
+	AccountType                AcctType      `json:"accountType" bson:"accountType"`
+	Balances                   []SpotBalance `json:"balances" bson:"balances"`
+	Permissions                []TradeType   `json:"permissions" bson:"permissions"`
+}
+
+var SpotAccountConfig = cex.ReqConfig[cex.EmptyReqData, SpotAccountInfo]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:               ApiBaseUrl,
+		Path:                  SapiV1 + "/account",
+		Method:                http.MethodGet,
+		IsUserData:            true,
+		UserTimeInterval:      0,
+		IpTimeInterval:        0,
+		HttpStatusCodeChecker: HttpStatusCodeChecker,
+		CexCustomCodeChecker:  CustomRespCodeChecker,
+	},
+}

@@ -27,3 +27,14 @@ func TestCoinInfo(t *testing.T) {
 	data, _ := json.MarshalIndent(respData, "", "  ")
 	fmt.Println(string(data))
 }
+
+func TestSpotAccount(t *testing.T) {
+	apiKey := readApiKey()
+	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
+	respData, err := cex.Request(user, bnc.SpotAccountConfig, nil)
+	if err != nil {
+		panic(err)
+	}
+	data, _ := json.MarshalIndent(respData, "", "  ")
+	fmt.Println(string(data))
+}
