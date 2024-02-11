@@ -120,3 +120,37 @@ var UniversalTransferConfig = cex.ReqConfig[UniversalTransferReq, UniversalTrans
 		CexCustomCodeChecker:  CustomRespCodeChecker,
 	},
 }
+
+type FlexibleProductListReq struct {
+	Asset   string `s2m:"asset,omitempty"`
+	Current int64  `s2m:"current,omitempty"`
+	Size    int64  `s2m:"size,omitempty"`
+}
+
+type FlexibleProduct struct {
+	Asset                      string            `json:"asset"`
+	LatestAnnualPercentageRate float64           `json:"latestAnnualPercentageRate,string"`
+	TierAnnualPercentageRate   map[string]string `json:"tierAnnualPercentageRate"`
+	AirDropPercentageRate      float64           `json:"airDropPercentageRate,string"`
+	CanPurchase                bool              `json:"canPurchase"`
+	CanRedeem                  bool              `json:"canRedeem"`
+	IsSoldOut                  bool              `json:"isSoldOut"`
+	Hot                        bool              `json:"hot"`
+	MinPurchaseAmount          float64           `json:"minPurchaseAmount,string"`
+	ProductId                  string            `json:"productId"`
+	SubscriptionStartTime      int64             `json:"subscriptionStartTime"`
+	Status                     string            `json:"status"`
+}
+
+var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListReq, []FlexibleProduct]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:               ApiBaseUrl,
+		Path:                  SapiV1 + "/simple-earn/flexible/list",
+		Method:                http.MethodGet,
+		IsUserData:            true,
+		UserTimeInterval:      0,
+		IpTimeInterval:        0,
+		HttpStatusCodeChecker: HttpStatusCodeChecker,
+		CexCustomCodeChecker:  CustomRespCodeChecker,
+	},
+}
