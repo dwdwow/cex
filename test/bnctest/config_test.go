@@ -56,3 +56,16 @@ func TestUniversalTransfer(t *testing.T) {
 	data, _ := json.MarshalIndent(respData, "", "  ")
 	fmt.Println(string(data))
 }
+
+func TestFlexibleProduct(t *testing.T) {
+	apiKey := readApiKey()
+	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
+	_, respData, err := cex.Request(user, bnc.FlexibleProductConfig, bnc.FlexibleProductListReq{
+		Asset: "BTC",
+	})
+	if err != nil {
+		panic(err)
+	}
+	data, _ := json.MarshalIndent(respData, "", "  ")
+	fmt.Println(string(data))
+}
