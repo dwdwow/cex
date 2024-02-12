@@ -42,4 +42,5 @@ func HTTPStatusCodeChecker(code int) error {
 
 var cexCustomErrCodes = map[int]error{
 	-1021: cex.ErrInvalidTimestamp,
+	-2011: cex.ErrUnknownOrder,
 }

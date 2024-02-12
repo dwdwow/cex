@@ -21,4 +21,5 @@ var (
 	ErrInvalidTimestamp    = errors.New("invalid timestamp")
 	ErrInsufficientBalance = errors.New("insufficient balance")
 	ErrOrderRejected       = errors.New("order is rejected")
+	ErrUnknownOrder        = errors.New("unknown order")
 )
