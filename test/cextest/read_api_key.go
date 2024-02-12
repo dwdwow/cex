@@ -44,6 +44,6 @@ func MarshalIndent(v any) string {
 
 func PanicIfErr(err error) {
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 }

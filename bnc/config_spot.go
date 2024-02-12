@@ -227,7 +227,7 @@ type FlexibleOngoingOrder struct {
 	CurrentLTV       float64 `json:"currentLTV,string" bson:"currentLTV"`
 }
 
-var FlexibleOnGoingOrdersConfig = cex.ReqConfig[FlexibleOngoingOrdersParams, Page[[]FlexibleOngoingOrder]]{
+var FlexibleOngoingOrdersConfig = cex.ReqConfig[FlexibleOngoingOrdersParams, Page[[]FlexibleOngoingOrder]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/loan/flexible/ongoing/orders",
