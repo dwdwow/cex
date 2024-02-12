@@ -455,7 +455,7 @@ var FlexibleCollateralCoinsConfig = cex.ReqConfig[FlexibleCollateralCoinsParams,
 // Spot Trading
 // ---------------------------------------------
 
-type NewSpotOrderParams struct {
+type SpotNewOrderParams struct {
 	Symbol                  string                      `s2m:"symbol,omitempty"`
 	Type                    OrderType                   `s2m:"type,omitempty"`
 	Side                    OrderSide                   `s2m:"side,omitempty"`
@@ -473,7 +473,7 @@ type NewSpotOrderParams struct {
 	SelfTradePreventionMode SpotSelfTradePreventionMode `s2m:"selfTradePreventionMode,omitempty"` // The allowed enums is dependent on what is configured on the symbol.The possible supported values are EXPIRE_TAKER, EXPIRE_MAKER, EXPIRE_BOTH, NONE.
 }
 
-type NewSpotOrderFill struct {
+type SpotOrderFill struct {
 	Price           float64 `json:"price,string"`
 	Qty             float64 `json:"qty,string"`
 	Commission      float64 `json:"commission,string"`
@@ -497,7 +497,7 @@ type SpotOrderResult struct {
 	Type                    OrderType                   `json:"type"`
 	Side                    OrderSide                   `json:"side"`
 	SelfTradePreventionMode SpotSelfTradePreventionMode `json:"selfTradePreventionMode"`
-	Fills                   []NewSpotOrderFill          `json:"fills"`
+	Fills                   []SpotOrderFill             `json:"fills"`
 
 	// new order result
 	WorkingTime int64 `json:"workingTime"`
@@ -506,7 +506,7 @@ type SpotOrderResult struct {
 	OrigClientOrderId string `json:"origClientOrderId"`
 }
 
-var NewSpotOrderConfig = cex.ReqConfig[NewSpotOrderParams, SpotOrderResult]{
+var SpotNewOrderConfig = cex.ReqConfig[SpotNewOrderParams, SpotOrderResult]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             ApiV3 + "/order",
@@ -519,7 +519,7 @@ var NewSpotOrderConfig = cex.ReqConfig[NewSpotOrderParams, SpotOrderResult]{
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrderResult]),
 }
 
-type CancelSpotOrderParams struct {
+type SpotCancelOrderParams struct {
 	Symbol             string                     `s2m:"symbol,omitempty"`
 	OrderId            int64                      `s2m:"orderId,omitempty"`
 	OrigClientOrderId  string                     `s2m:"origClientOrderId,omitempty"`
@@ -527,7 +527,7 @@ type CancelSpotOrderParams struct {
 	CancelRestrictions SpotOrderCancelRestriction `s2m:"cancelRestrictions,omitempty"` // Supported values: ONLY_NEW - Cancel will succeed if the order status is NEW. ONLY_PARTIALLY_FILLED - Cancel will succeed if order status is PARTIALLY_FILLED
 }
 
-var CancelSpotOrderConfig = cex.ReqConfig[CancelSpotOrderParams, SpotOrderResult]{
+var SpotCancelOrderConfig = cex.ReqConfig[SpotCancelOrderParams, SpotOrderResult]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             ApiV3 + "/order",
@@ -540,11 +540,11 @@ var CancelSpotOrderConfig = cex.ReqConfig[CancelSpotOrderParams, SpotOrderResult
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrderResult]),
 }
 
-type CancelAllOpenOrdersParams struct {
+type SpotCancelAllOpenOrdersParams struct {
 	Symbol string `s2m:"symbol,omitempty"`
 }
 
-var CancelAllOpenOrdersConfig = cex.ReqConfig[CancelAllOpenOrdersParams, []SpotOrderResult]{
+var SpotCancelAllOpenOrdersConfig = cex.ReqConfig[SpotCancelAllOpenOrdersParams, []SpotOrderResult]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             ApiV3 + "/openOrders",

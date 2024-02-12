@@ -141,7 +141,7 @@ func TestFlexibleCollateralCoins(t *testing.T) {
 }
 
 func TestNewSpotOrder(t *testing.T) {
-	testConfig(bnc.NewSpotOrderConfig, bnc.NewSpotOrderParams{
+	testConfig(bnc.SpotNewOrderConfig, bnc.SpotNewOrderParams{
 		Symbol:                  "ETHUSDT",
 		Type:                    bnc.OrderTypeLimit,
 		Side:                    bnc.OrderSideBuy,
@@ -161,7 +161,7 @@ func TestNewSpotOrder(t *testing.T) {
 }
 
 func TestCancelSpotOder(t *testing.T) {
-	testConfig(bnc.CancelSpotOrderConfig, bnc.CancelSpotOrderParams{
+	testConfig(bnc.SpotCancelOrderConfig, bnc.SpotCancelOrderParams{
 		Symbol:             "ETHUSDT",
 		OrderId:            0,
 		OrigClientOrderId:  "",
@@ -170,8 +170,8 @@ func TestCancelSpotOder(t *testing.T) {
 	})
 }
 
-func TestCancelAllOpenOrders(t *testing.T) {
-	testConfig(bnc.CancelAllOpenOrdersConfig, bnc.CancelAllOpenOrdersParams{
+func TestCancelAllSpotOpenOrders(t *testing.T) {
+	testConfig(bnc.SpotCancelAllOpenOrdersConfig, bnc.SpotCancelAllOpenOrdersParams{
 		Symbol: "ETHUSDT",
 	})
 }
