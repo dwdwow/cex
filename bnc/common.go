@@ -236,11 +236,11 @@ const (
 	ExchangeTrading ExchangeStatus = "TRADING"
 )
 
-type LTVAdjustDeriction string
+type LTVAdjustDirection string
 
 const (
-	LTVAdDeriAdditional LTVAdjustDeriction = "ADDITIONAL"
-	LTVAdDeriReduced    LTVAdjustDeriction = "REDUCED"
+	LTVAdDireAdditional LTVAdjustDirection = "ADDITIONAL"
+	LTVAdDireReduced    LTVAdjustDirection = "REDUCED"
 )
 
 type CryptoLoanIncomeType string

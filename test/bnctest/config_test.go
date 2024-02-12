@@ -135,3 +135,16 @@ func TestFlexibleRepayHistories(t *testing.T) {
 	props.PanicIfNotNil(err)
 	props.PrintlnIndent(respData)
 }
+
+func TestFlexibleAdjustLtv(t *testing.T) {
+	apiKey := readApiKey()
+	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
+	_, respData, err := cex.Request(user, bnc.FlexibleLoanAdjustLtvConfig, bnc.FlexibleLoanAdjustLtvParams{
+		LoanCoin:         "USDT",
+		CollateralCoin:   "ETH",
+		AdjustmentAmount: 0.05,
+		Direction:        bnc.LTVAdDireReduced,
+	})
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(respData)
+}
