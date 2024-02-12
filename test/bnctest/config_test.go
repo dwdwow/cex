@@ -91,3 +91,18 @@ func TestFlexibleOngoingOrders(t *testing.T) {
 	props.PanicIfNotNil(err)
 	props.PrintlnIndent(respData)
 }
+
+func TestFlexibleBorrowHistories(t *testing.T) {
+	apiKey := readApiKey()
+	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
+	_, respData, err := cex.Request(user, bnc.FlexibleBorrowHistoriesConfig, bnc.FlexibleBorrowHistoriesParams{
+		LoanCoin:       "USDT",
+		CollateralCoin: "ETH",
+		StartTime:      0,
+		EndTime:        0,
+		Current:        0,
+		Limit:          0,
+	})
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(respData)
+}

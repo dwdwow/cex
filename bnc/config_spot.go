@@ -240,3 +240,34 @@ var FlexibleOngoingOrdersConfig = cex.ReqConfig[FlexibleOngoingOrdersParams, Pag
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleOngoingOrder]]),
 }
+
+type FlexibleBorrowHistoriesParams struct {
+	LoanCoin       string `s2m:"loanCoin,omitempty"`
+	CollateralCoin string `s2m:"collateralCoin,omitempty"`
+	StartTime      int64  `s2m:"startTime,omitempty"`
+	EndTime        int64  `s2m:"endTime,omitempty"`
+	Current        int64  `s2m:"current,omitempty"` // default: 1, max: 1000
+	Limit          int64  `s2m:"limit,omitempty"`   // default: 10, max: 100
+}
+
+type FlexibleBorrowHistory struct {
+	LoanCoin                string               `json:"loanCoin"`
+	InitialLoanAmount       string               `json:"initialLoanAmount"`
+	CollateralCoin          string               `json:"collateralCoin"`
+	InitialCollateralAmount string               `json:"initialCollateralAmount"`
+	BorrowTime              int64                `json:"borrowTime"`
+	Status                  FlexibleBorrowStatus `json:"status"`
+}
+
+var FlexibleBorrowHistoriesConfig = cex.ReqConfig[FlexibleBorrowHistoriesParams, Page[[]FlexibleBorrowHistory]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/flexible/borrow/history",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleBorrowHistory]]),
+}
