@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/go-resty/resty/v2"
 	"net/http"
 	"reflect"
+
+	"github.com/go-resty/resty/v2"
 )
 
 // =========================================================== \\

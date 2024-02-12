@@ -1,11 +1,12 @@
 package bnctest
 
 import (
+	"testing"
+
 	"github.com/dwdwow/cex"
 	"github.com/dwdwow/cex/bnc"
 	"github.com/dwdwow/cex/test/cextest"
 	"github.com/dwdwow/props"
-	"testing"
 )
 
 func readApiKey() cex.Api {

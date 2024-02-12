@@ -2,8 +2,9 @@ package bnc
 
 import (
 	"errors"
-	"github.com/dwdwow/cex"
 	"net/http"
+
+	"github.com/dwdwow/cex"
 )
 
 var (

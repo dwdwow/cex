@@ -1,8 +1,9 @@
 package bnc
 
 import (
-	"github.com/dwdwow/cex"
 	"net/http"
+
+	"github.com/dwdwow/cex"
 )
 
 type CoinInfo struct {

@@ -3,6 +3,7 @@ package bnc
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/dwdwow/cex"
 )
 

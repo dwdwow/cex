@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/dwdwow/cex"
-	"github.com/dwdwow/s2m"
-	"github.com/go-resty/resty/v2"
 	"net/url"
 	"strconv"
 	"time"
+
+	"github.com/dwdwow/cex"
+	"github.com/dwdwow/s2m"
+	"github.com/go-resty/resty/v2"
 )
 
 type User struct {

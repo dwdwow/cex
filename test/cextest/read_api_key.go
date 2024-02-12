@@ -1,9 +1,10 @@
 package cextest
 
 import (
+	"os"
+
 	"github.com/dwdwow/cex"
 	"gopkg.in/yaml.v3"
-	"os"
 )
 
 const (
