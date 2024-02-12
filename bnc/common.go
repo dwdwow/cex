@@ -247,3 +247,8 @@ type CodeMsg struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
 }
+
+type Page[Slice any] struct {
+	Rows  Slice `json:"rows"`
+	Total int   `json:"total"`
+}
