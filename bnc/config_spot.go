@@ -353,7 +353,7 @@ var FlexibleLoanAdjustLtvConfig = cex.ReqConfig[FlexibleLoanAdjustLtvParams, Fle
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/loan/flexible/adjust/ltv",
-		Method:           http.MethodGet,
+		Method:           http.MethodPost,
 		IsUserData:       true,
 		UserTimeInterval: 0,
 		IpTimeInterval:   0,
