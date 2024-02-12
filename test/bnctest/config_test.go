@@ -18,84 +18,66 @@ func readApiKey() cex.Api {
 	return apiKey
 }
 
-func TestCoinInfo(t *testing.T) {
+func testConfig[ReqDataType, RespDataType any](
+	config cex.ReqConfig[ReqDataType, RespDataType],
+	reqData ReqDataType,
+	opts ...cex.ReqOpt,
+) {
 	apiKey := readApiKey()
 	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	_, respData, err := cex.Request(user, bnc.CoinInfoConfig, nil)
+	_, respData, err := cex.Request(user, config, reqData, opts...)
 	props.PanicIfNotNil(err)
 	props.PrintlnIndent(respData)
+}
+
+func TestCoinInfo(t *testing.T) {
+	testConfig(bnc.CoinInfoConfig, nil)
 }
 
 func TestSpotAccount(t *testing.T) {
-	apiKey := readApiKey()
-	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	_, respData, err := cex.Request(user, bnc.SpotAccountConfig, nil)
-	props.PanicIfNotNil(err)
-	props.PrintlnIndent(respData)
+	testConfig(bnc.SpotAccountConfig, nil)
 }
 
 func TestUniversalTransfer(t *testing.T) {
-	apiKey := readApiKey()
-	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	_, respData, err := cex.Request(user, bnc.UniversalTransferConfig, bnc.UniversalTransferParams{
+	testConfig(bnc.UniversalTransferConfig, bnc.UniversalTransferParams{
 		Type:       bnc.TranType_MAIN_UMFUTURE,
 		Asset:      "USDT",
 		Amount:     10,
 		FromSymbol: "",
 		ToSymbol:   "",
 	})
-	props.PanicIfNotNil(err)
-	props.PrintlnIndent(respData)
 }
 
 func TestFlexibleProduct(t *testing.T) {
-	apiKey := readApiKey()
-	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	_, respData, err := cex.Request(user, bnc.FlexibleProductConfig, bnc.FlexibleProductListParams{
+	testConfig(bnc.FlexibleProductConfig, bnc.FlexibleProductListParams{
 		Asset: "BTC",
 	})
-	props.PanicIfNotNil(err)
-	props.PrintlnIndent(respData)
 }
 
 func TestCryptoLoansIncomeHistories(t *testing.T) {
-	apiKey := readApiKey()
-	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	_, respData, err := cex.Request(user, bnc.CryptoLoansIncomeHistoriesConfig, bnc.CryptoLoansIncomeHistoriesParams{})
-	props.PanicIfNotNil(err)
-	props.PrintlnIndent(respData)
+	testConfig(bnc.CryptoLoansIncomeHistoriesConfig, bnc.CryptoLoansIncomeHistoriesParams{})
 }
 
 func TestFlexibleBorrow(t *testing.T) {
-	apiKey := readApiKey()
-	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	_, respData, err := cex.Request(user, bnc.FlexibleBorrowConfig, bnc.FlexibleBorrowParams{
+	testConfig(bnc.FlexibleBorrowConfig, bnc.FlexibleBorrowParams{
 		LoanCoin:         "USDT",
 		LoanAmount:       100,
 		CollateralCoin:   "ETH",
 		CollateralAmount: 0,
 	})
-	props.PanicIfNotNil(err)
-	props.PrintlnIndent(respData)
 }
 
 func TestFlexibleOngoingOrders(t *testing.T) {
-	apiKey := readApiKey()
-	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	_, respData, err := cex.Request(user, bnc.FlexibleOngoingOrdersConfig, bnc.FlexibleOngoingOrdersParams{
+	testConfig(bnc.FlexibleOngoingOrdersConfig, bnc.FlexibleOngoingOrdersParams{
 		LoanCoin:       "USDT",
 		CollateralCoin: "ETH",
 		Current:        0,
 		Limit:          0,
 	})
-	props.PanicIfNotNil(err)
-	props.PrintlnIndent(respData)
 }
 
 func TestFlexibleBorrowHistories(t *testing.T) {
-	apiKey := readApiKey()
-	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	_, respData, err := cex.Request(user, bnc.FlexibleBorrowHistoriesConfig, bnc.FlexibleBorrowHistoriesParams{
+	testConfig(bnc.FlexibleBorrowHistoriesConfig, bnc.FlexibleBorrowHistoriesParams{
 		LoanCoin:       "USDT",
 		CollateralCoin: "ETH",
 		StartTime:      0,
@@ -103,28 +85,20 @@ func TestFlexibleBorrowHistories(t *testing.T) {
 		Current:        0,
 		Limit:          0,
 	})
-	props.PanicIfNotNil(err)
-	props.PrintlnIndent(respData)
 }
 
 func TestFlexibleRepay(t *testing.T) {
-	apiKey := readApiKey()
-	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	_, respData, err := cex.Request(user, bnc.FlexibleRepayConfig, bnc.FlexibleRepayParams{
+	testConfig(bnc.FlexibleRepayConfig, bnc.FlexibleRepayParams{
 		LoanCoin:         "USDT",
 		CollateralCoin:   "ETH",
 		RepayAmount:      100,
 		CollateralReturn: bnc.TRUE,
 		FullRepayment:    bnc.FALSE,
 	})
-	props.PanicIfNotNil(err)
-	props.PrintlnIndent(respData)
 }
 
 func TestFlexibleRepayHistories(t *testing.T) {
-	apiKey := readApiKey()
-	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	_, respData, err := cex.Request(user, bnc.FlexibleRepaymentHistoriesConfig, bnc.FlexibleRepaymentHistoriesParams{
+	testConfig(bnc.FlexibleRepaymentHistoriesConfig, bnc.FlexibleRepaymentHistoriesParams{
 		LoanCoin:       "",
 		CollateralCoin: "",
 		StartTime:      0,
@@ -132,19 +106,13 @@ func TestFlexibleRepayHistories(t *testing.T) {
 		Current:        0,
 		Limit:          0,
 	})
-	props.PanicIfNotNil(err)
-	props.PrintlnIndent(respData)
 }
 
 func TestFlexibleAdjustLtv(t *testing.T) {
-	apiKey := readApiKey()
-	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	_, respData, err := cex.Request(user, bnc.FlexibleLoanAdjustLtvConfig, bnc.FlexibleLoanAdjustLtvParams{
+	testConfig(bnc.FlexibleLoanAdjustLtvConfig, bnc.FlexibleLoanAdjustLtvParams{
 		LoanCoin:         "USDT",
 		CollateralCoin:   "ETH",
 		AdjustmentAmount: 0.05,
 		Direction:        bnc.LTVAdDireReduced,
 	})
-	props.PanicIfNotNil(err)
-	props.PrintlnIndent(respData)
 }
