@@ -207,6 +207,13 @@ const (
 	SpotSelfTradePreventionMode_NONE         SpotSelfTradePreventionMode = "NONE"
 )
 
+type SpotOrderCancelRestriction string
+
+const (
+	SpotOrderCancelRestriction_ONLY_NEW              SpotOrderCancelRestriction = "ONLY_NEW"
+	SpotOrderCancelRestriction_ONLY_PARTIALLY_FILLED SpotOrderCancelRestriction = "ONLY_PARTIALLY_FILLED"
+)
+
 type Network string
 
 const (
