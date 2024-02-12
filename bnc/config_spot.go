@@ -417,3 +417,28 @@ var FlexibleLoanAssetsConfig = cex.ReqConfig[FlexibleLoanAssetsParams, Page[[]Fl
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleLoanAsset]]),
 }
+
+type FlexibleCollateralCoinsParams struct {
+	CollateralCoin string `s2m:"collateralCoin,omitempty"`
+}
+
+type FlexibleCollateralCoin struct {
+	CollateralCoin string  `json:"collateralCoin"`
+	InitialLTV     float64 `json:"initialLTV,string"`
+	MarginCallLTV  float64 `json:"marginCallLTV,string"`
+	LiquidationLTV float64 `json:"liquidationLTV,string"`
+	MaxLimit       float64 `json:"maxLimit,string"`
+}
+
+var FlexibleCollateralCoinsConfig = cex.ReqConfig[FlexibleCollateralCoinsParams, Page[[]FlexibleCollateralCoin]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/flexible/collateral/data",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleCollateralCoin]]),
+}

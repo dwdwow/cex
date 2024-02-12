@@ -133,3 +133,9 @@ func TestFlexibleLoanAssets(t *testing.T) {
 		LoanCoin: "",
 	})
 }
+
+func TestFlexibleCollateralCoins(t *testing.T) {
+	testConfig(bnc.FlexibleCollateralCoinsConfig, bnc.FlexibleCollateralCoinsParams{
+		CollateralCoin: "",
+	})
+}
