@@ -120,3 +120,18 @@ func TestFlexibleRepay(t *testing.T) {
 	props.PanicIfNotNil(err)
 	props.PrintlnIndent(respData)
 }
+
+func TestFlexibleRepayHistories(t *testing.T) {
+	apiKey := readApiKey()
+	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
+	_, respData, err := cex.Request(user, bnc.FlexibleRepaymentHistoriesConfig, bnc.FlexibleRepaymentHistoriesParams{
+		LoanCoin:       "",
+		CollateralCoin: "",
+		StartTime:      0,
+		EndTime:        0,
+		Current:        0,
+		Limit:          0,
+	})
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(respData)
+}

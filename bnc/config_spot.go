@@ -302,3 +302,34 @@ var FlexibleRepayConfig = cex.ReqConfig[FlexibleRepayParams, FlexibleRepayResult
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleRepayResult]),
 }
+
+type FlexibleRepaymentHistoriesParams struct {
+	LoanCoin       string `s2m:"loanCoin,omitempty"`
+	CollateralCoin string `s2m:"collateralCoin,omitempty"`
+	StartTime      int64  `s2m:"startTime,omitempty"`
+	EndTime        int64  `s2m:"endTime,omitempty"`
+	Current        int64  `s2m:"current,omitempty"` //	start from 1; default: 1; max: 1000
+	Limit          int64  `s2m:"limit,omitempty"`   // default: 10; max: 100
+}
+
+type FlexibleRepaymentHistory struct {
+	LoanCoin         string              `json:"loanCoin"`
+	RepayAmount      float64             `json:"repayAmount,string"`
+	CollateralCoin   string              `json:"collateralCoin"`
+	CollateralReturn float64             `json:"collateralReturn,string"`
+	RepayStatus      FlexibleRepayStatus `json:"repayStatus"`
+	RepayTime        int64               `json:"repayTime"`
+}
+
+var FlexibleRepaymentHistoriesConfig = cex.ReqConfig[FlexibleRepaymentHistoriesParams, Page[[]FlexibleRepaymentHistory]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/flexible/repay/history",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleRepaymentHistory]]),
+}
