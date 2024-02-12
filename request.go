@@ -28,9 +28,11 @@ import (
 // to custom response analysing.
 // After above works, whenever add new REST api, developer could just add
 // new ReqConfig, and some very simple REST functions in exchange packages.
+// Can see code in bnc(binance) package.
 //
 // Callers just need to find target ReqConfig in the target exchange package,
 // and add opts appending needs, Request will do other things.
+// Package bnctest has many examples.
 //
 // Structured request error, RequestError, will help callers to check more
 // details of error occurred during resting.
@@ -114,27 +116,25 @@ func request[ReqDataType, RespDataType any](
 
 	respData, errBodyUnmarshal := config.RespBodyUnmarshaler(resp.Body())
 
+	if errHttp == nil && errBodyUnmarshal == nil {
+		return resp, respData, nil
+	}
+
 	// some cex may set detailed error msg in body, while request failed
 	// so, collect http status and body data together
-	if errHttp != nil || errBodyUnmarshal != nil {
-		if errHttp != nil {
-			reqErr.HTTPError = &HTTPError{
-				StatusCode: resp.StatusCode(),
-				Status:     resp.Status(),
-				Err:        errHttp,
-			}
+	if errHttp != nil {
+		reqErr.HTTPError = &HTTPError{
+			StatusCode: resp.StatusCode(),
+			Status:     resp.Status(),
+			Err:        errHttp,
 		}
-
-		if errBodyUnmarshal != nil {
-			reqErr.RespBodyUnmarshalerError = errBodyUnmarshal
-		}
-
-		reqErr.Err = fmt.Errorf("cex: request, http err: %w, body unmarshal err: %w", errHttp, errBodyUnmarshal)
 	}
 
-	if reqErr.Err == nil {
-		reqErr = nil
+	if errBodyUnmarshal != nil {
+		reqErr.RespBodyUnmarshalerError = errBodyUnmarshal
 	}
+
+	reqErr.Err = fmt.Errorf("cex: request, http err: %w, body unmarshal err: %w", errHttp, errBodyUnmarshal)
 
 	return resp, respData, reqErr
 }
