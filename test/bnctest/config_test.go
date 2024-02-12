@@ -185,11 +185,11 @@ func TestSpotQueryOrder(t *testing.T) {
 }
 
 func TestSpotReplaceOrder(t *testing.T) {
-	testConfig(bnc.SpotCancelNewOrderConfig, bnc.SpotCancelNewOrderParams{
+	testConfig(bnc.SpotReplaceOrderConfig, bnc.SpotReplaceOrderParams{
 		Symbol:                  "ETHUSDT",
 		Type:                    bnc.OrderTypeLimit,
 		Side:                    bnc.OrderSideSell,
-		CancelReplaceMode:       "",
+		CancelReplaceMode:       bnc.SpotCancelReplaceMode_STOP_ON_FAILURE,
 		TimeInForce:             bnc.TimeInForceGtc,
 		Quantity:                0.01,
 		QuoteOrderQty:           0,

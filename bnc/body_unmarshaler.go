@@ -68,10 +68,35 @@ func bodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 	}
 }
 
-func spotOrderCancelReplaceUnmarshaler(body []byte) (SpotCancelNewOrderResult, *cex.RespBodyUnmarshalerError) {
-	result := SpotCancelNewOrderResult{}
+func spotOrderReplaceUnmarshaler(body []byte) (SpotReplaceOrderResult, *cex.RespBodyUnmarshalerError) {
+	errCodeMsgCheck := bodyUnmshCodeMsg(body)
+	if errCodeMsgCheck == nil {
+		return spotSucceedOrderReplaceUnmarshaler(body)
+	}
+	return spotFailedOrderReplaceUnmarshaler(body)
+}
 
-	rawResult := new(SpotCancelNewOrderRawResult)
+func spotSucceedOrderReplaceUnmarshaler(body []byte) (SpotReplaceOrderResult, *cex.RespBodyUnmarshalerError) {
+	rawResult := new(SpotReplaceOrderRawData)
+	result := SpotReplaceOrderResult{}
+	err := json.Unmarshal(body, rawResult)
+	if err != nil {
+		return result, &cex.RespBodyUnmarshalerError{
+			CexErrCode: 0,
+			CexErrMsg:  "",
+			Err:        fmt.Errorf("%w: %w", cex.ErrJsonUnmarshal, err),
+		}
+	}
+	result.OK = true
+	result.OrderCancel = rawResult.CancelResponse
+	result.OrderNew = rawResult.NewOrderResponse
+	return result, nil
+}
+
+func spotFailedOrderReplaceUnmarshaler(body []byte) (SpotReplaceOrderResult, *cex.RespBodyUnmarshalerError) {
+	result := SpotReplaceOrderResult{}
+
+	rawResult := new(SpotReplaceOrderRawResult)
 	unmshErr := json.Unmarshal(body, rawResult)
 	if unmshErr != nil {
 		return result, &cex.RespBodyUnmarshalerError{
