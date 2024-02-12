@@ -318,7 +318,7 @@ type FlexibleRepaymentHistory struct {
 	CollateralCoin   string              `json:"collateralCoin"`
 	CollateralReturn float64             `json:"collateralReturn,string"`
 	RepayStatus      FlexibleRepayStatus `json:"repayStatus"`
-	RepayTime        int64               `json:"repayTime"`
+	RepayTime        int64               `json:"repayTime,string"`
 }
 
 var FlexibleRepaymentHistoriesConfig = cex.ReqConfig[FlexibleRepaymentHistoriesParams, Page[[]FlexibleRepaymentHistory]]{
