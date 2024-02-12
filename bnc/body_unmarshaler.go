@@ -6,43 +6,49 @@ import (
 	"github.com/dwdwow/cex"
 )
 
-func BodyUnmarshalerWrapper[D any](unmarshaler func([]byte) (D, *cex.RespBodyUnmarshalerError)) func([]byte) (D, *cex.RespBodyUnmarshalerError) {
+func bodyUnmshWrapper[D any](unmarshaler cex.RespBodyUnmarshaler[D]) cex.RespBodyUnmarshaler[D] {
 	return func(body []byte) (D, *cex.RespBodyUnmarshalerError) {
-		codeMsg := CodeMsg{}
-
-		_ = json.Unmarshal(body, &codeMsg)
-
-		code := codeMsg.Code
-		msg := codeMsg.Msg
-
-		if code == 0 {
-			return unmarshaler(body)
+		err := bodyUnmshCodeMsg(body)
+		if err != nil {
+			return *new(D), err
 		}
+		return unmarshaler(body)
+	}
+}
 
-		d := new(D)
+func bodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
+	codeMsg := CodeMsg{}
 
-		if code > 0 {
-			// should not get here
-			return *d, &cex.RespBodyUnmarshalerError{
-				CexErrCode: code,
-				CexErrMsg:  msg,
-				Err: fmt.Errorf(
-					"bnc: %w: code: %v, msg: %v",
-					cex.ErrUnexpected, code, msg,
-				),
-			}
-		}
+	_ = json.Unmarshal(body, &codeMsg)
 
-		errCtm := cexCustomErrCodes[code]
-		if errCtm == nil {
-			errCtm = fmt.Errorf("%v, %v", code, msg)
-		}
+	code := codeMsg.Code
+	msg := codeMsg.Msg
 
-		return *d, &cex.RespBodyUnmarshalerError{
+	if code == 0 {
+		return nil
+	}
+
+	if code > 0 {
+		// should not get here
+		return &cex.RespBodyUnmarshalerError{
 			CexErrCode: code,
 			CexErrMsg:  msg,
-			Err:        fmt.Errorf("bnc: %v", errCtm),
+			Err: fmt.Errorf(
+				"bnc: %w: code: %v, msg: %v",
+				cex.ErrUnexpected, code, msg,
+			),
 		}
+	}
+
+	errCtm := cexCustomErrCodes[code]
+	if errCtm == nil {
+		errCtm = fmt.Errorf("%v, %v", code, msg)
+	}
+
+	return &cex.RespBodyUnmarshalerError{
+		CexErrCode: code,
+		CexErrMsg:  msg,
+		Err:        fmt.Errorf("bnc: %v", errCtm),
 	}
 }
 
