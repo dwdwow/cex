@@ -488,7 +488,7 @@ type SpotOrderResult struct {
 	OrderListId             int64                       `json:"orderListId"` // Unless OCO, value will be -1
 	ClientOrderId           string                      `json:"clientOrderId"`
 	TransactTime            int64                       `json:"transactTime"`
-	Price                   string                      `json:"price"`
+	Price                   string                      `json:"price"` // origin price, if market order, it is 0
 	OrigQty                 string                      `json:"origQty"`
 	ExecutedQty             string                      `json:"executedQty"`
 	CummulativeQuoteQty     string                      `json:"cummulativeQuoteQty"`
@@ -497,13 +497,23 @@ type SpotOrderResult struct {
 	Type                    OrderType                   `json:"type"`
 	Side                    OrderSide                   `json:"side"`
 	SelfTradePreventionMode SpotSelfTradePreventionMode `json:"selfTradePreventionMode"`
-	Fills                   []SpotOrderFill             `json:"fills"`
 
 	// new order result
+	Fills []SpotOrderFill `json:"fills"`
+
+	// new order result, query order
 	WorkingTime int64 `json:"workingTime"`
 
 	// cancel order result
 	OrigClientOrderId string `json:"origClientOrderId"`
+
+	// query order
+	StopPrice         float64 `json:"stopPrice,string"`
+	IcebergQty        float64 `json:"icebergQty,string"`
+	Time              int64   `json:"time"`
+	UpdateTime        int64   `json:"updateTime"`
+	IsWorking         bool    `json:"isWorking"`
+	OrigQuoteOrderQty float64 `json:"origQuoteOrderQty,string"`
 }
 
 var SpotNewOrderConfig = cex.ReqConfig[SpotNewOrderParams, SpotOrderResult]{
@@ -555,6 +565,25 @@ var SpotCancelAllOpenOrdersConfig = cex.ReqConfig[SpotCancelAllOpenOrdersParams,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrderResult]),
+}
+
+type SpotQueryOrderParams struct {
+	Symbol            string `s2m:"symbol,omitempty"` // must
+	OrderId           int64  `s2m:"orderId,omitempty"`
+	OrigClientOrderId string `s2m:"origClientOrderId,omitempty"`
+}
+
+var SpotQueryOrderConfig = cex.ReqConfig[SpotQueryOrderParams, SpotOrderResult]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             ApiV3 + "/order",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrderResult]),
 }
 
 // ---------------------------------------------

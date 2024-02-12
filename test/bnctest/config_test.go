@@ -175,3 +175,11 @@ func TestCancelAllSpotOpenOrders(t *testing.T) {
 		Symbol: "ETHUSDT",
 	})
 }
+
+func TestSpotQueryOrder(t *testing.T) {
+	testConfig(bnc.SpotQueryOrderConfig, bnc.SpotQueryOrderParams{
+		Symbol:            "ETHUSDT",
+		OrderId:           0,
+		OrigClientOrderId: "",
+	})
+}
