@@ -393,3 +393,27 @@ var FlexibleAdjustLtvHistoriesConfig = cex.ReqConfig[FlexibleAdjustLtvHistoriesP
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleAdjustLtvHistory]]),
 }
+
+type FlexibleLoanAssetsParams struct {
+	LoanCoin string `s2m:"loanCoin,omitempty"`
+}
+
+type FlexibleLoanAsset struct {
+	LoanCoin             string  `json:"loanCoin"`
+	FlexibleInterestRate float64 `json:"flexibleInterestRate,string"`
+	FlexibleMinLimit     float64 `json:"flexibleMinLimit,string"`
+	FlexibleMaxLimit     float64 `json:"flexibleMaxLimit,string"`
+}
+
+var FlexibleLoanAssetsConfig = cex.ReqConfig[FlexibleLoanAssetsParams, Page[[]FlexibleLoanAsset]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/flexible/loanable/data",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleLoanAsset]]),
+}

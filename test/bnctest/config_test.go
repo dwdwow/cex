@@ -127,3 +127,9 @@ func TestFlexibleAdjustLtvHistories(t *testing.T) {
 		Limit:          0,
 	})
 }
+
+func TestFlexibleLoanAssets(t *testing.T) {
+	testConfig(bnc.FlexibleLoanAssetsConfig, bnc.FlexibleLoanAssetsParams{
+		LoanCoin: "",
+	})
+}
