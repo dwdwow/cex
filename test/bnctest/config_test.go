@@ -183,3 +183,28 @@ func TestSpotQueryOrder(t *testing.T) {
 		OrigClientOrderId: "",
 	})
 }
+
+func TestSpotReplaceOrder(t *testing.T) {
+	testConfig(bnc.SpotCancelNewOrderConfig, bnc.SpotCancelNewOrderParams{
+		Symbol:                  "ETHUSDT",
+		Type:                    bnc.OrderTypeLimit,
+		Side:                    bnc.OrderSideSell,
+		CancelReplaceMode:       "",
+		TimeInForce:             bnc.TimeInForceGtc,
+		Quantity:                0.01,
+		QuoteOrderQty:           0,
+		Price:                   3000,
+		CancelNewClientOrderId:  "",
+		CancelOrigClientOrderId: "",
+		CancelOrderId:           0,
+		NewClientOrderId:        "",
+		StrategyId:              0,
+		StrategyType:            0,
+		StopPrice:               0,
+		TrailingDelta:           0,
+		IcebergQty:              0,
+		NewOrderRespType:        "",
+		SelfTradePreventionMode: "",
+		CancelRestrictions:      "",
+	})
+}

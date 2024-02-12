@@ -40,7 +40,21 @@ func HTTPStatusCodeChecker(code int) error {
 	return cex.ErrHttpUnknown
 }
 
+var (
+	ErrOrderCancelReplacePartiallyFailed = errors.New("order cancel-replace partially failed")
+	ErrOrderCancelReplaceFailed          = errors.New("order cancel-replace failed")
+	ErrOrderWouldImmediatelyMatchAndTake = errors.New("order would immediately match and take")
+	ErrOrderNotAttempted                 = errors.New("order is not attempted")
+)
+
 var cexCustomErrCodes = map[int]error{
 	-1021: cex.ErrInvalidTimestamp,
+	-2010: ErrOrderWouldImmediatelyMatchAndTake,
 	-2011: cex.ErrUnknownOrder,
+	-2021: ErrOrderCancelReplacePartiallyFailed,
+	-2022: ErrOrderCancelReplaceFailed,
+}
+
+func CodeMsgChecker(code int) error {
+	return cexCustomErrCodes[code]
 }

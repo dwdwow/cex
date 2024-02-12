@@ -2,6 +2,7 @@ package bnc
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/dwdwow/cex"
@@ -64,5 +65,74 @@ func bodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 		CexErrCode: code,
 		CexErrMsg:  msg,
 		Err:        fmt.Errorf("bnc: %v", errCtm),
+	}
+}
+
+func spotOrderCancelReplaceUnmarshaler(body []byte) (SpotCancelNewOrderResult, *cex.RespBodyUnmarshalerError) {
+	result := SpotCancelNewOrderResult{}
+
+	rawResult := new(SpotCancelNewOrderRawResult)
+	unmshErr := json.Unmarshal(body, rawResult)
+	if unmshErr != nil {
+		return result, &cex.RespBodyUnmarshalerError{
+			CexErrCode: 0,
+			CexErrMsg:  "",
+			Err:        fmt.Errorf("%w: %w", cex.ErrJsonUnmarshal, unmshErr),
+		}
+	}
+
+	rawData := rawResult.Data
+
+	cancelResult := rawData.CancelResult
+	newResult := rawData.NewOrderResult
+
+	rawCancelResp := rawData.CancelResponse
+	rawNewResp := rawData.NewOrderResponse
+
+	result.OrderCancel = rawCancelResp
+	result.OrderNew = rawNewResp
+
+	// checking cancel result and new result is unnecessary
+	// just in case
+	rawResCode := rawResult.Code
+	if rawResCode == 0 &&
+		cancelResult == SpotOrderCancelNewStatus_SUCCESS &&
+		newResult == SpotOrderCancelNewStatus_SUCCESS {
+		result.OK = true
+		return result, nil
+	}
+
+	rawResMsg := rawResult.Msg
+	rawErr := CodeMsgChecker(rawResCode)
+	if rawErr == nil {
+		rawErr = errors.New(rawResMsg)
+	}
+
+	if cancelResult == SpotOrderCancelNewStatus_NOT_ATTEMPTED {
+		result.ErrCancel = ErrOrderNotAttempted
+	} else if cancelResult == SpotOrderCancelNewStatus_FAILURE {
+		code := rawCancelResp.Code
+		err := CodeMsgChecker(code)
+		if err == nil {
+			err = errors.New(rawCancelResp.Msg)
+		}
+		result.ErrCancel = err
+	}
+
+	if newResult == SpotOrderCancelNewStatus_NOT_ATTEMPTED {
+		result.ErrNew = ErrOrderNotAttempted
+	} else if newResult == SpotOrderCancelNewStatus_FAILURE {
+		code := rawNewResp.Code
+		err := CodeMsgChecker(code)
+		if err == nil {
+			err = errors.New(rawNewResp.Msg)
+		}
+		result.ErrNew = err
+	}
+
+	return result, &cex.RespBodyUnmarshalerError{
+		CexErrCode: rawResCode,
+		CexErrMsg:  rawResMsg,
+		Err:        rawErr,
 	}
 }

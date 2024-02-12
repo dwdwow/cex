@@ -214,6 +214,21 @@ const (
 	SpotOrderCancelRestriction_ONLY_PARTIALLY_FILLED SpotOrderCancelRestriction = "ONLY_PARTIALLY_FILLED"
 )
 
+type SpotCancelReplaceMode string
+
+const (
+	SpotCancelReplaceMode_STOP_ON_FAILURE SpotCancelReplaceMode = "STOP_ON_FAILURE"
+	SpotCancelReplaceMode_ALLOW_FAILURE   SpotCancelReplaceMode = "ALLOW_FAILURE"
+)
+
+type SpotOrderCancelNewStatus string
+
+const (
+	SpotOrderCancelNewStatus_SUCCESS       SpotOrderCancelNewStatus = "SUCCESS"
+	SpotOrderCancelNewStatus_FAILURE       SpotOrderCancelNewStatus = "FAILURE"
+	SpotOrderCancelNewStatus_NOT_ATTEMPTED SpotOrderCancelNewStatus = "NOT_ATTEMPTED"
+)
+
 type Network string
 
 const (
