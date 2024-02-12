@@ -219,3 +219,13 @@ func TestSpotReplaceOrder(t *testing.T) {
 func TestSpotCurrentOpenOrders(t *testing.T) {
 	testConfig(bnc.SpotCurrentOpenOrdersConfig, bnc.SpotCurrentOpenOrdersParams{Symbol: ""})
 }
+
+func TestSpotAllOrders(t *testing.T) {
+	testConfig(bnc.SpotAllOrdersConfig, bnc.SpotAllOrdersParams{
+		Symbol:    "ETHUSDT",
+		OrderId:   0,
+		StartTime: 0,
+		EndTime:   0,
+		Limit:     0,
+	})
+}

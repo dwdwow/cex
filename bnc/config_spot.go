@@ -503,13 +503,13 @@ type SpotOrderResult struct {
 	// new order result, cancel new (replace) order
 	Fills []SpotOrderFill `json:"fills"`
 
-	// new order result, query order
+	// new order result, query order, all orders
 	WorkingTime int64 `json:"workingTime"`
 
 	// cancel order result, cancel new (replace) order
 	OrigClientOrderId string `json:"origClientOrderId"`
 
-	// query order
+	// query order, all orders
 	StopPrice         float64 `json:"stopPrice,string"`
 	IcebergQty        float64 `json:"icebergQty,string"`
 	Time              int64   `json:"time"`
@@ -664,6 +664,33 @@ var SpotCurrentOpenOrdersConfig = cex.ReqConfig[SpotCurrentOpenOrdersParams, []S
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             ApiV3 + "/openOrders",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrderResult]),
+}
+
+// SpotAllOrdersParams
+// If orderId is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
+// For some historical orders cummulativeQuoteQty will be < 0, meaning the data is not available at this time.
+// If startTime and/or endTime provided, orderId is not required.
+// The payload sample does not show all fields that can appear.
+type SpotAllOrdersParams struct {
+	// Symbol is required
+	Symbol    string `s2m:"symbol,omitempty"`
+	OrderId   int64  `s2m:"orderId,omitempty"`
+	StartTime int64  `s2m:"startTime,omitempty"`
+	EndTime   int64  `s2m:"endTime,omitempty"`
+	Limit     int64  `s2m:"limit,omitempty"` // Default 500; max 1000.
+}
+
+var SpotAllOrdersConfig = cex.ReqConfig[SpotAllOrdersParams, []SpotOrderResult]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             ApiV3 + "/allOrders",
 		Method:           http.MethodGet,
 		IsUserData:       true,
 		UserTimeInterval: 0,
