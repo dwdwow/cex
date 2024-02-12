@@ -243,6 +243,18 @@ const (
 	LTVAdDeriReduced    LTVAdjustDeriction = "REDUCED"
 )
 
+type CryptoLoanIncomeType string
+
+const (
+	CryptoLoanIncomeBorrowIn                         CryptoLoanIncomeType = "borrowIn"
+	CryptoLoanIncomeCollateralSpent                  CryptoLoanIncomeType = "collateralSpent"
+	CryptoLoanIncomeRepayAmount                      CryptoLoanIncomeType = "repayAmount"
+	CryptoLoanIncomeCollateralReturn                 CryptoLoanIncomeType = "collateralReturn"
+	CryptoLoanIncomeAddCollateral                    CryptoLoanIncomeType = "addCollateral"
+	CryptoLoanIncomeRemoveCollateral                 CryptoLoanIncomeType = "removeCollateral"
+	CryptoLoanIncomeCollateralReturnAfterLiquidation CryptoLoanIncomeType = "collateralReturnAfterLiquidation"
+)
+
 type CodeMsg struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`

@@ -69,3 +69,14 @@ func TestFlexibleProduct(t *testing.T) {
 	data, _ := json.MarshalIndent(respData, "", "  ")
 	fmt.Println(string(data))
 }
+
+func TestCryptoLoansIncomeHistories(t *testing.T) {
+	apiKey := readApiKey()
+	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
+	_, respData, err := cex.Request(user, bnc.CryptoLoansIncomeHistoriesConfig, bnc.CryptoLoansIncomeHistoriesReq{})
+	if err != nil {
+		panic(err)
+	}
+	data, _ := json.MarshalIndent(respData, "", "  ")
+	fmt.Println(string(data))
+}

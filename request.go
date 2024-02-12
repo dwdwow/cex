@@ -298,7 +298,7 @@ func (e *RequestError) SetErr(err error) *RequestError {
 // Resp Data Unmarshaler
 // -----------------------------------------------------------
 
-func StdRespDataUnmarshaler[D any](data []byte) (D, *RespBodyUnmarshalerError) {
+func StdBodyUnmarshaler[D any](data []byte) (D, *RespBodyUnmarshalerError) {
 	errUnmar := new(RespBodyUnmarshalerError)
 	respData := new(D)
 

@@ -52,7 +52,7 @@ var CoinInfoConfig = cex.ReqConfig[cex.EmptyReqData, []CoinInfo]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdRespDataUnmarshaler[[]CoinInfo]),
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[[]CoinInfo]),
 }
 
 type SpotBalance struct {
@@ -93,7 +93,7 @@ var SpotAccountConfig = cex.ReqConfig[cex.EmptyReqData, SpotAccount]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdRespDataUnmarshaler[SpotAccount]),
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotAccount]),
 }
 
 type UniversalTransferReq struct {
@@ -118,7 +118,7 @@ var UniversalTransferConfig = cex.ReqConfig[UniversalTransferReq, UniversalTrans
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdRespDataUnmarshaler[UniversalTransferResp]),
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[UniversalTransferResp]),
 }
 
 type FlexibleProductListReq struct {
@@ -152,5 +152,34 @@ var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListReq, []FlexibleProd
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(PageBodyUnmarshaler[[]FlexibleProduct]),
+	RespBodyUnmarshaler:   bodyUnmshWrapper(PageUnmarshaler[[]FlexibleProduct]),
+}
+
+type CryptoLoansIncomeHistoriesReq struct {
+	Asset     string               `s2m:"asset,omitempty"`
+	Type      CryptoLoanIncomeType `s2m:"type,omitempty"`
+	StartTime int64                `s2m:"startTime,omitempty"`
+	EndTime   int64                `s2m:"endTime,omitempty"`
+	Limit     int                  `s2m:"limit,omitempty"`
+}
+
+type CryptoLoanIncomeHistory struct {
+	Asset     string               `json:"asset"`
+	Type      CryptoLoanIncomeType `json:"type"`
+	Amount    float64              `json:"amount,string"`
+	Timestamp int64                `json:"timestamp"`
+	TranId    string               `json:"tranId"`
+}
+
+var CryptoLoansIncomeHistoriesConfig = cex.ReqConfig[CryptoLoansIncomeHistoriesReq, []CryptoLoanIncomeHistory]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/income",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[[]CryptoLoanIncomeHistory]),
 }
