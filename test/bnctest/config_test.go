@@ -1,6 +1,7 @@
 package bnctest
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/dwdwow/cex"
@@ -185,18 +186,20 @@ func TestSpotQueryOrder(t *testing.T) {
 }
 
 func TestSpotReplaceOrder(t *testing.T) {
-	testConfig(bnc.SpotReplaceOrderConfig, bnc.SpotReplaceOrderParams{
+	apiKey := readApiKey()
+	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
+	_, respData, err := cex.Request(user, bnc.SpotReplaceOrderConfig, bnc.SpotReplaceOrderParams{
 		Symbol:                  "ETHUSDT",
 		Type:                    bnc.OrderTypeLimit,
 		Side:                    bnc.OrderSideSell,
 		CancelReplaceMode:       bnc.SpotCancelReplaceMode_STOP_ON_FAILURE,
 		TimeInForce:             bnc.TimeInForceGtc,
-		Quantity:                0.01,
+		Quantity:                10,
 		QuoteOrderQty:           0,
 		Price:                   3000,
 		CancelNewClientOrderId:  "",
 		CancelOrigClientOrderId: "",
-		CancelOrderId:           0,
+		CancelOrderId:           15946838304,
 		NewClientOrderId:        "",
 		StrategyId:              0,
 		StrategyType:            0,
@@ -207,4 +210,8 @@ func TestSpotReplaceOrder(t *testing.T) {
 		SelfTradePreventionMode: "",
 		CancelRestrictions:      "",
 	})
+	if err != nil {
+		fmt.Println(err)
+	}
+	props.PrintlnIndent(respData)
 }
