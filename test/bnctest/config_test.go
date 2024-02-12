@@ -215,3 +215,7 @@ func TestSpotReplaceOrder(t *testing.T) {
 	}
 	props.PrintlnIndent(respData)
 }
+
+func TestSpotCurrentOpenOrders(t *testing.T) {
+	testConfig(bnc.SpotCurrentOpenOrdersConfig, bnc.SpotCurrentOpenOrdersParams{Symbol: ""})
+}

@@ -487,7 +487,6 @@ type SpotOrderResult struct {
 	OrderId                 int64                       `json:"orderId"`
 	OrderListId             int64                       `json:"orderListId"` // Unless OCO, value will be -1
 	ClientOrderId           string                      `json:"clientOrderId"`
-	TransactTime            int64                       `json:"transactTime"`
 	Price                   string                      `json:"price"` // origin price, if market order, it is 0
 	OrigQty                 string                      `json:"origQty"`
 	ExecutedQty             string                      `json:"executedQty"`
@@ -497,6 +496,9 @@ type SpotOrderResult struct {
 	Type                    OrderType                   `json:"type"`
 	Side                    OrderSide                   `json:"side"`
 	SelfTradePreventionMode SpotSelfTradePreventionMode `json:"selfTradePreventionMode"`
+
+	// new order result, replace order result
+	TransactTime int64 `json:"transactTime"`
 
 	// new order result, cancel new (replace) order
 	Fills []SpotOrderFill `json:"fills"`
@@ -652,6 +654,23 @@ var SpotReplaceOrderConfig = cex.ReqConfig[SpotReplaceOrderParams, SpotReplaceOr
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   spotOrderReplaceUnmarshaler,
+}
+
+type SpotCurrentOpenOrdersParams struct {
+	Symbol string `s2m:"symbol,omitempty"`
+}
+
+var SpotCurrentOpenOrdersConfig = cex.ReqConfig[SpotCurrentOpenOrdersParams, []SpotOrderResult]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             ApiV3 + "/openOrders",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrderResult]),
 }
 
 // ---------------------------------------------
