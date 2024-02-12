@@ -363,12 +363,12 @@ var FlexibleLoanAdjustLtvConfig = cex.ReqConfig[FlexibleAdjustLtvParams, Flexibl
 }
 
 type FlexibleAdjustLtvHistoriesParams struct {
-	LoanCoin       string `w2m:"loanCoin,omitempty"`
-	CollateralCoin string `w2m:"collateralCoin,omitempty"`
-	StartTime      int64  `w2m:"startTime,omitempty"`
-	EndTime        int64  `w2m:"endTime,omitempty"`
-	Current        int64  `w2m:"current,omitempty"` // start from 1; default: 1; max: 1000
-	Limit          int64  `w2m:"limit,omitempty"`   // default: 10; max: 100
+	LoanCoin       string `s2m:"loanCoin,omitempty"`
+	CollateralCoin string `s2m:"collateralCoin,omitempty"`
+	StartTime      int64  `s2m:"startTime,omitempty"`
+	EndTime        int64  `s2m:"endTime,omitempty"`
+	Current        int64  `s2m:"current,omitempty"` // start from 1; default: 1; max: 1000
+	Limit          int64  `s2m:"limit,omitempty"`   // default: 10; max: 100
 }
 
 type FlexibleAdjustLtvHistory struct {
