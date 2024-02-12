@@ -271,3 +271,34 @@ var FlexibleBorrowHistoriesConfig = cex.ReqConfig[FlexibleBorrowHistoriesParams,
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleBorrowHistory]]),
 }
+
+type FlexibleRepayParams struct {
+	LoanCoin         string  `s2m:"loanCoin,omitempty"`
+	CollateralCoin   string  `s2m:"collateralCoin,omitempty"`
+	RepayAmount      float64 `s2m:"repayAmount,omitempty"`
+	CollateralReturn BigBool `s2m:"collateralReturn,omitempty"`
+	FullRepayment    BigBool `s2m:"fullRepayment,omitempty"`
+}
+
+type FlexibleRepayResult struct {
+	LoanCoin            string              `json:"loanCoin"`
+	CollateralCoin      string              `json:"collateralCoin"`
+	RemainingDebt       string              `json:"remainingDebt"`
+	RemainingCollateral string              `json:"remainingCollateral"`
+	FullRepayment       bool                `json:"fullRepayment"`
+	CurrentLTV          string              `json:"currentLTV"`
+	RepayStatus         FlexibleRepayStatus `json:"repayStatus"`
+}
+
+var FlexibleRepayConfig = cex.ReqConfig[FlexibleRepayParams, FlexibleRepayResult]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/flexible/repay",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleRepayResult]),
+}

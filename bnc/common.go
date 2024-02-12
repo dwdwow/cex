@@ -263,6 +263,14 @@ const (
 	FlexibleBorrowProcessing FlexibleBorrowStatus = "Processing"
 )
 
+type FlexibleRepayStatus string
+
+const (
+	FlexibleRepayRepaid   FlexibleRepayStatus = "Repaid"
+	FlexibleRepayRepaying FlexibleRepayStatus = "Repaying"
+	FlexibleRepayFailed   FlexibleRepayStatus = "Failed"
+)
+
 type CodeMsg struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
