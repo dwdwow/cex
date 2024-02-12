@@ -152,7 +152,7 @@ var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListParams, Page[[]Flex
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(PageUnmarshaler[Page[[]FlexibleProduct]]),
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleProduct]]),
 }
 
 type CryptoLoansIncomeHistoriesParams struct {
