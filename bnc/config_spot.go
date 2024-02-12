@@ -96,7 +96,7 @@ var SpotAccountConfig = cex.ReqConfig[cex.EmptyReqData, SpotAccount]{
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotAccount]),
 }
 
-type UniversalTransferReq struct {
+type UniversalTransferParams struct {
 	Type       TranType `s2m:"type,omitempty"`
 	Asset      string   `s2m:"asset,omitempty"`
 	Amount     float64  `s2m:"amount,omitempty"`
@@ -108,7 +108,7 @@ type UniversalTransferResp struct {
 	TranId int64 `json:"tranId,omitempty"`
 }
 
-var UniversalTransferConfig = cex.ReqConfig[UniversalTransferReq, UniversalTransferResp]{
+var UniversalTransferConfig = cex.ReqConfig[UniversalTransferParams, UniversalTransferResp]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/asset/transfer",
@@ -121,7 +121,7 @@ var UniversalTransferConfig = cex.ReqConfig[UniversalTransferReq, UniversalTrans
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[UniversalTransferResp]),
 }
 
-type FlexibleProductListReq struct {
+type FlexibleProductListParams struct {
 	Asset   string `s2m:"asset,omitempty"`
 	Current int64  `s2m:"current,omitempty"`
 	Size    int64  `s2m:"size,omitempty"`
@@ -142,7 +142,7 @@ type FlexibleProduct struct {
 	Status                     string            `json:"status"`
 }
 
-var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListReq, []FlexibleProduct]{
+var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListParams, []FlexibleProduct]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/simple-earn/flexible/list",
@@ -155,7 +155,7 @@ var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListReq, []FlexibleProd
 	RespBodyUnmarshaler:   bodyUnmshWrapper(PageUnmarshaler[[]FlexibleProduct]),
 }
 
-type CryptoLoansIncomeHistoriesReq struct {
+type CryptoLoansIncomeHistoriesParams struct {
 	Asset     string               `s2m:"asset,omitempty"`
 	Type      CryptoLoanIncomeType `s2m:"type,omitempty"`
 	StartTime int64                `s2m:"startTime,omitempty"`
@@ -171,7 +171,7 @@ type CryptoLoanIncomeHistory struct {
 	TranId    string               `json:"tranId"`
 }
 
-var CryptoLoansIncomeHistoriesConfig = cex.ReqConfig[CryptoLoansIncomeHistoriesReq, []CryptoLoanIncomeHistory]{
+var CryptoLoansIncomeHistoriesConfig = cex.ReqConfig[CryptoLoansIncomeHistoriesParams, []CryptoLoanIncomeHistory]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/loan/income",
@@ -182,4 +182,32 @@ var CryptoLoansIncomeHistoriesConfig = cex.ReqConfig[CryptoLoansIncomeHistoriesR
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[[]CryptoLoanIncomeHistory]),
+}
+
+type FlexibleBorrowParams struct {
+	LoanCoin         string  `s2m:"loanCoin,omitempty"`
+	LoanAmount       float64 `s2m:"loanAmount,omitempty"`
+	CollateralCoin   string  `s2m:"collateralCoin,omitempty"`
+	CollateralAmount float64 `s2m:"collateralAmount,omitempty"`
+}
+
+type FlexibleBorrowResult struct {
+	LoanCoin         string               `json:"loanCoin"`
+	LoanAmount       float64              `json:"loanAmount,string"`
+	CollateralCoin   string               `json:"collateralCoin"`
+	CollateralAmount float64              `json:"collateralAmount,string"`
+	Status           FlexibleBorrowStatus `json:"status"`
+}
+
+var FlexibleBorrowConfig = cex.ReqConfig[FlexibleBorrowParams, FlexibleBorrowResult]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/flexible/borrow",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleBorrowResult]),
 }

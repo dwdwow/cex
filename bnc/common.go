@@ -255,6 +255,14 @@ const (
 	CryptoLoanIncomeCollateralReturnAfterLiquidation CryptoLoanIncomeType = "collateralReturnAfterLiquidation"
 )
 
+type FlexibleBorrowStatus string
+
+const (
+	FlexibleBorrowSucceeds   FlexibleBorrowStatus = "Succeeds"
+	FlexibleBorrowFailed     FlexibleBorrowStatus = "Failed"
+	FlexibleBorrowProcessing FlexibleBorrowStatus = "Processing"
+)
+
 type CodeMsg struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
