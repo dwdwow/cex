@@ -169,3 +169,9 @@ func TestCancelSpotOder(t *testing.T) {
 		CancelRestrictions: "",
 	})
 }
+
+func TestCancelAllOpenOrders(t *testing.T) {
+	testConfig(bnc.CancelAllOpenOrdersConfig, bnc.CancelAllOpenOrdersParams{
+		Symbol: "ETHUSDT",
+	})
+}
