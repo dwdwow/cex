@@ -142,7 +142,7 @@ type FlexibleProduct struct {
 	Status                     string            `json:"status"`
 }
 
-var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListParams, []FlexibleProduct]{
+var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListParams, Page[[]FlexibleProduct]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/simple-earn/flexible/list",
@@ -152,7 +152,7 @@ var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListParams, []FlexibleP
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(PageUnmarshaler[[]FlexibleProduct]),
+	RespBodyUnmarshaler:   bodyUnmshWrapper(PageUnmarshaler[Page[[]FlexibleProduct]]),
 }
 
 type CryptoLoansIncomeHistoriesParams struct {
@@ -210,4 +210,32 @@ var FlexibleBorrowConfig = cex.ReqConfig[FlexibleBorrowParams, FlexibleBorrowRes
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleBorrowResult]),
+}
+
+type FlexibleOngoingOrdersParams struct {
+	LoanCoin       string `s2m:"loanCoin,omitempty"`
+	CollateralCoin string `s2m:"collateralCoin,omitempty"`
+	Current        int    `s2m:"current,omitempty"` // default: 1, max: 1000
+	Limit          int    `s2m:"limit,omitempty"`   // default: 10, max: 100
+}
+
+type FlexibleOngoingOrder struct {
+	LoanCoin         string  `json:"loanCoin" bson:"loanCoin"`
+	TotalDebt        float64 `json:"totalDebt,string" bson:"totalDebt"`
+	CollateralCoin   string  `json:"collateralCoin" bson:"collateralCoin"`
+	CollateralAmount float64 `json:"collateralAmount,string" bson:"collateralAmount"`
+	CurrentLTV       float64 `json:"currentLTV,string" bson:"currentLTV"`
+}
+
+var FlexibleOnGoingOrdersConfig = cex.ReqConfig[FlexibleOngoingOrdersParams, Page[[]FlexibleOngoingOrder]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/flexible/ongoing/orders",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleOngoingOrder]]),
 }

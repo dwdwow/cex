@@ -96,3 +96,16 @@ func TestFlexibleBorrow(t *testing.T) {
 	data, _ := json.MarshalIndent(respData, "", "  ")
 	fmt.Println(string(data))
 }
+
+func TestFlexibleOngoingOrders(t *testing.T) {
+	apiKey := readApiKey()
+	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
+	_, respData, err := cex.Request(user, bnc.FlexibleOnGoingOrdersConfig, bnc.FlexibleOngoingOrdersParams{
+		LoanCoin:       "USDT",
+		CollateralCoin: "ETH",
+		Current:        0,
+		Limit:          0,
+	})
+	cextest.PanicIfErr(err)
+	cextest.MarshalIndent(respData)
+}
