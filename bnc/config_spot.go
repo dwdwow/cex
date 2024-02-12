@@ -255,7 +255,7 @@ type FlexibleBorrowHistory struct {
 	InitialLoanAmount       string               `json:"initialLoanAmount"`
 	CollateralCoin          string               `json:"collateralCoin"`
 	InitialCollateralAmount string               `json:"initialCollateralAmount"`
-	BorrowTime              int64                `json:"borrowTime"`
+	BorrowTime              int64                `json:"borrowTime,string"`
 	Status                  FlexibleBorrowStatus `json:"status"`
 }
 
