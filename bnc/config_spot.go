@@ -122,6 +122,10 @@ var UniversalTransferConfig = cex.ReqConfig[UniversalTransferParams, UniversalTr
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[UniversalTransferResp]),
 }
 
+// =============================================
+// Crypto Flexible Loans
+// ---------------------------------------------
+
 type FlexibleProductListParams struct {
 	Asset   string `s2m:"asset,omitempty"`
 	Current int64  `s2m:"current,omitempty"`
@@ -442,3 +446,73 @@ var FlexibleCollateralCoinsConfig = cex.ReqConfig[FlexibleCollateralCoinsParams,
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleCollateralCoin]]),
 }
+
+// ---------------------------------------------
+// Crypto Flexible Loans
+// =============================================
+
+// =============================================
+// Spot Trading
+// ---------------------------------------------
+
+type NewSpotOrderParams struct {
+	Symbol                  string                      `s2m:"symbol,omitempty"`
+	Type                    OrderType                   `s2m:"type,omitempty"`
+	Side                    OrderSide                   `s2m:"side,omitempty"`
+	Quantity                float64                     `s2m:"quantity,omitempty"`
+	Price                   float64                     `s2m:"price,omitempty"`
+	TimeInForce             TimeInForce                 `s2m:"timeInForce,omitempty"`
+	NewClientOrderId        string                      `s2m:"newClientOrderId,omitempty"`
+	QuoteOrderQty           float64                     `s2m:"quoteOrderQty,omitempty"`
+	StrategyId              int64                       `s2m:"strategyId,omitempty"`
+	StrategyType            int64                       `s2m:"strategyType,omitempty"`
+	StopPrice               float64                     `s2m:"stopPrice,omitempty"`               // Used with STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, and TAKE_PROFIT_LIMIT orders.
+	TrailingDelta           int64                       `s2m:"trailingDelta,omitempty"`           // Used with STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, and TAKE_PROFIT_LIMIT orders. For more details on SPOT implementation on trailing stops, please refer to Trailing Stop FAQ
+	IcebergQty              float64                     `s2m:"icebergQty,omitempty"`              // Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
+	NewOrderRespType        SpotOrderResponseType       `s2m:"newOrderRespType,omitempty"`        // Set the response JSON. ACK, RESULT, or FULL; MARKET and LIMIT order types default to FULL, all other orders default to ACK.
+	SelfTradePreventionMode SpotSelfTradePreventionMode `s2m:"selfTradePreventionMode,omitempty"` // The allowed enums is dependent on what is configured on the symbol.The possible supported values are EXPIRE_TAKER, EXPIRE_MAKER, EXPIRE_BOTH, NONE.
+}
+
+type NewSpotOrderFill struct {
+	Price           float64 `json:"price,string"`
+	Qty             float64 `json:"qty,string"`
+	Commission      float64 `json:"commission,string"`
+	CommissionAsset string  `json:"commissionAsset"`
+	TradeId         int64   `json:"tradeId"`
+}
+
+type NewSpotOrderResult struct {
+	Symbol                  string                      `json:"symbol"`
+	OrderId                 int64                       `json:"orderId"`
+	OrderListId             int64                       `json:"orderListId"` // Unless OCO, value will be -1
+	ClientOrderId           string                      `json:"clientOrderId"`
+	TransactTime            int64                       `json:"transactTime"`
+	Price                   string                      `json:"price"`
+	OrigQty                 string                      `json:"origQty"`
+	ExecutedQty             string                      `json:"executedQty"`
+	CummulativeQuoteQty     string                      `json:"cummulativeQuoteQty"`
+	Status                  OrderStatus                 `json:"status"`
+	TimeInForce             TimeInForce                 `json:"timeInForce"`
+	Type                    OrderType                   `json:"type"`
+	Side                    OrderSide                   `json:"side"`
+	WorkingTime             int64                       `json:"workingTime"`
+	SelfTradePreventionMode SpotSelfTradePreventionMode `json:"selfTradePreventionMode"`
+	Fills                   []NewSpotOrderFill          `json:"fills"`
+}
+
+var NewSpotOrderConfig = cex.ReqConfig[NewSpotOrderParams, NewSpotOrderResult]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             ApiV3 + "/order",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[NewSpotOrderResult]),
+}
+
+// ---------------------------------------------
+// Spot Trading
+// =============================================

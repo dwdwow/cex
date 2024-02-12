@@ -139,3 +139,23 @@ func TestFlexibleCollateralCoins(t *testing.T) {
 		CollateralCoin: "",
 	})
 }
+
+func TestNewSpotOrder(t *testing.T) {
+	testConfig(bnc.NewSpotOrderConfig, bnc.NewSpotOrderParams{
+		Symbol:                  "ETHUSDT",
+		Type:                    bnc.OrderTypeMarket,
+		Side:                    bnc.OrderSideBuy,
+		Quantity:                0.01,
+		Price:                   0,
+		TimeInForce:             "",
+		NewClientOrderId:        "asdfsfhkhuiwe",
+		QuoteOrderQty:           0,
+		StrategyId:              0,
+		StrategyType:            0,
+		StopPrice:               0,
+		TrailingDelta:           0,
+		IcebergQty:              0,
+		NewOrderRespType:        "",
+		SelfTradePreventionMode: "",
+	})
+}

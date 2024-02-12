@@ -189,6 +189,24 @@ const (
 	TimeInForceIoc  TimeInForce = "IOC"
 )
 
+// SpotOrderResponseType is the response of JSON type. ACK, RESULT, or FULL; MARKET and LIMIT order types default to FULL, all other orders default to ACK.
+type SpotOrderResponseType string
+
+const (
+	SpotOrderResponse_ACK    SpotOrderResponseType = "ACK"
+	SpotOrderResponse_RESULT SpotOrderResponseType = "RESULT"
+	SpotOrderResponse_FULL   SpotOrderResponseType = "FULL"
+)
+
+type SpotSelfTradePreventionMode string
+
+const (
+	SpotSelfTradePreventionMode_EXPIRE_TAKER SpotSelfTradePreventionMode = "EXPIRE_TAKER"
+	SpotSelfTradePreventionMode_EXPIRE_MAKER SpotSelfTradePreventionMode = "EXPIRE_MAKER"
+	SpotSelfTradePreventionMode_EXPIRE_BOTH  SpotSelfTradePreventionMode = "EXPIRE_BOTH"
+	SpotSelfTradePreventionMode_NONE         SpotSelfTradePreventionMode = "NONE"
+)
+
 type Network string
 
 const (
