@@ -334,7 +334,7 @@ var FlexibleRepaymentHistoriesConfig = cex.ReqConfig[FlexibleRepaymentHistoriesP
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleRepaymentHistory]]),
 }
 
-type FlexibleLoanAdjustLtvParams struct {
+type FlexibleAdjustLtvParams struct {
 	LoanCoin         string             `s2m:"loanCoin,omitempty"`
 	CollateralCoin   string             `s2m:"collateralCoin,omitempty"`
 	AdjustmentAmount float64            `s2m:"adjustmentAmount,omitempty"`
@@ -349,7 +349,7 @@ type FlexibleLoanAdjustLtvResult struct {
 	CurrentLTV       float64            `json:"currentLTV,string"`
 }
 
-var FlexibleLoanAdjustLtvConfig = cex.ReqConfig[FlexibleLoanAdjustLtvParams, FlexibleLoanAdjustLtvResult]{
+var FlexibleLoanAdjustLtvConfig = cex.ReqConfig[FlexibleAdjustLtvParams, FlexibleLoanAdjustLtvResult]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/loan/flexible/adjust/ltv",
@@ -360,4 +360,36 @@ var FlexibleLoanAdjustLtvConfig = cex.ReqConfig[FlexibleLoanAdjustLtvParams, Fle
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleLoanAdjustLtvResult]),
+}
+
+type FlexibleAdjustLtvHistoriesParams struct {
+	LoanCoin       string `w2m:"loanCoin,omitempty"`
+	CollateralCoin string `w2m:"collateralCoin,omitempty"`
+	StartTime      int64  `w2m:"startTime,omitempty"`
+	EndTime        int64  `w2m:"endTime,omitempty"`
+	Current        int64  `w2m:"current,omitempty"` // start from 1; default: 1; max: 1000
+	Limit          int64  `w2m:"limit,omitempty"`   // default: 10; max: 100
+}
+
+type FlexibleAdjustLtvHistory struct {
+	LoanCoin         string `json:"loanCoin"`
+	CollateralCoin   string `json:"collateralCoin"`
+	Direction        string `json:"direction"`
+	CollateralAmount string `json:"collateralAmount"`
+	PreLTV           string `json:"preLTV"`
+	AfterLTV         string `json:"afterLTV"`
+	AdjustTime       int64  `json:"adjustTime,string"`
+}
+
+var FlexibleAdjustLtvHistoriesConfig = cex.ReqConfig[FlexibleAdjustLtvHistoriesParams, Page[[]FlexibleAdjustLtvHistory]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/flexible/ltv/adjustment/history",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleAdjustLtvHistory]]),
 }

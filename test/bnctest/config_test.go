@@ -109,10 +109,21 @@ func TestFlexibleRepayHistories(t *testing.T) {
 }
 
 func TestFlexibleAdjustLtv(t *testing.T) {
-	testConfig(bnc.FlexibleLoanAdjustLtvConfig, bnc.FlexibleLoanAdjustLtvParams{
+	testConfig(bnc.FlexibleLoanAdjustLtvConfig, bnc.FlexibleAdjustLtvParams{
 		LoanCoin:         "USDT",
 		CollateralCoin:   "ETH",
 		AdjustmentAmount: 0.05,
 		Direction:        bnc.LTVAdDireReduced,
+	})
+}
+
+func TestFlexibleAdjustLtvHistories(t *testing.T) {
+	testConfig(bnc.FlexibleAdjustLtvHistoriesConfig, bnc.FlexibleAdjustLtvHistoriesParams{
+		LoanCoin:       "USDT",
+		CollateralCoin: "ETH",
+		StartTime:      0,
+		EndTime:        0,
+		Current:        0,
+		Limit:          0,
 	})
 }
