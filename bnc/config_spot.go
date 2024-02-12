@@ -540,6 +540,23 @@ var CancelSpotOrderConfig = cex.ReqConfig[CancelSpotOrderParams, SpotOrderResult
 	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrderResult]),
 }
 
+type CancelAllOpenOrdersParams struct {
+	Symbol string `s2m:"symbol,omitempty"`
+}
+
+var CancelAllOpenOrdersConfig = cex.ReqConfig[CancelAllOpenOrdersParams, []SpotOrderResult]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             ApiV3 + "/openOrders",
+		Method:           http.MethodDelete,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrderResult]),
+}
+
 // ---------------------------------------------
 // Spot Trading
 // =============================================
