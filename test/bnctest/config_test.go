@@ -1,11 +1,10 @@
 package bnctest
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/dwdwow/cex"
 	"github.com/dwdwow/cex/bnc"
 	"github.com/dwdwow/cex/test/cextest"
+	"github.com/dwdwow/props"
 	"testing"
 )
 
@@ -22,22 +21,16 @@ func TestCoinInfo(t *testing.T) {
 	apiKey := readApiKey()
 	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
 	_, respData, err := cex.Request(user, bnc.CoinInfoConfig, nil)
-	if err != nil {
-		panic(err)
-	}
-	data, _ := json.MarshalIndent(respData, "", "  ")
-	fmt.Println(string(data))
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(respData)
 }
 
 func TestSpotAccount(t *testing.T) {
 	apiKey := readApiKey()
 	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
 	_, respData, err := cex.Request(user, bnc.SpotAccountConfig, nil)
-	if err != nil {
-		panic(err)
-	}
-	data, _ := json.MarshalIndent(respData, "", "  ")
-	fmt.Println(string(data))
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(respData)
 }
 
 func TestUniversalTransfer(t *testing.T) {
@@ -50,11 +43,8 @@ func TestUniversalTransfer(t *testing.T) {
 		FromSymbol: "",
 		ToSymbol:   "",
 	})
-	if err != nil {
-		panic(err)
-	}
-	data, _ := json.MarshalIndent(respData, "", "  ")
-	fmt.Println(string(data))
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(respData)
 }
 
 func TestFlexibleProduct(t *testing.T) {
@@ -63,22 +53,16 @@ func TestFlexibleProduct(t *testing.T) {
 	_, respData, err := cex.Request(user, bnc.FlexibleProductConfig, bnc.FlexibleProductListParams{
 		Asset: "BTC",
 	})
-	if err != nil {
-		panic(err)
-	}
-	data, _ := json.MarshalIndent(respData, "", "  ")
-	fmt.Println(string(data))
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(respData)
 }
 
 func TestCryptoLoansIncomeHistories(t *testing.T) {
 	apiKey := readApiKey()
 	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
 	_, respData, err := cex.Request(user, bnc.CryptoLoansIncomeHistoriesConfig, bnc.CryptoLoansIncomeHistoriesParams{})
-	if err != nil {
-		panic(err)
-	}
-	data, _ := json.MarshalIndent(respData, "", "  ")
-	fmt.Println(string(data))
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(respData)
 }
 
 func TestFlexibleBorrow(t *testing.T) {
@@ -90,11 +74,8 @@ func TestFlexibleBorrow(t *testing.T) {
 		CollateralCoin:   "ETH",
 		CollateralAmount: 0,
 	})
-	if err != nil {
-		panic(err)
-	}
-	data, _ := json.MarshalIndent(respData, "", "  ")
-	fmt.Println(string(data))
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(respData)
 }
 
 func TestFlexibleOngoingOrders(t *testing.T) {
@@ -106,6 +87,6 @@ func TestFlexibleOngoingOrders(t *testing.T) {
 		Current:        0,
 		Limit:          0,
 	})
-	cextest.PanicIfErr(err)
-	cextest.MarshalIndent(respData)
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(respData)
 }
