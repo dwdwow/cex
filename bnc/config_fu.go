@@ -10,7 +10,7 @@ type ChangePositionModParams struct {
 	DualSidePosition SmallBool `json:"dualSidePosition"`
 }
 
-var ChangePositionModConfig = cex.ReqConfig[ChangePositionModParams, cex.NilReqData]{
+var ChangePositionModConfig = cex.ReqConfig[ChangePositionModParams, CodeMsg]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/positionSide/dual",
