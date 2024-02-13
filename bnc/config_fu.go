@@ -130,6 +130,10 @@ type FuOrderResponse struct {
 	// modify order
 	Pair    string `json:"pair"`    // same as symbol
 	CumBase string `json:"cumBase"` // same as CumQuote? should verify
+
+	// place multi orders
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
 }
 
 var FuNewOrderConfig = cex.ReqConfig[FuNewOrderParams, FuOrderResponse]{
@@ -149,7 +153,7 @@ type FuModifyOrderParams struct {
 	OrderId           int64     `s2m:"orderId,omitempty"`
 	OrigClientOrderId string    `s2m:"origClientOrderId,omitempty"`
 	Symbol            string    `s2m:"symbol,omitempty"`
-	Side              OrderSide `s2m:"side,omitempty"`
+	Side              OrderSide `s2m:"side,omitempty"` // needs to be same as origin order
 	Quantity          float64   `s2m:"quantity,omitempty"`
 	Price             float64   `s2m:"price,omitempty"`
 	PriceMatch        string    `s2m:"priceMatch,omitempty"`
@@ -166,4 +170,21 @@ var FuModifyOrderConfig = cex.ReqConfig[FuModifyOrderParams, FuOrderResponse]{
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrderResponse]),
+}
+
+type FuPlaceMultiOrdersParams struct {
+	BatchOrders []FuNewOrderParams `json:"batchOrders"` // max 5 orders
+}
+
+var FuPlaceMultiOrdersConfig = cex.ReqConfig[FuPlaceMultiOrdersParams, []FuOrderResponse]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/batchOrders",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrderResponse]),
 }
