@@ -196,12 +196,13 @@ type FuNewMultiOrdersOrderParams struct {
 	GoodTillDate            string                  `s2m:"goodTillDate,omitempty" json:"goodTillDate,omitempty"`
 }
 
-// FuPlaceMultiOrdersParams is wired
-// TODO how to compose right query string
 type FuPlaceMultiOrdersParams struct {
 	BatchOrders []FuNewMultiOrdersOrderParams `s2m:"batchOrders"` // max 5 orders
 }
 
+// FuPlaceMultiOrdersConfig
+// Response []FuOrder may contain failed orders with error code and msg.
+// TODO should add ErrFuMultiOrdersAllFailed or ErrFuMultiOrdersSomeFailed?
 var FuPlaceMultiOrdersConfig = cex.ReqConfig[FuPlaceMultiOrdersParams, []FuOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
