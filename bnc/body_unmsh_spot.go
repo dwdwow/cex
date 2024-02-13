@@ -41,7 +41,7 @@ func spotBodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 	// }
 
 	// spot: 0, code: 0, 200
-	if code == 0 || code == 200 {
+	if code == 0 {
 		return nil
 	}
 
@@ -58,11 +58,6 @@ func spotBodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 	}
 
 	errCtm := spotCexCustomErrCodes[code]
-	switch errCtm {
-	case ErrFutureNoNeedToChangePositionSide:
-		return nil
-	default:
-	}
 	if errCtm == nil {
 		errCtm = fmt.Errorf("%v, %v", code, msg)
 	}
