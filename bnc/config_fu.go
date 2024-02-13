@@ -96,7 +96,7 @@ type FuNewOrderParams struct {
 	GoodTillDate            int64                   `s2m:"goodTillDate,omitempty" json:"goodTillDate,omitempty"`
 }
 
-type FuOrderResponse struct {
+type FuOrder struct {
 	// common
 	ClientOrderId           string         `json:"clientOrderId"`
 	CumQty                  float64        `json:"cumQty,string"`
@@ -136,7 +136,7 @@ type FuOrderResponse struct {
 	Msg  string `json:"msg"`
 }
 
-var FuNewOrderConfig = cex.ReqConfig[FuNewOrderParams, FuOrderResponse]{
+var FuNewOrderConfig = cex.ReqConfig[FuNewOrderParams, FuOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/order",
@@ -146,7 +146,7 @@ var FuNewOrderConfig = cex.ReqConfig[FuNewOrderParams, FuOrderResponse]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrderResponse]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrder]),
 }
 
 type FuModifyOrderParams struct {
@@ -159,7 +159,7 @@ type FuModifyOrderParams struct {
 	PriceMatch        string    `s2m:"priceMatch,omitempty"`
 }
 
-var FuModifyOrderConfig = cex.ReqConfig[FuModifyOrderParams, FuOrderResponse]{
+var FuModifyOrderConfig = cex.ReqConfig[FuModifyOrderParams, FuOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/order",
@@ -169,7 +169,7 @@ var FuModifyOrderConfig = cex.ReqConfig[FuModifyOrderParams, FuOrderResponse]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrderResponse]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrder]),
 }
 
 // FuPlaceMultiOrdersParams is wired
@@ -178,7 +178,7 @@ type FuPlaceMultiOrdersParams struct {
 	BatchOrders []FuNewOrderParams `s2m:"batchOrders"` // max 5 orders
 }
 
-var FuPlaceMultiOrdersConfig = cex.ReqConfig[FuPlaceMultiOrdersParams, []FuOrderResponse]{
+var FuPlaceMultiOrdersConfig = cex.ReqConfig[FuPlaceMultiOrdersParams, []FuOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/batchOrders",
@@ -188,7 +188,7 @@ var FuPlaceMultiOrdersConfig = cex.ReqConfig[FuPlaceMultiOrdersParams, []FuOrder
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrderResponse]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrder]),
 }
 
 type FuOrderModifyHistoriesParams struct {
@@ -200,7 +200,7 @@ type FuOrderModifyHistoriesParams struct {
 	Limit             int    `s2m:"limit,omitempty"` // Default 1000; max 1000
 }
 
-type FuOrderModifyHistoriesResponse struct {
+type FuOrderModifyHistory struct {
 	AmendmentId   int    `json:"amendmentId"`
 	Symbol        string `json:"symbol"`
 	Pair          string `json:"pair"`
@@ -221,7 +221,7 @@ type FuOrderModifyHistoriesResponse struct {
 	PriceMatch string `json:"priceMatch"`
 }
 
-var FuOrderModifyHistoriesConfig = cex.ReqConfig[FuOrderModifyHistoriesParams, FuOrderModifyHistoriesResponse]{
+var FuOrderModifyHistoriesConfig = cex.ReqConfig[FuOrderModifyHistoriesParams, []FuOrderModifyHistory]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/orderAmendment",
@@ -231,5 +231,5 @@ var FuOrderModifyHistoriesConfig = cex.ReqConfig[FuOrderModifyHistoriesParams, F
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrderModifyHistoriesResponse]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrderModifyHistory]),
 }
