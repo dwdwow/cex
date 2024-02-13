@@ -173,7 +173,7 @@ var FuModifyOrderConfig = cex.ReqConfig[FuModifyOrderParams, FuOrderResponse]{
 }
 
 type FuPlaceMultiOrdersParams struct {
-	BatchOrders []FuNewOrderParams `json:"batchOrders"` // max 5 orders
+	BatchOrders []FuNewOrderParams `s2m:"batchOrders"` // max 5 orders
 }
 
 var FuPlaceMultiOrdersConfig = cex.ReqConfig[FuPlaceMultiOrdersParams, []FuOrderResponse]{
