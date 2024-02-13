@@ -15,3 +15,7 @@ func TestFuCurrentPositionMode(t *testing.T) {
 func TestFuChangeMultiAssetsMode(t *testing.T) {
 	testConfig(FuChangeMultiAssetsModeConfig, FuChangeMultiAssetsModeParams{MultiAssetsMargin: SmallFalse})
 }
+
+func TestFuCurrentMultiAssetsMode(t *testing.T) {
+	testConfig(FuCurrentMultiAssetsModeConfig, nil)
+}
