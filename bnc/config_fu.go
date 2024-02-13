@@ -7,7 +7,7 @@ import (
 )
 
 type ChangePositionModParams struct {
-	DualSidePosition SmallBool `json:"dualSidePosition"`
+	DualSidePosition SmallBool `s2m:"dualSidePosition"`
 }
 
 var FuChangePositionModeConfig = cex.ReqConfig[ChangePositionModParams, CodeMsg]{
@@ -38,4 +38,21 @@ var FuPositionModeConfig = cex.ReqConfig[cex.NilReqData, CurrentPositionModeResu
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[CurrentPositionModeResult]),
+}
+
+type FuChangeMultiAssetsModeParams struct {
+	MultiAssetsMargin SmallBool `s2m:"multiAssetsMargin"`
+}
+
+var FuChangeMultiAssetsModeConfig = cex.ReqConfig[FuChangeMultiAssetsModeParams, CodeMsg]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/multiAssetsMargin",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[CodeMsg]),
 }
