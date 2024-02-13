@@ -20,5 +20,5 @@ var ChangePositionModConfig = cex.ReqConfig[ChangePositionModParams, CodeMsg]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[cex.NilReqData]),
+	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[CodeMsg]),
 }
