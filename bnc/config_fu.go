@@ -75,25 +75,25 @@ var FuCurrentMultiAssetsModeConfig = cex.ReqConfig[cex.NilReqData, FuCurrentMult
 }
 
 type FuNewOrderParams struct {
-	Symbol                  string                  `s2m:"symbol,omitempty"`
-	PositionSide            FuPositionSide          `s2m:"positionSide,omitempty"`
-	Type                    OrderType               `s2m:"type,omitempty"`
-	Side                    OrderSide               `s2m:"side,omitempty"`
-	Quantity                float64                 `s2m:"quantity,omitempty"`
-	Price                   float64                 `s2m:"price,omitempty"`
-	TimeInForce             TimeInForce             `s2m:"timeInForce,omitempty"`
-	NewClientOrderId        string                  `s2m:"newClientOrderId,omitempty"`
-	ReduceOnly              SmallBool               `s2m:"reduceOnly,omitempty"`              // "true" or "false". default "false". Cannot be sent in Hedge Mode; cannot be sent with closePosition=true
-	ClosePosition           bool                    `s2m:"closePosition,omitempty"`           //	true, false；Close-All，used with STOP_MARKET or TAKE_PROFIT_MARKET.
-	StopPrice               float64                 `s2m:"stopPrice,omitempty"`               // Used with STOP/STOP_MARKET or TAKE_PROFIT/TAKE_PROFIT_MARKET orders.
-	ActivationPrice         float64                 `s2m:"activationPrice,omitempty"`         // Used with TRAILING_STOP_MARKET orders, default as the latest price(supporting different workingType)
-	CallbackRate            float64                 `s2m:"callbackRate,omitempty"`            // Used with TRAILING_STOP_MARKET orders, min 0.1, max 5 where 1 for 1%
-	WorkingType             FuWorkingType           `s2m:"workingType,omitempty"`             // stopPrice triggered by: "MARK_PRICE", "CONTRACT_PRICE".Default "CONTRACT_PRICE"
-	PriceProtect            BigBool                 `s2m:"priceProtect,omitempty"`            // "TRUE" or "FALSE", default "FALSE".Used with STOP/STOP_MARKET or TAKE_PROFIT/TAKE_PROFIT_MARKET orders.
-	NewOrderRespType        SpotOrderResponseType   `s2m:"newOrderRespType,omitempty"`        // "ACK", "RESULT", default "ACK"
-	PriceMatch              string                  `s2m:"priceMatch,omitempty"`              //  only available for LIMIT/STOP/TAKE_PROFIT order, can be set to OPPONENT/ OPPONENT_5/ OPPONENT_10/ OPPONENT_20: /QUEUE/ QUEUE_5/ QUEUE_10/ QUEUE_20. Can't be passed together with price
-	SelfTradePreventionMode SelfTradePreventionMode `s2m:"selfTradePreventionMode,omitempty"` // NONE:No STP / EXPIRE_TAKER:expire taker order when STP triggers/ EXPIRE_MAKER:expire maker order when STP triggers/ EXPIRE_BOTH:expire both orders when STP triggers , default NONE
-	GoodTillDate            int64                   `s2m:"goodTillDate,omitempty"`
+	Symbol                  string                  `s2m:"symbol,omitempty" json:"symbol,omitempty"`
+	PositionSide            FuPositionSide          `s2m:"positionSide,omitempty" json:"positionSide,omitempty"`
+	Type                    OrderType               `s2m:"type,omitempty" json:"type,omitempty"`
+	Side                    OrderSide               `s2m:"side,omitempty" json:"side,omitempty"`
+	Quantity                float64                 `s2m:"quantity,omitempty" json:"quantity,omitempty"`
+	Price                   float64                 `s2m:"price,omitempty" json:"price,omitempty"`
+	TimeInForce             TimeInForce             `s2m:"timeInForce,omitempty" json:"timeInForce,omitempty"`
+	NewClientOrderId        string                  `s2m:"newClientOrderId,omitempty" json:"newClientOrderId,omitempty"`
+	ReduceOnly              SmallBool               `s2m:"reduceOnly,omitempty" json:"reduceOnly,omitempty"`                           // "true" or "false". default "false". Cannot be sent in Hedge Mode; cannot be sent with closePosition=true
+	ClosePosition           bool                    `s2m:"closePosition,omitempty" json:"closePosition,omitempty"`                     //	true, false；Close-All，used with STOP_MARKET or TAKE_PROFIT_MARKET.
+	StopPrice               float64                 `s2m:"stopPrice,omitempty" json:"stopPrice,omitempty"`                             // Used with STOP/STOP_MARKET or TAKE_PROFIT/TAKE_PROFIT_MARKET orders.
+	ActivationPrice         float64                 `s2m:"activationPrice,omitempty" json:"activationPrice,omitempty"`                 // Used with TRAILING_STOP_MARKET orders, default as the latest price(supporting different workingType)
+	CallbackRate            float64                 `s2m:"callbackRate,omitempty" json:"callbackRate,omitempty"`                       // Used with TRAILING_STOP_MARKET orders, min 0.1, max 5 where 1 for 1%
+	WorkingType             FuWorkingType           `s2m:"workingType,omitempty" json:"workingType,omitempty"`                         // stopPrice triggered by: "MARK_PRICE", "CONTRACT_PRICE".Default "CONTRACT_PRICE"
+	PriceProtect            BigBool                 `s2m:"priceProtect,omitempty" json:"priceProtect,omitempty"`                       // "TRUE" or "FALSE", default "FALSE".Used with STOP/STOP_MARKET or TAKE_PROFIT/TAKE_PROFIT_MARKET orders.
+	NewOrderRespType        SpotOrderResponseType   `s2m:"newOrderRespType,omitempty" json:"newOrderRespType,omitempty"`               // "ACK", "RESULT", default "ACK"
+	PriceMatch              string                  `s2m:"priceMatch,omitempty" json:"priceMatch,omitempty"`                           //  only available for LIMIT/STOP/TAKE_PROFIT order, can be set to OPPONENT/ OPPONENT_5/ OPPONENT_10/ OPPONENT_20: /QUEUE/ QUEUE_5/ QUEUE_10/ QUEUE_20. Can't be passed together with price
+	SelfTradePreventionMode SelfTradePreventionMode `s2m:"selfTradePreventionMode,omitempty" json:"selfTradePreventionMode,omitempty"` // NONE:No STP / EXPIRE_TAKER:expire taker order when STP triggers/ EXPIRE_MAKER:expire maker order when STP triggers/ EXPIRE_BOTH:expire both orders when STP triggers , default NONE
+	GoodTillDate            int64                   `s2m:"goodTillDate,omitempty" json:"goodTillDate,omitempty"`
 }
 
 type FuOrderResponse struct {
