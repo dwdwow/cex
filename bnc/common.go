@@ -32,8 +32,8 @@ const (
 type SmallBool string
 
 const (
-	Strue  SmallBool = "true"
-	Sfalse SmallBool = "false"
+	SmallTrue  SmallBool = "true"
+	SmallFalse SmallBool = "false"
 )
 
 type AcctType string
