@@ -263,7 +263,7 @@ func (e *HTTPError) Is(target error) bool {
 	return e.Err != nil && errors.Is(e.Err, target)
 }
 
-// RequestError contains detailed error info.
+// RequestError
 // Structured error info is better.
 type RequestError struct {
 	ReqBaseConfig            ReqBaseConfig

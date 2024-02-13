@@ -8,20 +8,6 @@ import (
 	"github.com/dwdwow/cex"
 )
 
-func PageUnmarshaler[Slice any](body []byte) (Slice, *cex.RespBodyUnmarshalerError) {
-	page := new(Page[Slice])
-	err := json.Unmarshal(body, page)
-	var serr *cex.RespBodyUnmarshalerError
-	if err != nil {
-		serr = &cex.RespBodyUnmarshalerError{
-			CexErrCode: 0,
-			CexErrMsg:  "",
-			Err:        fmt.Errorf("%w: %w", cex.ErrJsonUnmarshal, err),
-		}
-	}
-	return page.Rows, serr
-}
-
 func bodyUnmshWrapper[D any](unmarshaler cex.RespBodyUnmarshaler[D]) cex.RespBodyUnmarshaler[D] {
 	return func(body []byte) (D, *cex.RespBodyUnmarshalerError) {
 		err := bodyUnmshCodeMsg(body)
@@ -40,7 +26,23 @@ func bodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 	code := codeMsg.Code
 	msg := codeMsg.Msg
 
-	if code == 0 {
+	// https://binance-docs.github.io/apidocs/futures/en/#general-api-information
+	// Binance general info doc description:
+	// If there is an error message "Unknown error, please check your request or try again later."
+	// returned in the response, the API successfully sent the request but not get a response
+	// within the timeout period. It is important to NOT treat this as a failure operation;
+
+	// https://binance-docs.github.io/apidocs/futures/en/#error-codes
+	// Binance error codes description:
+	// -1000 UNKNOWN
+	// An unknown error occured while processing the request.
+	if code == -1000 || msg == "Unknown error, please check your request or try again later." {
+		// TODO should handle this error
+		return nil
+	}
+
+	// spot: 0, code: 0, 200
+	if code == 0 || code == 200 {
 		return nil
 	}
 
@@ -56,7 +58,7 @@ func bodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 		}
 	}
 
-	errCtm := cexCustomErrCodes[code]
+	errCtm := spotCexCustomErrCodes[code]
 	if errCtm == nil {
 		errCtm = fmt.Errorf("%v, %v", code, msg)
 	}
@@ -128,16 +130,16 @@ func spotFailedOrderReplaceUnmarshaler(body []byte) (SpotReplaceOrderResult, *ce
 	}
 
 	rawResMsg := rawResult.Msg
-	rawErr := CodeMsgChecker(rawResCode)
+	rawErr := SpotCodeMsgChecker(rawResCode)
 	if rawErr == nil {
 		rawErr = errors.New(rawResMsg)
 	}
 
 	if cancelResult == SpotOrderCancelNewStatus_NOT_ATTEMPTED {
-		result.ErrCancel = ErrOrderNotAttempted
+		result.ErrCancel = ErrSpotOrderNotAttempted
 	} else if cancelResult == SpotOrderCancelNewStatus_FAILURE {
 		code := rawCancelResp.Code
-		err := CodeMsgChecker(code)
+		err := SpotCodeMsgChecker(code)
 		if err == nil {
 			err = errors.New(rawCancelResp.Msg)
 		}
@@ -145,10 +147,10 @@ func spotFailedOrderReplaceUnmarshaler(body []byte) (SpotReplaceOrderResult, *ce
 	}
 
 	if newResult == SpotOrderCancelNewStatus_NOT_ATTEMPTED {
-		result.ErrNew = ErrOrderNotAttempted
+		result.ErrNew = ErrSpotOrderNotAttempted
 	} else if newResult == SpotOrderCancelNewStatus_FAILURE {
 		code := rawNewResp.Code
-		err := CodeMsgChecker(code)
+		err := SpotCodeMsgChecker(code)
 		if err == nil {
 			err = errors.New(rawNewResp.Msg)
 		}
