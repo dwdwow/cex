@@ -172,6 +172,13 @@ const (
 	FuMarginCross    FuMarginType = "cross"
 )
 
+type FuWorkingType string
+
+const (
+	FuWorkingType_MARK_PRICE     FuWorkingType = "MARK_PRICE"
+	FuWorkingType_CONTRACT_PRICE FuWorkingType = "CONTRACT_PRICE"
+)
+
 type BSwapOrderStatus string
 
 const (
@@ -198,13 +205,13 @@ const (
 	SpotOrderResponse_FULL   SpotOrderResponseType = "FULL"
 )
 
-type SpotSelfTradePreventionMode string
+type SelfTradePreventionMode string
 
 const (
-	SpotSelfTradePreventionMode_EXPIRE_TAKER SpotSelfTradePreventionMode = "EXPIRE_TAKER"
-	SpotSelfTradePreventionMode_EXPIRE_MAKER SpotSelfTradePreventionMode = "EXPIRE_MAKER"
-	SpotSelfTradePreventionMode_EXPIRE_BOTH  SpotSelfTradePreventionMode = "EXPIRE_BOTH"
-	SpotSelfTradePreventionMode_NONE         SpotSelfTradePreventionMode = "NONE"
+	SpotSelfTradePreventionMode_EXPIRE_TAKER SelfTradePreventionMode = "EXPIRE_TAKER"
+	SpotSelfTradePreventionMode_EXPIRE_MAKER SelfTradePreventionMode = "EXPIRE_MAKER"
+	SpotSelfTradePreventionMode_EXPIRE_BOTH  SelfTradePreventionMode = "EXPIRE_BOTH"
+	SpotSelfTradePreventionMode_NONE         SelfTradePreventionMode = "NONE"
 )
 
 type SpotOrderCancelRestriction string

@@ -123,6 +123,7 @@ func signReqData(data any, key string) (query string, err error) {
 	}
 	query = val.Encode()
 	sig := cex.SignByHmacSHA256ToHex(query, key)
+	// binance requires that the signature must be the last one
 	query += "&signature=" + sig
 	return
 }

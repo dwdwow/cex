@@ -456,21 +456,21 @@ var FlexibleCollateralCoinsConfig = cex.ReqConfig[FlexibleCollateralCoinsParams,
 // ---------------------------------------------
 
 type SpotNewOrderParams struct {
-	Symbol                  string                      `s2m:"symbol,omitempty"`
-	Type                    OrderType                   `s2m:"type,omitempty"`
-	Side                    OrderSide                   `s2m:"side,omitempty"`
-	Quantity                float64                     `s2m:"quantity,omitempty"`
-	Price                   float64                     `s2m:"price,omitempty"`
-	TimeInForce             TimeInForce                 `s2m:"timeInForce,omitempty"`
-	NewClientOrderId        string                      `s2m:"newClientOrderId,omitempty"`
-	QuoteOrderQty           float64                     `s2m:"quoteOrderQty,omitempty"`
-	StrategyId              int64                       `s2m:"strategyId,omitempty"`
-	StrategyType            int64                       `s2m:"strategyType,omitempty"`
-	StopPrice               float64                     `s2m:"stopPrice,omitempty"`               // Used with STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, and TAKE_PROFIT_LIMIT orders.
-	TrailingDelta           int64                       `s2m:"trailingDelta,omitempty"`           // Used with STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, and TAKE_PROFIT_LIMIT orders. For more details on SPOT implementation on trailing stops, please refer to Trailing Stop FAQ
-	IcebergQty              float64                     `s2m:"icebergQty,omitempty"`              // Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
-	NewOrderRespType        SpotOrderResponseType       `s2m:"newOrderRespType,omitempty"`        // Set the response JSON. ACK, RESULT, or FULL; MARKET and LIMIT order types default to FULL, all other orders default to ACK.
-	SelfTradePreventionMode SpotSelfTradePreventionMode `s2m:"selfTradePreventionMode,omitempty"` // The allowed enums is dependent on what is configured on the symbol.The possible supported values are EXPIRE_TAKER, EXPIRE_MAKER, EXPIRE_BOTH, NONE.
+	Symbol                  string                  `s2m:"symbol,omitempty"`
+	Type                    OrderType               `s2m:"type,omitempty"`
+	Side                    OrderSide               `s2m:"side,omitempty"`
+	Quantity                float64                 `s2m:"quantity,omitempty"`
+	Price                   float64                 `s2m:"price,omitempty"`
+	TimeInForce             TimeInForce             `s2m:"timeInForce,omitempty"`
+	NewClientOrderId        string                  `s2m:"newClientOrderId,omitempty"`
+	QuoteOrderQty           float64                 `s2m:"quoteOrderQty,omitempty"`
+	StrategyId              int64                   `s2m:"strategyId,omitempty"`
+	StrategyType            int64                   `s2m:"strategyType,omitempty"`
+	StopPrice               float64                 `s2m:"stopPrice,omitempty"`               // Used with STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, and TAKE_PROFIT_LIMIT orders.
+	TrailingDelta           int64                   `s2m:"trailingDelta,omitempty"`           // Used with STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, and TAKE_PROFIT_LIMIT orders. For more details on SPOT implementation on trailing stops, please refer to Trailing Stop FAQ
+	IcebergQty              float64                 `s2m:"icebergQty,omitempty"`              // Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
+	NewOrderRespType        SpotOrderResponseType   `s2m:"newOrderRespType,omitempty"`        // Set the response JSON. ACK, RESULT, or FULL; MARKET and LIMIT order types default to FULL, all other orders default to ACK.
+	SelfTradePreventionMode SelfTradePreventionMode `s2m:"selfTradePreventionMode,omitempty"` // The allowed enums is dependent on what is configured on the symbol.The possible supported values are EXPIRE_TAKER, EXPIRE_MAKER, EXPIRE_BOTH, NONE.
 }
 
 type SpotOrderFill struct {
@@ -483,19 +483,19 @@ type SpotOrderFill struct {
 
 type SpotOrderResult struct {
 	// common
-	Symbol                  string                      `json:"symbol"`
-	OrderId                 int64                       `json:"orderId"`
-	OrderListId             int64                       `json:"orderListId"` // Unless OCO, value will be -1
-	ClientOrderId           string                      `json:"clientOrderId"`
-	Price                   string                      `json:"price"` // origin price, if market order, it is 0
-	OrigQty                 string                      `json:"origQty"`
-	ExecutedQty             string                      `json:"executedQty"`
-	CummulativeQuoteQty     string                      `json:"cummulativeQuoteQty"`
-	Status                  OrderStatus                 `json:"status"`
-	TimeInForce             TimeInForce                 `json:"timeInForce"`
-	Type                    OrderType                   `json:"type"`
-	Side                    OrderSide                   `json:"side"`
-	SelfTradePreventionMode SpotSelfTradePreventionMode `json:"selfTradePreventionMode"`
+	Symbol                  string                  `json:"symbol"`
+	OrderId                 int64                   `json:"orderId"`
+	OrderListId             int64                   `json:"orderListId"` // Unless OCO, value will be -1
+	ClientOrderId           string                  `json:"clientOrderId"`
+	Price                   string                  `json:"price"` // origin price, if market order, it is 0
+	OrigQty                 string                  `json:"origQty"`
+	ExecutedQty             string                  `json:"executedQty"`
+	CummulativeQuoteQty     string                  `json:"cummulativeQuoteQty"`
+	Status                  OrderStatus             `json:"status"`
+	TimeInForce             TimeInForce             `json:"timeInForce"`
+	Type                    OrderType               `json:"type"`
+	Side                    OrderSide               `json:"side"`
+	SelfTradePreventionMode SelfTradePreventionMode `json:"selfTradePreventionMode"`
 
 	// new order result, replace order result
 	TransactTime int64 `json:"transactTime"`
@@ -604,17 +604,17 @@ type SpotReplaceOrderParams struct {
 	CancelOrderId           int64                 `s2m:"cancelOrderId,omitempty"`           // Either the cancelOrigClientOrderId or cancelOrderId must be provided. If both are provided, cancelOrderId takes precedence.
 	CancelReplaceMode       SpotCancelReplaceMode `s2m:"cancelReplaceMode,omitempty"`       // The allowed values are: STOP_ON_FAILURE - If the cancel request fails, the new order placement will not be attempted. ALLOW_FAILURE - new order placement will be attempted even if cancel request fails.
 
-	QuoteOrderQty           float64                     `s2m:"quoteOrderQty,omitempty"`
-	CancelNewClientOrderId  string                      `s2m:"cancelNewClientOrderId,omitempty"` // Used to uniquely identify this cancel. Automatically generated by default.
-	NewClientOrderId        string                      `s2m:"newClientOrderId,omitempty"`       // Used to identify the new order.
-	StrategyId              int64                       `s2m:"strategyId,omitempty"`
-	StrategyType            int64                       `s2m:"strategyType,omitempty"` // The value cannot be less than 1000000.
-	StopPrice               float64                     `s2m:"stopPrice,omitempty"`
-	TrailingDelta           int64                       `s2m:"trailingDelta,omitempty"`
-	IcebergQty              float64                     `s2m:"icebergQty,omitempty"`
-	NewOrderRespType        SpotOrderResponseType       `s2m:"newOrderRespType,omitempty"`
-	SelfTradePreventionMode SpotSelfTradePreventionMode `s2m:"selfTradePreventionMode,omitempty"` // The allowed enums is dependent on what is configured on the symbol. The possible supported values are EXPIRE_TAKER, EXPIRE_MAKER, EXPIRE_BOTH, NONE.
-	CancelRestrictions      SpotOrderCancelRestriction  `s2m:"cancelRestrictions,omitempty"`      // Supported values: ONLY_NEW - Cancel will succeed if the order status is NEW. ONLY_PARTIALLY_FILLED - Cancel will succeed if order status is PARTIALLY_FILLED.
+	QuoteOrderQty           float64                    `s2m:"quoteOrderQty,omitempty"`
+	CancelNewClientOrderId  string                     `s2m:"cancelNewClientOrderId,omitempty"` // Used to uniquely identify this cancel. Automatically generated by default.
+	NewClientOrderId        string                     `s2m:"newClientOrderId,omitempty"`       // Used to identify the new order.
+	StrategyId              int64                      `s2m:"strategyId,omitempty"`
+	StrategyType            int64                      `s2m:"strategyType,omitempty"` // The value cannot be less than 1000000.
+	StopPrice               float64                    `s2m:"stopPrice,omitempty"`
+	TrailingDelta           int64                      `s2m:"trailingDelta,omitempty"`
+	IcebergQty              float64                    `s2m:"icebergQty,omitempty"`
+	NewOrderRespType        SpotOrderResponseType      `s2m:"newOrderRespType,omitempty"`
+	SelfTradePreventionMode SelfTradePreventionMode    `s2m:"selfTradePreventionMode,omitempty"` // The allowed enums is dependent on what is configured on the symbol. The possible supported values are EXPIRE_TAKER, EXPIRE_MAKER, EXPIRE_BOTH, NONE.
+	CancelRestrictions      SpotOrderCancelRestriction `s2m:"cancelRestrictions,omitempty"`      // Supported values: ONLY_NEW - Cancel will succeed if the order status is NEW. ONLY_PARTIALLY_FILLED - Cancel will succeed if order status is PARTIALLY_FILLED.
 }
 
 type SpotReplaceOrderRawData struct {

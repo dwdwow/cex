@@ -19,3 +19,27 @@ func TestFuChangeMultiAssetsMode(t *testing.T) {
 func TestFuCurrentMultiAssetsMode(t *testing.T) {
 	testConfig(FuCurrentMultiAssetsModeConfig, nil)
 }
+
+func TestFuNewOrder(t *testing.T) {
+	testConfig(FuNewOrderConfig, FuNewOrderParams{
+		Symbol:                  "ETHUSDT",
+		Side:                    OrderSideBuy,
+		PositionSide:            FuPosBoth,
+		Type:                    OrderTypeLimit,
+		TimeInForce:             TimeInForceGtc,
+		Quantity:                0.01,
+		Price:                   1500,
+		ReduceOnly:              "",
+		NewClientOrderId:        "asdfljksdhkf",
+		StopPrice:               0,
+		ClosePosition:           false,
+		ActivationPrice:         0,
+		CallbackRate:            0,
+		WorkingType:             "",
+		PriceProtect:            "",
+		NewOrderRespType:        "",
+		PriceMatch:              "",
+		SelfTradePreventionMode: "",
+		GoodTillDate:            0,
+	})
+}
