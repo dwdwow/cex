@@ -312,8 +312,10 @@ const (
 )
 
 type CodeMsg struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
+	// spot: 0, future: 200
+	Code int `json:"code"`
+	// spot: "", future: "success"
+	Msg string `json:"msg"`
 }
 
 type Page[Slice any] struct {

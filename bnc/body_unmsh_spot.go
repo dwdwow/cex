@@ -40,7 +40,6 @@ func spotBodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 	// 	return nil
 	// }
 
-	// spot: 0, code: 0, 200
 	if code == 0 {
 		return nil
 	}

@@ -10,7 +10,7 @@ type ChangePositionModParams struct {
 	DualSidePosition SmallBool `json:"dualSidePosition"`
 }
 
-var ChangePositionModConfig = cex.ReqConfig[ChangePositionModParams, CodeMsg]{
+var FuChangePositionModeConfig = cex.ReqConfig[ChangePositionModParams, CodeMsg]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/positionSide/dual",
@@ -21,4 +21,21 @@ var ChangePositionModConfig = cex.ReqConfig[ChangePositionModParams, CodeMsg]{
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[CodeMsg]),
+}
+
+type CurrentPositionModeResult struct {
+	DualSidePosition bool `json:"dualSidePosition"`
+}
+
+var FuPositionModeConfig = cex.ReqConfig[cex.NilReqData, CurrentPositionModeResult]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/positionSide/dual",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[CurrentPositionModeResult]),
 }
