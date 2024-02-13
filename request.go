@@ -69,16 +69,18 @@ func request[ReqDataType, RespDataType any](
 		return nil, respData, reqErr.SetErr(fmt.Errorf("cex: make request, %w", err))
 	}
 
+	// here sets empty url
+	// request maker should compose the whole url
 	var resp *resty.Response
 	switch config.Method {
 	case http.MethodGet:
-		resp, err = req.Get(config.Path)
+		resp, err = req.Get("")
 	case http.MethodPost:
-		resp, err = req.Post(config.Path)
+		resp, err = req.Post("")
 	case http.MethodPut:
-		resp, err = req.Put(config.Path)
+		resp, err = req.Put("")
 	case http.MethodDelete:
-		resp, err = req.Delete(config.Path)
+		resp, err = req.Delete("")
 	default:
 		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: http method %v is not supported", config.Method))
 	}

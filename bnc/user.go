@@ -65,8 +65,8 @@ func (u User) makePrivateReq(config cex.ReqBaseConfig, reqData any, opts ...cex.
 	// url.Values composing is alphabetical
 	// but binance require signature as the last one
 	clt := resty.New().
-		SetBaseURL(config.BaseUrl+config.Path+"?"+query).
-		SetHeader("X-MBX-APIKEY", u.api.ApiKey)
+		SetHeader("X-MBX-APIKEY", u.api.ApiKey).
+		SetBaseURL(config.BaseUrl + config.Path + "?" + query)
 	req := clt.R()
 	for _, opt := range opts {
 		opt(clt, req)
