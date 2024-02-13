@@ -1,11 +1,10 @@
-package bnctest
+package bnc
 
 import (
 	"fmt"
 	"testing"
 
 	"github.com/dwdwow/cex"
-	"github.com/dwdwow/cex/bnc"
 	"github.com/dwdwow/cex/test/cextest"
 	"github.com/dwdwow/props"
 )
@@ -25,23 +24,23 @@ func testConfig[ReqDataType, RespDataType any](
 	opts ...cex.ReqOpt,
 ) {
 	apiKey := readApiKey()
-	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
+	user := NewUser(apiKey.ApiKey, apiKey.SecretKey)
 	_, respData, err := cex.Request(user, config, reqData, opts...)
 	props.PanicIfNotNil(err)
 	props.PrintlnIndent(respData)
 }
 
 func TestCoinInfo(t *testing.T) {
-	testConfig(bnc.CoinInfoConfig, nil)
+	testConfig(CoinInfoConfig, nil)
 }
 
 func TestSpotAccount(t *testing.T) {
-	testConfig(bnc.SpotAccountConfig, nil)
+	testConfig(SpotAccountConfig, nil)
 }
 
 func TestUniversalTransfer(t *testing.T) {
-	testConfig(bnc.UniversalTransferConfig, bnc.UniversalTransferParams{
-		Type:       bnc.TranType_MAIN_UMFUTURE,
+	testConfig(UniversalTransferConfig, UniversalTransferParams{
+		Type:       TranType_MAIN_UMFUTURE,
 		Asset:      "USDT",
 		Amount:     10,
 		FromSymbol: "",
@@ -50,17 +49,17 @@ func TestUniversalTransfer(t *testing.T) {
 }
 
 func TestFlexibleProduct(t *testing.T) {
-	testConfig(bnc.FlexibleProductConfig, bnc.FlexibleProductListParams{
+	testConfig(FlexibleProductConfig, FlexibleProductListParams{
 		Asset: "BTC",
 	})
 }
 
 func TestCryptoLoansIncomeHistories(t *testing.T) {
-	testConfig(bnc.CryptoLoansIncomeHistoriesConfig, bnc.CryptoLoansIncomeHistoriesParams{})
+	testConfig(CryptoLoansIncomeHistoriesConfig, CryptoLoansIncomeHistoriesParams{})
 }
 
 func TestFlexibleBorrow(t *testing.T) {
-	testConfig(bnc.FlexibleBorrowConfig, bnc.FlexibleBorrowParams{
+	testConfig(FlexibleBorrowConfig, FlexibleBorrowParams{
 		LoanCoin:         "USDT",
 		LoanAmount:       100,
 		CollateralCoin:   "ETH",
@@ -69,7 +68,7 @@ func TestFlexibleBorrow(t *testing.T) {
 }
 
 func TestFlexibleOngoingOrders(t *testing.T) {
-	testConfig(bnc.FlexibleOngoingOrdersConfig, bnc.FlexibleOngoingOrdersParams{
+	testConfig(FlexibleOngoingOrdersConfig, FlexibleOngoingOrdersParams{
 		LoanCoin:       "USDT",
 		CollateralCoin: "ETH",
 		Current:        0,
@@ -78,7 +77,7 @@ func TestFlexibleOngoingOrders(t *testing.T) {
 }
 
 func TestFlexibleBorrowHistories(t *testing.T) {
-	testConfig(bnc.FlexibleBorrowHistoriesConfig, bnc.FlexibleBorrowHistoriesParams{
+	testConfig(FlexibleBorrowHistoriesConfig, FlexibleBorrowHistoriesParams{
 		LoanCoin:       "USDT",
 		CollateralCoin: "ETH",
 		StartTime:      0,
@@ -89,17 +88,17 @@ func TestFlexibleBorrowHistories(t *testing.T) {
 }
 
 func TestFlexibleRepay(t *testing.T) {
-	testConfig(bnc.FlexibleRepayConfig, bnc.FlexibleRepayParams{
+	testConfig(FlexibleRepayConfig, FlexibleRepayParams{
 		LoanCoin:         "USDT",
 		CollateralCoin:   "ETH",
 		RepayAmount:      100,
-		CollateralReturn: bnc.TRUE,
-		FullRepayment:    bnc.FALSE,
+		CollateralReturn: TRUE,
+		FullRepayment:    FALSE,
 	})
 }
 
 func TestFlexibleRepayHistories(t *testing.T) {
-	testConfig(bnc.FlexibleRepaymentHistoriesConfig, bnc.FlexibleRepaymentHistoriesParams{
+	testConfig(FlexibleRepaymentHistoriesConfig, FlexibleRepaymentHistoriesParams{
 		LoanCoin:       "",
 		CollateralCoin: "",
 		StartTime:      0,
@@ -110,16 +109,16 @@ func TestFlexibleRepayHistories(t *testing.T) {
 }
 
 func TestFlexibleAdjustLtv(t *testing.T) {
-	testConfig(bnc.FlexibleLoanAdjustLtvConfig, bnc.FlexibleAdjustLtvParams{
+	testConfig(FlexibleLoanAdjustLtvConfig, FlexibleAdjustLtvParams{
 		LoanCoin:         "USDT",
 		CollateralCoin:   "ETH",
 		AdjustmentAmount: 0.05,
-		Direction:        bnc.LTVAdDireReduced,
+		Direction:        LTVAdDireReduced,
 	})
 }
 
 func TestFlexibleAdjustLtvHistories(t *testing.T) {
-	testConfig(bnc.FlexibleAdjustLtvHistoriesConfig, bnc.FlexibleAdjustLtvHistoriesParams{
+	testConfig(FlexibleAdjustLtvHistoriesConfig, FlexibleAdjustLtvHistoriesParams{
 		LoanCoin:       "USDT",
 		CollateralCoin: "ETH",
 		StartTime:      0,
@@ -130,25 +129,25 @@ func TestFlexibleAdjustLtvHistories(t *testing.T) {
 }
 
 func TestFlexibleLoanAssets(t *testing.T) {
-	testConfig(bnc.FlexibleLoanAssetsConfig, bnc.FlexibleLoanAssetsParams{
+	testConfig(FlexibleLoanAssetsConfig, FlexibleLoanAssetsParams{
 		LoanCoin: "",
 	})
 }
 
 func TestFlexibleCollateralCoins(t *testing.T) {
-	testConfig(bnc.FlexibleCollateralCoinsConfig, bnc.FlexibleCollateralCoinsParams{
+	testConfig(FlexibleCollateralCoinsConfig, FlexibleCollateralCoinsParams{
 		CollateralCoin: "",
 	})
 }
 
 func TestNewSpotOrder(t *testing.T) {
-	testConfig(bnc.SpotNewOrderConfig, bnc.SpotNewOrderParams{
+	testConfig(SpotNewOrderConfig, SpotNewOrderParams{
 		Symbol:                  "ETHUSDT",
-		Type:                    bnc.OrderTypeLimit,
-		Side:                    bnc.OrderSideBuy,
+		Type:                    OrderTypeLimit,
+		Side:                    OrderSideBuy,
 		Quantity:                0.01,
 		Price:                   1500,
-		TimeInForce:             bnc.TimeInForceGtc,
+		TimeInForce:             TimeInForceGtc,
 		NewClientOrderId:        "asdfsfhkhuiwe",
 		QuoteOrderQty:           0,
 		StrategyId:              0,
@@ -162,7 +161,7 @@ func TestNewSpotOrder(t *testing.T) {
 }
 
 func TestCancelSpotOder(t *testing.T) {
-	testConfig(bnc.SpotCancelOrderConfig, bnc.SpotCancelOrderParams{
+	testConfig(SpotCancelOrderConfig, SpotCancelOrderParams{
 		Symbol:             "ETHUSDT",
 		OrderId:            0,
 		OrigClientOrderId:  "",
@@ -172,13 +171,13 @@ func TestCancelSpotOder(t *testing.T) {
 }
 
 func TestCancelAllSpotOpenOrders(t *testing.T) {
-	testConfig(bnc.SpotCancelAllOpenOrdersConfig, bnc.SpotCancelAllOpenOrdersParams{
+	testConfig(SpotCancelAllOpenOrdersConfig, SpotCancelAllOpenOrdersParams{
 		Symbol: "ETHUSDT",
 	})
 }
 
 func TestSpotQueryOrder(t *testing.T) {
-	testConfig(bnc.SpotQueryOrderConfig, bnc.SpotQueryOrderParams{
+	testConfig(SpotQueryOrderConfig, SpotQueryOrderParams{
 		Symbol:            "ETHUSDT",
 		OrderId:           0,
 		OrigClientOrderId: "",
@@ -187,13 +186,13 @@ func TestSpotQueryOrder(t *testing.T) {
 
 func TestSpotReplaceOrder(t *testing.T) {
 	apiKey := readApiKey()
-	user := bnc.NewUser(apiKey.ApiKey, apiKey.SecretKey)
-	_, respData, err := cex.Request(user, bnc.SpotReplaceOrderConfig, bnc.SpotReplaceOrderParams{
+	user := NewUser(apiKey.ApiKey, apiKey.SecretKey)
+	_, respData, err := cex.Request(user, SpotReplaceOrderConfig, SpotReplaceOrderParams{
 		Symbol:                  "ETHUSDT",
-		Type:                    bnc.OrderTypeLimit,
-		Side:                    bnc.OrderSideSell,
-		CancelReplaceMode:       bnc.SpotCancelReplaceMode_STOP_ON_FAILURE,
-		TimeInForce:             bnc.TimeInForceGtc,
+		Type:                    OrderTypeLimit,
+		Side:                    OrderSideSell,
+		CancelReplaceMode:       SpotCancelReplaceMode_STOP_ON_FAILURE,
+		TimeInForce:             TimeInForceGtc,
 		Quantity:                10,
 		QuoteOrderQty:           0,
 		Price:                   3000,
@@ -217,11 +216,11 @@ func TestSpotReplaceOrder(t *testing.T) {
 }
 
 func TestSpotCurrentOpenOrders(t *testing.T) {
-	testConfig(bnc.SpotCurrentOpenOrdersConfig, bnc.SpotCurrentOpenOrdersParams{Symbol: ""})
+	testConfig(SpotCurrentOpenOrdersConfig, SpotCurrentOpenOrdersParams{Symbol: ""})
 }
 
 func TestSpotAllOrders(t *testing.T) {
-	testConfig(bnc.SpotAllOrdersConfig, bnc.SpotAllOrdersParams{
+	testConfig(SpotAllOrdersConfig, SpotAllOrdersParams{
 		Symbol:    "ETHUSDT",
 		OrderId:   0,
 		StartTime: 0,

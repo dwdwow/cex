@@ -43,7 +43,7 @@ type CoinNetworkInfo struct {
 	Busy                    bool   `json:"busy"`
 }
 
-var CoinInfoConfig = cex.ReqConfig[cex.EmptyReqData, []CoinInfo]{
+var CoinInfoConfig = cex.ReqConfig[cex.NilReqData, []CoinInfo]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/capital/config/getall",
@@ -84,7 +84,7 @@ type SpotAccount struct {
 	Permissions                []TradeType   `json:"permissions" bson:"permissions"`
 }
 
-var SpotAccountConfig = cex.ReqConfig[cex.EmptyReqData, SpotAccount]{
+var SpotAccountConfig = cex.ReqConfig[cex.NilReqData, SpotAccount]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             ApiV3 + "/account",

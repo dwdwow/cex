@@ -19,7 +19,7 @@ Error Codes Ref:
 Spot    : https://binance-docs.github.io/apidocs/spot/en/#error-codes
 Futures : https://binance-docs.github.io/apidocs/futures/en/#error-codes
 
-All Endpoint:
+All Endpoints:
 	HTTP 4XX return codes are used for malformed requests; the issue is on the sender's side.
 	HTTP 403 return code is used when the WAF Limit (Web Application Firewall) has been violated.
 	HTTP 429 return code is used when breaking a request rate limit.
@@ -68,7 +68,7 @@ var httpErrCodes = map[int]error{
 }
 
 func HTTPStatusCodeChecker(code int) error {
-	if code == 200 || code >= 500 {
+	if code == 200 {
 		return nil
 	}
 	// Spot Endpoint:
@@ -81,6 +81,9 @@ func HTTPStatusCodeChecker(code int) error {
 	// if error msg is not "Unknown error, please check your request or try again later.",
 	// should retry latter.
 	// ref: https://binance-docs.github.io/apidocs/futures/en/#general-api-information
+	//
+	// Although there are differences between spot and future endpoint, just ignore.
+	// Binance spot document may be not thorough? I do not know.
 	if code > 499 {
 		return cex.ErrHTTPCexInnerUnknownStatus
 	}
@@ -100,7 +103,7 @@ func HTTPStatusCodeChecker(code int) error {
 // ---------------------------------------------
 
 var (
-	ErrCexUnknownErrorDoNotTryAgain = errors.New("an unknown error occured while processing the request")
+	ErrCexInnerProblems = errors.New("an unknown error occured while processing the request")
 )
 
 // ---------------------------------------------
@@ -119,7 +122,7 @@ var (
 )
 
 var spotCexCustomErrCodes = map[int]error{
-	-1000: ErrCexUnknownErrorDoNotTryAgain,
+	-1000: ErrCexInnerProblems,
 	-1021: cex.ErrInvalidTimestamp,
 	-2010: ErrSpotOrderWouldImmediatelyMatchAndTake,
 	-2011: cex.ErrUnknownOrder,
@@ -142,7 +145,7 @@ func SpotCodeMsgChecker(code int) error {
 var ()
 
 var fuCexCustomErrCodes = map[int]error{
-	-1000: ErrCexUnknownErrorDoNotTryAgain,
+	-1000: ErrCexInnerProblems,
 	-1021: cex.ErrInvalidTimestamp,
 }
 

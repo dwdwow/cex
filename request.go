@@ -182,10 +182,10 @@ type HTTPStatusCodeChecker func(int) error
 // so should get these infos by unmarshalling.
 type RespBodyUnmarshaler[D any] func([]byte) (D, *RespBodyUnmarshalerError)
 
-// EmptyReqData means that no request data.
+// NilReqData means that no request data.
 // If a ReqConfig ReqDataType is this,
 // reqData should be nil.
-type EmptyReqData any
+type NilReqData any
 
 // ReqConfig is wrapper of ReqBaseConfig.
 // This struct makes it convenient to call Request.
