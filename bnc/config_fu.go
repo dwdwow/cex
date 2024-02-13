@@ -76,16 +76,16 @@ var FuCurrentMultiAssetsModeConfig = cex.ReqConfig[cex.NilReqData, FuCurrentMult
 
 type FuNewOrderParams struct {
 	Symbol                  string                  `s2m:"symbol,omitempty"`
-	Side                    OrderSide               `s2m:"side,omitempty"`
 	PositionSide            FuPositionSide          `s2m:"positionSide,omitempty"`
 	Type                    OrderType               `s2m:"type,omitempty"`
-	TimeInForce             TimeInForce             `s2m:"timeInForce,omitempty"`
+	Side                    OrderSide               `s2m:"side,omitempty"`
 	Quantity                float64                 `s2m:"quantity,omitempty"`
-	ReduceOnly              SmallBool               `s2m:"reduceOnly,omitempty"` // "true" or "false". default "false". Cannot be sent in Hedge Mode; cannot be sent with closePosition=true
 	Price                   float64                 `s2m:"price,omitempty"`
+	TimeInForce             TimeInForce             `s2m:"timeInForce,omitempty"`
 	NewClientOrderId        string                  `s2m:"newClientOrderId,omitempty"`
-	StopPrice               float64                 `s2m:"stopPrice,omitempty"`               // Used with STOP/STOP_MARKET or TAKE_PROFIT/TAKE_PROFIT_MARKET orders.
+	ReduceOnly              SmallBool               `s2m:"reduceOnly,omitempty"`              // "true" or "false". default "false". Cannot be sent in Hedge Mode; cannot be sent with closePosition=true
 	ClosePosition           bool                    `s2m:"closePosition,omitempty"`           //	true, false；Close-All，used with STOP_MARKET or TAKE_PROFIT_MARKET.
+	StopPrice               float64                 `s2m:"stopPrice,omitempty"`               // Used with STOP/STOP_MARKET or TAKE_PROFIT/TAKE_PROFIT_MARKET orders.
 	ActivationPrice         float64                 `s2m:"activationPrice,omitempty"`         // Used with TRAILING_STOP_MARKET orders, default as the latest price(supporting different workingType)
 	CallbackRate            float64                 `s2m:"callbackRate,omitempty"`            // Used with TRAILING_STOP_MARKET orders, min 0.1, max 5 where 1 for 1%
 	WorkingType             FuWorkingType           `s2m:"workingType,omitempty"`             // stopPrice triggered by: "MARK_PRICE", "CONTRACT_PRICE".Default "CONTRACT_PRICE"
@@ -97,9 +97,9 @@ type FuNewOrderParams struct {
 }
 
 type FuOrderResponse struct {
+	// common
 	ClientOrderId           string         `json:"clientOrderId"`
 	CumQty                  float64        `json:"cumQty,string"`
-	CumQuote                float64        `json:"cumQuote,string"`
 	ExecutedQty             float64        `json:"executedQty,string"`
 	OrderId                 int            `json:"orderId"`
 	AvgPrice                float64        `json:"avgPrice,string"`
@@ -115,14 +115,21 @@ type FuOrderResponse struct {
 	TimeInForce             TimeInForce    `json:"timeInForce"`
 	Type                    OrderType      `json:"type"`
 	OrigType                OrderType      `json:"origType"`
-	ActivatePrice           float64        `json:"activatePrice,string"`
-	PriceRate               float64        `json:"priceRate,string"`
 	UpdateTime              int64          `json:"updateTime"`
 	WorkingType             FuWorkingType  `json:"workingType"`
 	PriceProtect            bool           `json:"priceProtect"`
 	PriceMatch              string         `json:"priceMatch"`
 	SelfTradePreventionMode string         `json:"selfTradePreventionMode"`
 	GoodTillDate            int64          `json:"goodTillDate"`
+
+	// new order
+	CumQuote      float64 `json:"cumQuote,string"`
+	ActivatePrice float64 `json:"activatePrice,string"`
+	PriceRate     float64 `json:"priceRate,string"`
+
+	// modify order
+	Pair    string `json:"pair"`    // same as symbol
+	CumBase string `json:"cumBase"` // same as CumQuote? should verify
 }
 
 var FuNewOrderConfig = cex.ReqConfig[FuNewOrderParams, FuOrderResponse]{
@@ -130,6 +137,29 @@ var FuNewOrderConfig = cex.ReqConfig[FuNewOrderParams, FuOrderResponse]{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/order",
 		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrderResponse]),
+}
+
+type FuModifyOrderParams struct {
+	OrderId           int64     `s2m:"orderId,omitempty"`
+	OrigClientOrderId string    `s2m:"origClientOrderId,omitempty"`
+	Symbol            string    `s2m:"symbol,omitempty"`
+	Side              OrderSide `s2m:"side,omitempty"`
+	Quantity          float64   `s2m:"quantity,omitempty"`
+	Price             float64   `s2m:"price,omitempty"`
+	PriceMatch        string    `s2m:"priceMatch,omitempty"`
+}
+
+var FuModifyOrderConfig = cex.ReqConfig[FuModifyOrderParams, FuOrderResponse]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/order",
+		Method:           http.MethodPut,
 		IsUserData:       true,
 		UserTimeInterval: 0,
 		IpTimeInterval:   0,

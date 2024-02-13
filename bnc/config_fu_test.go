@@ -27,7 +27,7 @@ func TestFuNewOrder(t *testing.T) {
 		PositionSide:            FuPosBoth,
 		Type:                    OrderTypeLimit,
 		TimeInForce:             TimeInForceGtc,
-		Quantity:                0.01,
+		Quantity:                0.02,
 		Price:                   1500,
 		ReduceOnly:              "",
 		NewClientOrderId:        "asdfljksdhkf",
@@ -41,5 +41,17 @@ func TestFuNewOrder(t *testing.T) {
 		PriceMatch:              "",
 		SelfTradePreventionMode: "",
 		GoodTillDate:            0,
+	})
+}
+
+func TestFuModifyOrder(t *testing.T) {
+	testConfig(FuModifyOrderConfig, FuModifyOrderParams{
+		OrderId:           0,
+		OrigClientOrderId: "asdfljksdhkf",
+		Symbol:            "ETHUSDT",
+		Side:              OrderSideSell,
+		Quantity:          0.02,
+		Price:             3000,
+		PriceMatch:        "",
 	})
 }
