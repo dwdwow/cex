@@ -49,9 +49,9 @@ func TestFuModifyOrder(t *testing.T) {
 		OrderId:           0,
 		OrigClientOrderId: "asdfljksdhkf",
 		Symbol:            "ETHUSDT",
-		Side:              OrderSideSell,
+		Side:              OrderSideBuy,
 		Quantity:          0.02,
-		Price:             3000,
+		Price:             1200,
 		PriceMatch:        "",
 	})
 }
