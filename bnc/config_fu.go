@@ -31,7 +31,7 @@ var FuPositionModeConfig = cex.ReqConfig[cex.NilReqData, CurrentPositionModeResu
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/positionSide/dual",
-		Method:           http.MethodPost,
+		Method:           http.MethodGet,
 		IsUserData:       true,
 		UserTimeInterval: 0,
 		IpTimeInterval:   0,
