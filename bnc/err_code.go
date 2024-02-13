@@ -142,11 +142,14 @@ func SpotCodeMsgChecker(code int) error {
 // Binance Future Custom Errors
 // ---------------------------------------------
 
-var ()
+var (
+	ErrFutureNoNeedToChangePositionSide = errors.New("no need to change position side")
+)
 
 var fuCexCustomErrCodes = map[int]error{
 	-1000: ErrCexInnerProblems,
 	-1021: cex.ErrInvalidTimestamp,
+	-4059: ErrFutureNoNeedToChangePositionSide,
 }
 
 func FutureCodeMsgChecker(code int) error {

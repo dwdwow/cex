@@ -36,10 +36,9 @@ func bodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 	// Binance error codes description:
 	// -1000 UNKNOWN
 	// An unknown error occured while processing the request.
-	if code == -1000 || msg == "Unknown error, please check your request or try again later." {
-		// TODO should handle this error
-		return nil
-	}
+	// if code == -1000 || msg == "Unknown error, please check your request or try again later." {
+	// 	return nil
+	// }
 
 	// spot: 0, code: 0, 200
 	if code == 0 || code == 200 {
@@ -59,6 +58,11 @@ func bodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 	}
 
 	errCtm := spotCexCustomErrCodes[code]
+	switch errCtm {
+	case ErrFutureNoNeedToChangePositionSide:
+		return nil
+	default:
+	}
 	if errCtm == nil {
 		errCtm = fmt.Errorf("%v, %v", code, msg)
 	}
