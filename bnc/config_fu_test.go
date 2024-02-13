@@ -125,3 +125,14 @@ func TestFuPlaceMultiOrders(t *testing.T) {
 		},
 	})
 }
+
+func TestFuOrderModifyHistories(t *testing.T) {
+	testConfig(FuOrderModifyHistoriesConfig, FuOrderModifyHistoriesParams{
+		Symbol:            "ETHUSDT",
+		OrderId:           0,
+		OrigClientOrderId: "",
+		StartTime:         0,
+		EndTime:           0,
+		Limit:             0,
+	})
+}

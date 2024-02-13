@@ -172,6 +172,8 @@ var FuModifyOrderConfig = cex.ReqConfig[FuModifyOrderParams, FuOrderResponse]{
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrderResponse]),
 }
 
+// FuPlaceMultiOrdersParams is wired
+// TODO how to compose right query string
 type FuPlaceMultiOrdersParams struct {
 	BatchOrders []FuNewOrderParams `s2m:"batchOrders"` // max 5 orders
 }
@@ -187,4 +189,47 @@ var FuPlaceMultiOrdersConfig = cex.ReqConfig[FuPlaceMultiOrdersParams, []FuOrder
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrderResponse]),
+}
+
+type FuOrderModifyHistoriesParams struct {
+	Symbol            string `s2m:"symbol,omitempty"`
+	OrderId           int64  `s2m:"orderId,omitempty"`
+	OrigClientOrderId string `s2m:"origClientOrderId,omitempty"`
+	StartTime         int64  `s2m:"startTime,omitempty"`
+	EndTime           int64  `s2m:"endTime,omitempty"`
+	Limit             int    `s2m:"limit,omitempty"` // Default 1000; max 1000
+}
+
+type FuOrderModifyHistoriesResponse struct {
+	AmendmentId   int    `json:"amendmentId"`
+	Symbol        string `json:"symbol"`
+	Pair          string `json:"pair"`
+	OrderId       int64  `json:"orderId"`
+	ClientOrderId string `json:"clientOrderId"`
+	Time          int64  `json:"time"` // Order modification time
+	Amendment     struct {
+		Price struct {
+			Before float64 `json:"before,string"`
+			After  float64 `json:"after,string"`
+		} `json:"price"`
+		OrigQty struct {
+			Before float64 `json:"before,string"`
+			After  float64 `json:"after,string"`
+		} `json:"origQty"`
+		Count int `json:"count"` // Order modification count, representing the number of times the order has been modified
+	} `json:"amendment"`
+	PriceMatch string `json:"priceMatch"`
+}
+
+var FuOrderModifyHistoriesConfig = cex.ReqConfig[FuOrderModifyHistoriesParams, FuOrderModifyHistoriesResponse]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/orderAmendment",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrderModifyHistoriesResponse]),
 }
