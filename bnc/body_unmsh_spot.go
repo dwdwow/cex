@@ -8,9 +8,9 @@ import (
 	"github.com/dwdwow/cex"
 )
 
-func bodyUnmshWrapper[D any](unmarshaler cex.RespBodyUnmarshaler[D]) cex.RespBodyUnmarshaler[D] {
+func spotBodyUnmshWrapper[D any](unmarshaler cex.RespBodyUnmarshaler[D]) cex.RespBodyUnmarshaler[D] {
 	return func(body []byte) (D, *cex.RespBodyUnmarshalerError) {
-		err := bodyUnmshCodeMsg(body)
+		err := spotBodyUnmshCodeMsg(body)
 		if err != nil {
 			return *new(D), err
 		}
@@ -18,7 +18,7 @@ func bodyUnmshWrapper[D any](unmarshaler cex.RespBodyUnmarshaler[D]) cex.RespBod
 	}
 }
 
-func bodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
+func spotBodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 	codeMsg := CodeMsg{}
 
 	_ = json.Unmarshal(body, &codeMsg)
@@ -75,7 +75,7 @@ func bodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 }
 
 func spotOrderReplaceUnmarshaler(body []byte) (SpotReplaceOrderResult, *cex.RespBodyUnmarshalerError) {
-	errCodeMsgCheck := bodyUnmshCodeMsg(body)
+	errCodeMsgCheck := spotBodyUnmshCodeMsg(body)
 	if errCodeMsgCheck == nil {
 		return spotSucceedOrderReplaceUnmarshaler(body)
 	}

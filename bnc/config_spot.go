@@ -53,7 +53,7 @@ var CoinInfoConfig = cex.ReqConfig[cex.NilReqData, []CoinInfo]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[[]CoinInfo]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]CoinInfo]),
 }
 
 type SpotBalance struct {
@@ -94,7 +94,7 @@ var SpotAccountConfig = cex.ReqConfig[cex.NilReqData, SpotAccount]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotAccount]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotAccount]),
 }
 
 type UniversalTransferParams struct {
@@ -119,7 +119,7 @@ var UniversalTransferConfig = cex.ReqConfig[UniversalTransferParams, UniversalTr
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[UniversalTransferResp]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[UniversalTransferResp]),
 }
 
 // =============================================
@@ -157,7 +157,7 @@ var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListParams, Page[[]Flex
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleProduct]]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleProduct]]),
 }
 
 type CryptoLoansIncomeHistoriesParams struct {
@@ -186,7 +186,7 @@ var CryptoLoansIncomeHistoriesConfig = cex.ReqConfig[CryptoLoansIncomeHistoriesP
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[[]CryptoLoanIncomeHistory]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]CryptoLoanIncomeHistory]),
 }
 
 type FlexibleBorrowParams struct {
@@ -214,7 +214,7 @@ var FlexibleBorrowConfig = cex.ReqConfig[FlexibleBorrowParams, FlexibleBorrowRes
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleBorrowResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleBorrowResult]),
 }
 
 type FlexibleOngoingOrdersParams struct {
@@ -242,7 +242,7 @@ var FlexibleOngoingOrdersConfig = cex.ReqConfig[FlexibleOngoingOrdersParams, Pag
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleOngoingOrder]]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleOngoingOrder]]),
 }
 
 type FlexibleBorrowHistoriesParams struct {
@@ -273,7 +273,7 @@ var FlexibleBorrowHistoriesConfig = cex.ReqConfig[FlexibleBorrowHistoriesParams,
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleBorrowHistory]]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleBorrowHistory]]),
 }
 
 type FlexibleRepayParams struct {
@@ -304,7 +304,7 @@ var FlexibleRepayConfig = cex.ReqConfig[FlexibleRepayParams, FlexibleRepayResult
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleRepayResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleRepayResult]),
 }
 
 type FlexibleRepaymentHistoriesParams struct {
@@ -335,7 +335,7 @@ var FlexibleRepaymentHistoriesConfig = cex.ReqConfig[FlexibleRepaymentHistoriesP
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleRepaymentHistory]]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleRepaymentHistory]]),
 }
 
 type FlexibleAdjustLtvParams struct {
@@ -363,7 +363,7 @@ var FlexibleLoanAdjustLtvConfig = cex.ReqConfig[FlexibleAdjustLtvParams, Flexibl
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleLoanAdjustLtvResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleLoanAdjustLtvResult]),
 }
 
 type FlexibleAdjustLtvHistoriesParams struct {
@@ -395,7 +395,7 @@ var FlexibleAdjustLtvHistoriesConfig = cex.ReqConfig[FlexibleAdjustLtvHistoriesP
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleAdjustLtvHistory]]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleAdjustLtvHistory]]),
 }
 
 type FlexibleLoanAssetsParams struct {
@@ -419,7 +419,7 @@ var FlexibleLoanAssetsConfig = cex.ReqConfig[FlexibleLoanAssetsParams, Page[[]Fl
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleLoanAsset]]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleLoanAsset]]),
 }
 
 type FlexibleCollateralCoinsParams struct {
@@ -444,7 +444,7 @@ var FlexibleCollateralCoinsConfig = cex.ReqConfig[FlexibleCollateralCoinsParams,
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleCollateralCoin]]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleCollateralCoin]]),
 }
 
 // ---------------------------------------------
@@ -532,7 +532,7 @@ var SpotNewOrderConfig = cex.ReqConfig[SpotNewOrderParams, SpotOrderResult]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrderResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrderResult]),
 }
 
 type SpotCancelOrderParams struct {
@@ -553,7 +553,7 @@ var SpotCancelOrderConfig = cex.ReqConfig[SpotCancelOrderParams, SpotOrderResult
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrderResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrderResult]),
 }
 
 type SpotCancelAllOpenOrdersParams struct {
@@ -570,7 +570,7 @@ var SpotCancelAllOpenOrdersConfig = cex.ReqConfig[SpotCancelAllOpenOrdersParams,
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrderResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrderResult]),
 }
 
 type SpotQueryOrderParams struct {
@@ -589,7 +589,7 @@ var SpotQueryOrderConfig = cex.ReqConfig[SpotQueryOrderParams, SpotOrderResult]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrderResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrderResult]),
 }
 
 type SpotReplaceOrderParams struct {
@@ -670,7 +670,7 @@ var SpotCurrentOpenOrdersConfig = cex.ReqConfig[SpotCurrentOpenOrdersParams, []S
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrderResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrderResult]),
 }
 
 // SpotAllOrdersParams
@@ -697,7 +697,7 @@ var SpotAllOrdersConfig = cex.ReqConfig[SpotAllOrdersParams, []SpotOrderResult]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   bodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrderResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrderResult]),
 }
 
 // ---------------------------------------------
