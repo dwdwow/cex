@@ -103,6 +103,9 @@ func HTTPStatusCodeChecker(code int) error {
 // ---------------------------------------------
 
 var (
+	// ErrCexInnerProblems is so wired.
+	// Not inner problems, others may also respond this error.
+	// If HTTP method is wrong, will respond this error.
 	ErrCexInnerProblems = errors.New("an unknown error occured while processing the request")
 )
 

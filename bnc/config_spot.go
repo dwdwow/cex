@@ -176,7 +176,7 @@ var FlexibleRedeemConfig = cex.ReqConfig[FlexibleRedeemParams, FlexibleRedeemRes
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/simple-earn/flexible/redeem",
-		Method:           http.MethodPut,
+		Method:           http.MethodPost,
 		IsUserData:       true,
 		UserTimeInterval: 0,
 		IpTimeInterval:   0,
