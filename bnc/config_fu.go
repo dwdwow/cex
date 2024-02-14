@@ -411,3 +411,24 @@ var FuCurrentAllOpenOrdersConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, []F
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrder]),
 }
+
+type FuAllOrdersParams struct {
+	Symbol    string `s2m:"symbol,omitempty"`
+	OrderId   int64  `s2m:"orderId,omitempty"`
+	StartTime int64  `s2m:"startTime,omitempty"`
+	EndTime   int64  `s2m:"endTime,omitempty"`
+	Limit     int    `s2m:"limit,omitempty"` // default: 500, max: 1000
+}
+
+var FuAllOrdersConfig = cex.ReqConfig[FuAllOrdersParams, []FuOrder]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/allOrders",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrder]),
+}

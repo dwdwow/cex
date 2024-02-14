@@ -230,3 +230,9 @@ func TestFuCurrentAllOpenOrders(t *testing.T) {
 		Symbol: "ETHUSDT",
 	})
 }
+
+func TestFuAllOrders(t *testing.T) {
+	testConfig(FuAllOrdersConfig, FuAllOrdersParams{
+		Symbol: "ETHUSDT",
+	})
+}
