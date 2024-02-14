@@ -169,7 +169,7 @@ type FuMarginType string
 
 const (
 	FuMarginIsolated FuMarginType = "ISOLATED"
-	FuMarginCross    FuMarginType = "CROSS"
+	FuMarginCross    FuMarginType = "CROSSED"
 )
 
 type FuWorkingType string
