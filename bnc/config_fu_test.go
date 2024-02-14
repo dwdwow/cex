@@ -136,3 +136,46 @@ func TestFuOrderModifyHistories(t *testing.T) {
 		Limit:             0,
 	})
 }
+
+func TestFuModifyMultiOrders(t *testing.T) {
+	testConfig(FuModifyMultiOrdersConfig, FuModifyMultiOrdersParams{
+		BatchOrders: []FuModifyOrderParams{
+			{
+				OrderId:           0,
+				OrigClientOrderId: "",
+				Symbol:            "ETHUSDT",
+				Side:              OrderSideBuy,
+				Quantity:          0.03,
+				Price:             1300,
+				PriceMatch:        "",
+			},
+			{
+				OrderId:           0,
+				OrigClientOrderId: "",
+				Symbol:            "ETHUSDT",
+				Side:              OrderSideBuy,
+				Quantity:          0.01,
+				Price:             1400,
+				PriceMatch:        "",
+			},
+			{
+				OrderId:           0,
+				OrigClientOrderId: "",
+				Symbol:            "ETHUSDT",
+				Side:              OrderSideSell,
+				Quantity:          0.01,
+				Price:             3000,
+				PriceMatch:        "",
+			},
+			{
+				OrderId:           0,
+				OrigClientOrderId: "",
+				Symbol:            "ETHUSDT",
+				Side:              OrderSideSell,
+				Quantity:          0.03,
+				Price:             3200,
+				PriceMatch:        "",
+			},
+		},
+	})
+}

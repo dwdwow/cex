@@ -131,7 +131,7 @@ type FuOrder struct {
 	Pair    string `json:"pair"`    // same as symbol
 	CumBase string `json:"cumBase"` // same as CumQuote? should verify
 
-	// place multi orders
+	// place, modify multi orders
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
 }
@@ -174,6 +174,8 @@ var FuModifyOrderConfig = cex.ReqConfig[FuModifyOrderParams, FuOrder]{
 
 // FuNewMultiOrdersOrderParams is different with FuNewOrderParams.
 // All fields are string.
+// Binance doc example just show that quantity and price are string.
+// Do not know if other float/int fields are string or not.
 type FuNewMultiOrdersOrderParams struct {
 	Symbol                  string                  `s2m:"symbol,omitempty" json:"symbol,omitempty"`
 	PositionSide            FuPositionSide          `s2m:"positionSide,omitempty" json:"positionSide,omitempty"`
@@ -208,6 +210,23 @@ var FuPlaceMultiOrdersConfig = cex.ReqConfig[FuPlaceMultiOrdersParams, []FuOrder
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/batchOrders",
 		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrder]),
+}
+
+type FuModifyMultiOrdersParams struct {
+	BatchOrders []FuModifyOrderParams `s2m:"batchOrders"`
+}
+
+var FuModifyMultiOrdersConfig = cex.ReqConfig[FuModifyMultiOrdersParams, []FuOrder]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/batchOrders",
+		Method:           http.MethodPut,
 		IsUserData:       true,
 		UserTimeInterval: 0,
 		IpTimeInterval:   0,
