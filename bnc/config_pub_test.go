@@ -31,3 +31,11 @@ func TestFuturesOrderBook(t *testing.T) {
 		Limit:  0,
 	})
 }
+
+func TestSpotExchangeInfo(t *testing.T) {
+	testPubConfig(SpotExchangeInfosConfig, nil)
+}
+
+func TestFuturesExchangeInfo(t *testing.T) {
+	testPubConfig(FuturesExchangeInfosConfig, nil)
+}
