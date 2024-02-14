@@ -303,3 +303,7 @@ func TestFuIncomeHistories(t *testing.T) {
 		Limit:      0,
 	})
 }
+
+func TestFuCommission(t *testing.T) {
+	testConfig(FuCommissionRateConfig, FuCommissionRateParams{Symbol: "ETHUSDT"})
+}

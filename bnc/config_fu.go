@@ -746,3 +746,26 @@ var FuIncomeHistoriesConfig = cex.ReqConfig[FuIncomeHistoriesParams, []FuIncome]
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuIncome]),
 }
+
+type FuCommissionRateParams struct {
+	Symbol string `s2m:"symbol"`
+}
+
+type FuCommissionRate struct {
+	Symbol              string  `json:"symbol"`
+	MakerCommissionRate float64 `json:"makerCommissionRate,string"`
+	TakerCommissionRate float64 `json:"takerCommissionRate,string"`
+}
+
+var FuCommissionRateConfig = cex.ReqConfig[FuCommissionRateParams, FuCommissionRate]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/commissionRate",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuCommissionRate]),
+}
