@@ -412,6 +412,9 @@ var FuCurrentAllOpenOrdersConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, []F
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrder]),
 }
 
+// FuAllOrdersParams
+// If orderId is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
+// The query time period must be less then 7 days( default as the recent 7 days).
 type FuAllOrdersParams struct {
 	Symbol    string `s2m:"symbol,omitempty"`
 	OrderId   int64  `s2m:"orderId,omitempty"`
@@ -420,6 +423,10 @@ type FuAllOrdersParams struct {
 	Limit     int    `s2m:"limit,omitempty"` // default: 500, max: 1000
 }
 
+// FuAllOrdersConfig
+// These orders will not be found:
+// order status is CANCELED or EXPIRED AND order has NO filled trade AND created time + 3 days < current time
+// order create time + 90 days < current time
 var FuAllOrdersConfig = cex.ReqConfig[FuAllOrdersParams, []FuOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
@@ -431,4 +438,29 @@ var FuAllOrdersConfig = cex.ReqConfig[FuAllOrdersParams, []FuOrder]{
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrder]),
+}
+
+type FuAccountBalance struct {
+	AccountAlias       string  `json:"accountAlias"`
+	Asset              string  `json:"asset"`
+	Balance            float64 `json:"balance,string"`
+	CrossWalletBalance float64 `json:"crossWalletBalance,string"`
+	CrossUnPnl         float64 `json:"crossUnPnl,string"`
+	AvailableBalance   float64 `json:"availableBalance,string"`
+	MaxWithdrawAmount  float64 `json:"maxWithdrawAmount,string"`
+	MarginAvailable    bool    `json:"marginAvailable"`
+	UpdateTime         int64   `json:"updateTime"`
+}
+
+var FuAccountBalancesConfig = cex.ReqConfig[cex.NilReqData, []FuAccountBalance]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV2 + "/balance",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuAccountBalance]),
 }

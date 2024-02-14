@@ -236,3 +236,7 @@ func TestFuAllOrders(t *testing.T) {
 		Symbol: "ETHUSDT",
 	})
 }
+
+func TestFuAccountBalances(t *testing.T) {
+	testConfig(FuAccountBalancesConfig, nil)
+}
