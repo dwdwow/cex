@@ -168,8 +168,8 @@ const (
 type FuMarginType string
 
 const (
-	FuMarginIsolated FuMarginType = "isolated"
-	FuMarginCross    FuMarginType = "cross"
+	FuMarginIsolated FuMarginType = "ISOLATED"
+	FuMarginCross    FuMarginType = "CROSS"
 )
 
 type FuWorkingType string

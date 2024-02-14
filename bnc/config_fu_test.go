@@ -251,3 +251,10 @@ func TestChangeInitialLeverage(t *testing.T) {
 		Leverage: 10,
 	})
 }
+
+func TestChangeMarginType(t *testing.T) {
+	testConfig(FuChangeMarginTypeConfig, FuChangeMarginTypeParams{
+		Symbol:     "ETHUSDT",
+		MarginType: FuMarginIsolated,
+	})
+}

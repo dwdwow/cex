@@ -98,28 +98,28 @@ type FuNewOrderParams struct {
 
 type FuOrder struct {
 	// common
-	ClientOrderId           string         `json:"clientOrderId"`
-	ExecutedQty             float64        `json:"executedQty,string"`
-	OrderId                 int            `json:"orderId"`
-	AvgPrice                float64        `json:"avgPrice,string"`
-	OrigQty                 float64        `json:"origQty,string"`
-	Price                   float64        `json:"price,string"`
-	ReduceOnly              bool           `json:"reduceOnly"`
-	Side                    OrderSide      `json:"side"`
-	PositionSide            FuPositionSide `json:"positionSide"`
-	Status                  OrderStatus    `json:"status"`
-	StopPrice               float64        `json:"stopPrice,string"`
-	ClosePosition           bool           `json:"closePosition"`
-	Symbol                  string         `json:"symbol"`
-	TimeInForce             TimeInForce    `json:"timeInForce"`
-	Type                    OrderType      `json:"type"`
-	OrigType                OrderType      `json:"origType"`
-	UpdateTime              int64          `json:"updateTime"`
-	WorkingType             FuWorkingType  `json:"workingType"`
-	PriceProtect            bool           `json:"priceProtect"`
-	PriceMatch              string         `json:"priceMatch"`
-	SelfTradePreventionMode string         `json:"selfTradePreventionMode"`
-	GoodTillDate            int64          `json:"goodTillDate"`
+	Symbol                  string                  `json:"symbol"`
+	OrderId                 int                     `json:"orderId"`
+	ClientOrderId           string                  `json:"clientOrderId"`
+	Type                    OrderType               `json:"type"`
+	PositionSide            FuPositionSide          `json:"positionSide"`
+	Side                    OrderSide               `json:"side"`
+	OrigQty                 float64                 `json:"origQty,string"`
+	Price                   float64                 `json:"price,string"` // orig price
+	ExecutedQty             float64                 `json:"executedQty,string"`
+	AvgPrice                float64                 `json:"avgPrice,string"`
+	ReduceOnly              bool                    `json:"reduceOnly"`
+	Status                  OrderStatus             `json:"status"`
+	StopPrice               float64                 `json:"stopPrice,string"`
+	ClosePosition           bool                    `json:"closePosition"`
+	TimeInForce             TimeInForce             `json:"timeInForce"`
+	OrigType                OrderType               `json:"origType"`
+	UpdateTime              int64                   `json:"updateTime"`
+	WorkingType             FuWorkingType           `json:"workingType"`
+	PriceProtect            bool                    `json:"priceProtect"`
+	PriceMatch              string                  `json:"priceMatch"`
+	SelfTradePreventionMode SelfTradePreventionMode `json:"selfTradePreventionMode"`
+	GoodTillDate            int64                   `json:"goodTillDate"`
 
 	// new order
 	CumQuote      float64 `json:"cumQuote,string"`
@@ -561,4 +561,22 @@ var FuChangeInitialLeverageConfig = cex.ReqConfig[FuChangeInitialLeverageParams,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuChangeInitialLeverageResponse]),
+}
+
+type FuChangeMarginTypeParams struct {
+	Symbol     string       `s2m:"symbol"`
+	MarginType FuMarginType `s2m:"marginType"`
+}
+
+var FuChangeMarginTypeConfig = cex.ReqConfig[FuChangeMarginTypeParams, CodeMsg]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/marginType",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[CodeMsg]),
 }
