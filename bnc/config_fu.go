@@ -538,3 +538,27 @@ var FuAccountConfig = cex.ReqConfig[cex.NilReqData, FuAccount]{
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuAccount]),
 }
+
+type FuChangeInitialLeverageParams struct {
+	Symbol   string `s2m:"symbol"`
+	Leverage int    `s2m:"leverage"`
+}
+
+type FuChangeInitialLeverageResponse struct {
+	Symbol           string  `json:"symbol"`
+	Leverage         int     `json:"leverage"`
+	MaxNotionalValue float64 `json:"maxNotionalValue,string"`
+}
+
+var FuChangeInitialLeverageConfig = cex.ReqConfig[FuChangeInitialLeverageParams, FuChangeInitialLeverageResponse]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/leverage",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuChangeInitialLeverageResponse]),
+}

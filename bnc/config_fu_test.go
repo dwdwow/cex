@@ -244,3 +244,10 @@ func TestFuAccountBalances(t *testing.T) {
 func TestFuAccount(t *testing.T) {
 	testConfig(FuAccountConfig, nil)
 }
+
+func TestChangeInitialLeverage(t *testing.T) {
+	testConfig(FuChangeInitialLeverageConfig, FuChangeInitialLeverageParams{
+		Symbol:   "ETHUSDT",
+		Leverage: 10,
+	})
+}
