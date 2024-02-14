@@ -364,8 +364,8 @@ type FuAutoCancelAllOpenOrdersParams struct {
 	Symbol string `s2m:"symbol,omitempty"`
 	// millisecond
 	// system will check all countdowns approximately every 10 milliseconds
-	// 0 to cancel timer
-	CountdownTime int64 `s2m:"countdownTime,omitempty"`
+	// 0 to cancel timer, do not omit empty
+	CountdownTime int64 `s2m:"countdownTime"`
 }
 
 type FuAutoCancelAllOpenOrdersResponse struct {
