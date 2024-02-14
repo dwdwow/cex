@@ -277,3 +277,7 @@ func TestFuPositionMarginChangeHistories(t *testing.T) {
 		Limit:     0,
 	})
 }
+
+func TestFuPositions(t *testing.T) {
+	testConfig(FuPositionsConfig, FuPositionsParams{Symbol: ""})
+}

@@ -619,7 +619,7 @@ type FuPositionMarginChangeHistoriesParams struct {
 type FuPositionMarginChangeHistory struct {
 	Symbol       string             `json:"symbol"`
 	Type         FuModifyMarginType `json:"type"`
-	DeltaType    string             `json:"deltaType"`
+	DeltaType    FuMarginDeltaType  `json:"deltaType"`
 	Amount       float64            `json:"amount,string"`
 	Asset        string             `json:"asset"`
 	Time         int64              `json:"time"`
@@ -637,4 +637,40 @@ var FuPositionMarginChangeHistoriesConfig = cex.ReqConfig[FuPositionMarginChange
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuPositionMarginChangeHistory]),
+}
+
+type FuPositionsParams struct {
+	Symbol string `s2m:"symbol"`
+}
+
+type FuPosition struct {
+	Symbol           string                `json:"symbol"`
+	PositionSide     string                `json:"positionSide"`
+	EntryPrice       float64               `json:"entryPrice,string"`
+	BreakEvenPrice   float64               `json:"breakEvenPrice,string"`
+	MarginType       FuMarginLowerCaseType `json:"marginType"`
+	IsAutoAddMargin  SmallBool             `json:"isAutoAddMargin"`
+	IsolatedMargin   float64               `json:"isolatedMargin,string"`
+	Leverage         float64               `json:"leverage,string"`
+	LiquidationPrice float64               `json:"liquidationPrice,string"`
+	MarkPrice        float64               `json:"markPrice,string"`
+	MaxNotionalValue float64               `json:"maxNotionalValue,string"`
+	PositionAmt      float64               `json:"positionAmt,string"`
+	Notional         float64               `json:"notional,string"`
+	IsolatedWallet   float64               `json:"isolatedWallet,string"`
+	UnRealizedProfit float64               `json:"unRealizedProfit,string"`
+	UpdateTime       int                   `json:"updateTime"`
+}
+
+var FuPositionsConfig = cex.ReqConfig[FuPositionsParams, []FuPosition]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV2 + "/positionRisk",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuPosition]),
 }
