@@ -24,7 +24,7 @@ func testConfig[ReqDataType, RespDataType any](
 	opts ...cex.ReqOpt,
 ) {
 	apiKey := readApiKey()
-	user := NewUser(apiKey.ApiKey, apiKey.SecretKey)
+	user := NewUser(apiKey.ApiKey, apiKey.SecretKey, UserOptPositionSide(FuPosBoth))
 	_, respData, err := cex.Request(user, config, reqData, opts...)
 	props.PanicIfNotNil(err)
 	props.PrintlnIndent(respData)

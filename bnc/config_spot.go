@@ -123,7 +123,7 @@ var UniversalTransferConfig = cex.ReqConfig[UniversalTransferParams, UniversalTr
 }
 
 // =============================================
-// Crypto Flexible Loans
+// Flexible Simple Earn
 // ---------------------------------------------
 
 type FlexibleProductListParams struct {
@@ -159,6 +159,39 @@ var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListParams, Page[[]Flex
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleProduct]]),
 }
+
+type FlexibleRedeemParams struct {
+	ProductId   string                 `s2m:"productId,omitempty"`
+	RedeemAll   bool                   `s2m:"redeemAll,omitempty"` //	true or false, default to false
+	Amount      float64                `s2m:"amount,omitempty"`    //	if redeemAll is false, amount is mandatory
+	DestAccount FlexibleRedeemDestType `s2m:"destAccount,omitempty"`
+}
+
+type FlexibleRedeemResponse struct {
+	RedeemId int64 `s2m:"redeemId,omitempty"`
+	Success  bool  `s2m:"success,omitempty"`
+}
+
+var FlexibleRedeemConfig = cex.ReqConfig[FlexibleRedeemParams, FlexibleRedeemResponse]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/simple-earn/flexible/redeem",
+		Method:           http.MethodPut,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleRedeemResponse]),
+}
+
+// ---------------------------------------------
+// Flexible Simple Earn
+// =============================================
+
+// =============================================
+// Crypto Flexible Loans
+// ---------------------------------------------
 
 type CryptoLoansIncomeHistoriesParams struct {
 	Asset     string               `s2m:"asset,omitempty"`
@@ -487,10 +520,10 @@ type SpotOrder struct {
 	OrderId                 int64                   `json:"orderId"`
 	OrderListId             int64                   `json:"orderListId"` // Unless OCO, value will be -1
 	ClientOrderId           string                  `json:"clientOrderId"`
-	Price                   string                  `json:"price"` // origin price, if market order, it is 0
-	OrigQty                 string                  `json:"origQty"`
-	ExecutedQty             string                  `json:"executedQty"`
-	CummulativeQuoteQty     string                  `json:"cummulativeQuoteQty"`
+	Price                   float64                 `json:"price,string"` // origin price, if market order, it is 0
+	OrigQty                 float64                 `json:"origQty,string"`
+	ExecutedQty             float64                 `json:"executedQty,string"`
+	CummulativeQuoteQty     float64                 `json:"cummulativeQuoteQty,string"`
 	Status                  OrderStatus             `json:"status"`
 	TimeInForce             TimeInForce             `json:"timeInForce"`
 	Type                    OrderType               `json:"type"`

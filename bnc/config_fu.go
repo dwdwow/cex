@@ -99,7 +99,7 @@ type FuNewOrderParams struct {
 type FuOrder struct {
 	// common
 	Symbol                  string                  `json:"symbol"`
-	OrderId                 int                     `json:"orderId"`
+	OrderId                 int64                   `json:"orderId"`
 	ClientOrderId           string                  `json:"clientOrderId"`
 	Type                    OrderType               `json:"type"`
 	PositionSide            FuPositionSide          `json:"positionSide"`

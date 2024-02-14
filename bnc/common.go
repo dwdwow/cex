@@ -363,6 +363,13 @@ const (
 	FlexibleRepayFailed   FlexibleRepayStatus = "Failed"
 )
 
+type FlexibleRedeemDestType string
+
+const (
+	FlexibleRedeemDestSpot FlexibleRedeemDestType = "SPOT"
+	FlexibleRedeemDestFund FlexibleRedeemDestType = "FUND"
+)
+
 type CodeMsg struct {
 	// spot: 0, future: 200
 	Code int `json:"code"`

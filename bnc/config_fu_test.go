@@ -307,3 +307,12 @@ func TestFuIncomeHistories(t *testing.T) {
 func TestFuCommission(t *testing.T) {
 	testConfig(FuCommissionRateConfig, FuCommissionRateParams{Symbol: "ETHUSDT"})
 }
+
+func TestFlexibleRedeem(t *testing.T) {
+	testConfig(FlexibleRedeemConfig, FlexibleRedeemParams{
+		ProductId:   "ETH001",
+		RedeemAll:   false,
+		Amount:      0,
+		DestAccount: "",
+	})
+}
