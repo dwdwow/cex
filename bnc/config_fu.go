@@ -339,3 +339,22 @@ var FuCancelAllOpenOrdersConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, Code
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[CodeMsg]),
 }
+
+type FuCancelMultiOrdersParams struct {
+	Symbol                string   `s2m:"symbol,omitempty"`
+	OrderIdList           []int64  `s2m:"orderIdList,omitempty"`           // max length: 10
+	OrigClientOrderIdList []string `s2m:"origClientOrderIdList,omitempty"` // max length: 10
+}
+
+var FuCancelMultiOrdersConfig = cex.ReqConfig[FuCancelMultiOrdersParams, []FuOrder]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/batchOrders",
+		Method:           http.MethodDelete,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrder]),
+}

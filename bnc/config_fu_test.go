@@ -201,3 +201,11 @@ func TestFuCancelAllOpenOrders(t *testing.T) {
 		Symbol: "ETHUSDT",
 	})
 }
+
+func TestFuCancelMultiOrders(t *testing.T) {
+	testConfig(FuCancelMultiOrdersConfig, FuCancelMultiOrdersParams{
+		Symbol:                "ETHUSDT",
+		OrderIdList:           []int64{8389765651930173670, 8389765651930173671, 8389765651930173669},
+		OrigClientOrderIdList: []string{"ashjkdg111", "ashjkdg1112", "ashjkdg11"},
+	})
+}
