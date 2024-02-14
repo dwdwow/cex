@@ -294,7 +294,9 @@ var FuOrderModifyHistoriesConfig = cex.ReqConfig[FuOrderModifyHistoriesParams, [
 }
 
 type FuQueryOrCancelOrderParams struct {
-	Symbol            string `s2m:"symbol,omitempty"`
+	Symbol string `s2m:"symbol,omitempty"`
+
+	// If canceling all orders, ignore.
 	OrderId           int64  `s2m:"orderId,omitempty"`
 	OrigClientOrderId string `s2m:"origClientOrderId,omitempty"`
 }
@@ -323,4 +325,17 @@ var FuCancelOrderConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, FuOrder]{
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrder]),
+}
+
+var FuCancelAllOpenOrdersConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, CodeMsg]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/allOpenOrders",
+		Method:           http.MethodDelete,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[CodeMsg]),
 }

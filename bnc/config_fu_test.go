@@ -88,7 +88,7 @@ func TestFuPlaceMultiOrders(t *testing.T) {
 				Quantity:                "0.02",
 				Price:                   "1700",
 				TimeInForce:             TimeInForceGtc,
-				NewClientOrderId:        "ashjkdg111",
+				NewClientOrderId:        "ashjkdg1112",
 				ReduceOnly:              "",
 				ClosePosition:           false,
 				StopPrice:               "",
@@ -193,5 +193,11 @@ func TestFuCancelOrder(t *testing.T) {
 		Symbol:            "ETHUSDT",
 		OrderId:           8389765651928248535,
 		OrigClientOrderId: "asdfljksdhkf",
+	})
+}
+
+func TestFuCancelAllOpenOrders(t *testing.T) {
+	testConfig(FuCancelAllOpenOrdersConfig, FuQueryOrCancelOrderParams{
+		Symbol: "ETHUSDT",
 	})
 }
