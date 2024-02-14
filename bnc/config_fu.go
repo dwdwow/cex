@@ -731,7 +731,7 @@ type FuIncome struct {
 	Info       string       `json:"info"`
 	Time       int64        `json:"time"`
 	TranId     string       `json:"tranId"`
-	TradeId    string       `json:"tradeId"`
+	TradeId    int64        `json:"tradeId,string"`
 }
 
 var FuIncomeHistoriesConfig = cex.ReqConfig[FuIncomeHistoriesParams, []FuIncome]{
