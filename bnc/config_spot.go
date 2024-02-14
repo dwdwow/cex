@@ -6,19 +6,6 @@ import (
 	"github.com/dwdwow/cex"
 )
 
-type CoinInfo struct {
-	Coin             string            `json:"coin"`
-	DepositAllEnable bool              `json:"depositAllEnable"`
-	Free             float64           `json:"free,string"`
-	Freeze           float64           `json:"freeze,string"`
-	Ipoable          float64           `json:"ipoable,string"`
-	Ipoing           float64           `json:"ipoing,string"`
-	IsLegalMoney     bool              `json:"isLegalMoney"`
-	Locked           float64           `json:"locked,string"`
-	Name             string            `json:"name"`
-	NetworkList      []CoinNetworkInfo `json:"networkList"`
-}
-
 type CoinNetworkInfo struct {
 	AddressRegex            string `json:"addressRegex"`
 	Coin                    string `json:"coin"`
@@ -43,7 +30,20 @@ type CoinNetworkInfo struct {
 	Busy                    bool   `json:"busy"`
 }
 
-var CoinInfoConfig = cex.ReqConfig[cex.NilReqData, []CoinInfo]{
+type Coin struct {
+	Coin             string            `json:"coin"`
+	DepositAllEnable bool              `json:"depositAllEnable"`
+	Free             float64           `json:"free,string"`
+	Freeze           float64           `json:"freeze,string"`
+	Ipoable          float64           `json:"ipoable,string"`
+	Ipoing           float64           `json:"ipoing,string"`
+	IsLegalMoney     bool              `json:"isLegalMoney"`
+	Locked           float64           `json:"locked,string"`
+	Name             string            `json:"name"`
+	NetworkList      []CoinNetworkInfo `json:"networkList"`
+}
+
+var CoinInfoConfig = cex.ReqConfig[cex.NilReqData, []Coin]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/capital/config/getall",
@@ -53,7 +53,7 @@ var CoinInfoConfig = cex.ReqConfig[cex.NilReqData, []CoinInfo]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]CoinInfo]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]Coin]),
 }
 
 type SpotBalance struct {
@@ -481,7 +481,7 @@ type SpotOrderFill struct {
 	TradeId         int64   `json:"tradeId"`
 }
 
-type SpotOrderResult struct {
+type SpotOrder struct {
 	// common
 	Symbol                  string                  `json:"symbol"`
 	OrderId                 int64                   `json:"orderId"`
@@ -522,7 +522,7 @@ type SpotOrderResult struct {
 	Msg  string `json:"msg"`
 }
 
-var SpotNewOrderConfig = cex.ReqConfig[SpotNewOrderParams, SpotOrderResult]{
+var SpotNewOrderConfig = cex.ReqConfig[SpotNewOrderParams, SpotOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             ApiV3 + "/order",
@@ -532,7 +532,7 @@ var SpotNewOrderConfig = cex.ReqConfig[SpotNewOrderParams, SpotOrderResult]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrderResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrder]),
 }
 
 type SpotCancelOrderParams struct {
@@ -543,7 +543,7 @@ type SpotCancelOrderParams struct {
 	CancelRestrictions SpotOrderCancelRestriction `s2m:"cancelRestrictions,omitempty"` // Supported values: ONLY_NEW - Cancel will succeed if the order status is NEW. ONLY_PARTIALLY_FILLED - Cancel will succeed if order status is PARTIALLY_FILLED
 }
 
-var SpotCancelOrderConfig = cex.ReqConfig[SpotCancelOrderParams, SpotOrderResult]{
+var SpotCancelOrderConfig = cex.ReqConfig[SpotCancelOrderParams, SpotOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             ApiV3 + "/order",
@@ -553,14 +553,14 @@ var SpotCancelOrderConfig = cex.ReqConfig[SpotCancelOrderParams, SpotOrderResult
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrderResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrder]),
 }
 
 type SpotCancelAllOpenOrdersParams struct {
 	Symbol string `s2m:"symbol,omitempty"`
 }
 
-var SpotCancelAllOpenOrdersConfig = cex.ReqConfig[SpotCancelAllOpenOrdersParams, []SpotOrderResult]{
+var SpotCancelAllOpenOrdersConfig = cex.ReqConfig[SpotCancelAllOpenOrdersParams, []SpotOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             ApiV3 + "/openOrders",
@@ -570,7 +570,7 @@ var SpotCancelAllOpenOrdersConfig = cex.ReqConfig[SpotCancelAllOpenOrdersParams,
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrderResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrder]),
 }
 
 type SpotQueryOrderParams struct {
@@ -579,7 +579,7 @@ type SpotQueryOrderParams struct {
 	OrigClientOrderId string `s2m:"origClientOrderId,omitempty"`
 }
 
-var SpotQueryOrderConfig = cex.ReqConfig[SpotQueryOrderParams, SpotOrderResult]{
+var SpotQueryOrderConfig = cex.ReqConfig[SpotQueryOrderParams, SpotOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             ApiV3 + "/order",
@@ -589,7 +589,7 @@ var SpotQueryOrderConfig = cex.ReqConfig[SpotQueryOrderParams, SpotOrderResult]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrderResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[SpotOrder]),
 }
 
 type SpotReplaceOrderParams struct {
@@ -620,12 +620,12 @@ type SpotReplaceOrderParams struct {
 type SpotReplaceOrderRawData struct {
 	CancelResult   SpotOrderCancelNewStatus `json:"cancelResult"`
 	NewOrderResult SpotOrderCancelNewStatus `json:"newOrderResult"`
-	// response may be SpotOrderResult, CodeMsg, null
-	// if result is SpotOrderCancelNewStatus_SUCCESS, response is SpotOrderResult
+	// response may be SpotOrder, CodeMsg, null
+	// if result is SpotOrderCancelNewStatus_SUCCESS, response is SpotOrder
 	// if result is SpotOrderCancelNewStatus_FAILURE, response is CodeMsg
 	// if result is SpotOrderCancelNewStatus_NOT_ATTEMPTED, response is null
-	CancelResponse   SpotOrderResult `json:"cancelResponse"`
-	NewOrderResponse SpotOrderResult `json:"newOrderResponse"`
+	CancelResponse   SpotOrder `json:"cancelResponse"`
+	NewOrderResponse SpotOrder `json:"newOrderResponse"`
 }
 
 type SpotReplaceOrderRawResult struct {
@@ -636,11 +636,11 @@ type SpotReplaceOrderRawResult struct {
 }
 
 type SpotReplaceOrderResult struct {
-	OK          bool            `json:"OK"`
-	ErrCancel   error           `json:"errCancel"`
-	ErrNew      error           `json:"errNew"`
-	OrderCancel SpotOrderResult `json:"orderCancel"`
-	OrderNew    SpotOrderResult `json:"orderNew"`
+	OK          bool      `json:"OK"`
+	ErrCancel   error     `json:"errCancel"`
+	ErrNew      error     `json:"errNew"`
+	OrderCancel SpotOrder `json:"orderCancel"`
+	OrderNew    SpotOrder `json:"orderNew"`
 }
 
 var SpotReplaceOrderConfig = cex.ReqConfig[SpotReplaceOrderParams, SpotReplaceOrderResult]{
@@ -660,7 +660,7 @@ type SpotCurrentOpenOrdersParams struct {
 	Symbol string `s2m:"symbol,omitempty"`
 }
 
-var SpotCurrentOpenOrdersConfig = cex.ReqConfig[SpotCurrentOpenOrdersParams, []SpotOrderResult]{
+var SpotCurrentOpenOrdersConfig = cex.ReqConfig[SpotCurrentOpenOrdersParams, []SpotOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             ApiV3 + "/openOrders",
@@ -670,7 +670,7 @@ var SpotCurrentOpenOrdersConfig = cex.ReqConfig[SpotCurrentOpenOrdersParams, []S
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrderResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrder]),
 }
 
 // SpotAllOrdersParams
@@ -687,7 +687,7 @@ type SpotAllOrdersParams struct {
 	Limit     int64  `s2m:"limit,omitempty"` // Default 500; max 1000.
 }
 
-var SpotAllOrdersConfig = cex.ReqConfig[SpotAllOrdersParams, []SpotOrderResult]{
+var SpotAllOrdersConfig = cex.ReqConfig[SpotAllOrdersParams, []SpotOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             ApiV3 + "/allOrders",
@@ -697,7 +697,7 @@ var SpotAllOrdersConfig = cex.ReqConfig[SpotAllOrdersParams, []SpotOrderResult]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrderResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrder]),
 }
 
 // ---------------------------------------------
