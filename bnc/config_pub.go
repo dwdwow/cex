@@ -145,6 +145,8 @@ var FuturesExchangeInfosConfig = cex.ReqConfig[cex.NilReqData, ExchangeInfo]{
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[ExchangeInfo]),
 }
 
+// FuturesFundingRateHistoriesParams
+// Limit, default 100, max 1000
 type FuturesFundingRateHistoriesParams struct {
 	Symbol    string `s2m:"symbol,omitempty"`
 	StartTime int64  `s2m:"startTime,omitempty"` // Timestamp in ms to get funding rate from INCLUSIVE.

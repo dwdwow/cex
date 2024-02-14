@@ -46,6 +46,8 @@ func queryInfoAboutFundingRate[Req any, Resp any](config cex.ReqConfig[Req, Resp
 	return resp, nil
 }
 
+// QueryFundingRateHistories
+// limit, default 100, max 1000
 func QueryFundingRateHistories(symbol string, startTime, endTime int64, limit int) ([]FuturesFundingRateHistory, error) {
 	return queryInfoAboutFundingRate(FuturesFundingRateHistoriesConfig, FuturesFundingRateHistoriesParams{Symbol: symbol, StartTime: startTime, EndTime: endTime, Limit: limit})
 }
