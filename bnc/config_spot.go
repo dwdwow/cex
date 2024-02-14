@@ -168,8 +168,8 @@ type FlexibleRedeemParams struct {
 }
 
 type FlexibleRedeemResponse struct {
-	RedeemId int64 `s2m:"redeemId,omitempty"`
-	Success  bool  `s2m:"success,omitempty"`
+	RedeemId int64 `json:"redeemId,omitempty"`
+	Success  bool  `json:"success,omitempty"`
 }
 
 var FlexibleRedeemConfig = cex.ReqConfig[FlexibleRedeemParams, FlexibleRedeemResponse]{
@@ -183,6 +183,43 @@ var FlexibleRedeemConfig = cex.ReqConfig[FlexibleRedeemParams, FlexibleRedeemRes
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleRedeemResponse]),
+}
+
+type SimpleEarnFlexiblePositionsParams struct {
+	Asset     string `s2m:"asset,omitempty"`
+	ProductId string `s2m:"productId,omitempty"`
+	Current   int    `s2m:"current,omitempty"`
+	Size      int    `s2m:"size,omitempty"` // default 10, max 100
+}
+
+type SimpleEarnFlexiblePosition struct {
+	TotalAmount                    float64            `json:"totalAmount,string"`
+	TierAnnualPercentageRate       map[string]float64 `json:"tierAnnualPercentageRate"`
+	LatestAnnualPercentageRate     float64            `json:"latestAnnualPercentageRate,string"`
+	YesterdayAirdropPercentageRate float64            `json:"yesterdayAirdropPercentageRate,string"`
+	Asset                          string             `json:"asset"`        // raw symbol, is not with prefix, LD
+	AirDropAsset                   string             `json:"airDropAsset"` // do not know meanings of this
+	CanRedeem                      bool               `json:"canRedeem"`
+	CollateralAmount               float64            `json:"collateralAmount,string"`
+	ProductId                      string             `json:"productId"`
+	YesterdayRealTimeRewards       float64            `json:"yesterdayRealTimeRewards,string"`
+	CumulativeBonusRewards         float64            `json:"cumulativeBonusRewards,string"`
+	CumulativeRealTimeRewards      float64            `json:"cumulativeRealTimeRewards,string"`
+	CumulativeTotalRewards         float64            `json:"cumulativeTotalRewards,string"`
+	AutoSubscribe                  bool               `json:"autoSubscribe"`
+}
+
+var SimpleEarnFlexiblePositionsConfig = cex.ReqConfig[SimpleEarnFlexiblePositionsParams, Page[[]SimpleEarnFlexiblePosition]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/simple-earn/flexible/position",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]SimpleEarnFlexiblePosition]]),
 }
 
 // ---------------------------------------------

@@ -316,3 +316,12 @@ func TestFlexibleRedeem(t *testing.T) {
 		DestAccount: "",
 	})
 }
+
+func TestSimpleEarnFlexiblePositions(t *testing.T) {
+	testConfig(SimpleEarnFlexiblePositionsConfig, SimpleEarnFlexiblePositionsParams{
+		Asset:     "ETH",
+		ProductId: "",
+		Current:   0,
+		Size:      0,
+	})
+}
