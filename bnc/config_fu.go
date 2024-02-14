@@ -580,3 +580,30 @@ var FuChangeMarginTypeConfig = cex.ReqConfig[FuChangeMarginTypeParams, CodeMsg]{
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[CodeMsg]),
 }
+
+type FuModifyIsolatedPositionMarginParams struct {
+	Symbol       string             `s2m:"symbol,omitempty"`
+	PositionSide FuPositionSide     `s2m:"positionSide,omitempty"`
+	Amount       float64            `s2m:"amount,omitempty"`
+	Type         FuModifyMarginType `s2m:"type,omitempty"` // 1: add position margin; 2: reduce position margin
+}
+
+type FuModifyIsolatedPositionMarginResponse struct {
+	Amount float64            `json:"amount"`
+	Code   int                `json:"code"`
+	Msg    string             `json:"msg"`
+	Type   FuModifyMarginType `json:"type"`
+}
+
+var FuModifyIsolatedPositionMarginConfig = cex.ReqConfig[FuModifyIsolatedPositionMarginParams, FuModifyIsolatedPositionMarginResponse]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/positionMargin",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuModifyIsolatedPositionMarginResponse]),
+}

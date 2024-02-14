@@ -169,7 +169,7 @@ type FuMarginType string
 
 const (
 	FuMarginIsolated FuMarginType = "ISOLATED"
-	FuMarginCross    FuMarginType = "CROSSED"
+	FuMarginCrossed  FuMarginType = "CROSSED"
 )
 
 type FuWorkingType string
@@ -177,6 +177,13 @@ type FuWorkingType string
 const (
 	FuWorkingType_MARK_PRICE     FuWorkingType = "MARK_PRICE"
 	FuWorkingType_CONTRACT_PRICE FuWorkingType = "CONTRACT_PRICE"
+)
+
+type FuModifyMarginType int
+
+const (
+	FuAddMargin    FuModifyMarginType = 1
+	FuReduceMargin FuModifyMarginType = 2
 )
 
 type BSwapOrderStatus string
