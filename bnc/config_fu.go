@@ -99,7 +99,6 @@ type FuNewOrderParams struct {
 type FuOrder struct {
 	// common
 	ClientOrderId           string         `json:"clientOrderId"`
-	CumQty                  float64        `json:"cumQty,string"`
 	ExecutedQty             float64        `json:"executedQty,string"`
 	OrderId                 int            `json:"orderId"`
 	AvgPrice                float64        `json:"avgPrice,string"`
@@ -127,9 +126,15 @@ type FuOrder struct {
 	ActivatePrice float64 `json:"activatePrice,string"`
 	PriceRate     float64 `json:"priceRate,string"`
 
+	// new, modify order
+	CumQty float64 `json:"cumQty,string"`
+
 	// modify order
 	Pair    string `json:"pair"`    // same as symbol
 	CumBase string `json:"cumBase"` // same as CumQuote? should verify
+
+	// query order
+	Time int64 `json:"time"`
 
 	// place, modify multi orders
 	Code int    `json:"code"`
@@ -286,4 +291,23 @@ var FuOrderModifyHistoriesConfig = cex.ReqConfig[FuOrderModifyHistoriesParams, [
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrderModifyHistory]),
+}
+
+type FuQueryOrderParams struct {
+	Symbol            string `s2m:"symbol,omitempty"`
+	OrderId           int64  `s2m:"orderId,omitempty"`
+	OrigClientOrderId string `s2m:"origClientOrderId,omitempty"`
+}
+
+var FuQueryOrderConfig = cex.ReqConfig[FuQueryOrderParams, FuOrder]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/order",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrder]),
 }

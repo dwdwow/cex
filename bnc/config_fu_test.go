@@ -179,3 +179,11 @@ func TestFuModifyMultiOrders(t *testing.T) {
 		},
 	})
 }
+
+func TestFuQueryOrder(t *testing.T) {
+	testConfig(FuQueryOrderConfig, FuQueryOrderParams{
+		Symbol:            "ETHUSDT",
+		OrderId:           8389765651924056174,
+		OrigClientOrderId: "",
+	})
+}
