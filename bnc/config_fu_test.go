@@ -267,3 +267,13 @@ func TestModifyIsolatedPositionMargin(t *testing.T) {
 		Type:         FuAddMargin,
 	})
 }
+
+func TestFuPositionMarginChangeHistories(t *testing.T) {
+	testConfig(FuPositionMarginChangeHistoriesConfig, FuPositionMarginChangeHistoriesParams{
+		Symbol:    "ETHUSDT",
+		Type:      0,
+		StartTime: 0,
+		EndTime:   0,
+		Limit:     0,
+	})
+}

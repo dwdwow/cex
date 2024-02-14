@@ -607,3 +607,34 @@ var FuModifyIsolatedPositionMarginConfig = cex.ReqConfig[FuModifyIsolatedPositio
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuModifyIsolatedPositionMarginResponse]),
 }
+
+type FuPositionMarginChangeHistoriesParams struct {
+	Symbol    string             `s2m:"symbol,omitempty"`
+	Type      FuModifyMarginType `s2m:"type,omitempty"`
+	StartTime int64              `s2m:"startTime,omitempty"`
+	EndTime   int64              `s2m:"endTime,omitempty"`
+	Limit     int                `s2m:"limit,omitempty"` // default: 500
+}
+
+type FuPositionMarginChangeHistory struct {
+	Symbol       string             `json:"symbol"`
+	Type         FuModifyMarginType `json:"type"`
+	DeltaType    string             `json:"deltaType"`
+	Amount       float64            `json:"amount,string"`
+	Asset        string             `json:"asset"`
+	Time         int64              `json:"time"`
+	PositionSide FuPositionSide     `json:"positionSide"`
+}
+
+var FuPositionMarginChangeHistoriesConfig = cex.ReqConfig[FuPositionMarginChangeHistoriesParams, []FuPositionMarginChangeHistory]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/positionMargin/history",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuPositionMarginChangeHistory]),
+}
