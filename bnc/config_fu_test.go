@@ -209,3 +209,10 @@ func TestFuCancelMultiOrders(t *testing.T) {
 		OrigClientOrderIdList: []string{"ashjkdg111", "ashjkdg1112", "ashjkdg11"},
 	})
 }
+
+func TestFuAutoCancelAllOpenOrders(t *testing.T) {
+	testConfig(FuAutoCancelAllOpenOrdersConfig, FuAutoCancelAllOpenOrdersParams{
+		Symbol:        "ETHUSDT",
+		CountdownTime: 10 * 1000,
+	})
+}

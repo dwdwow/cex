@@ -341,7 +341,8 @@ var FuCancelAllOpenOrdersConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, Code
 }
 
 type FuCancelMultiOrdersParams struct {
-	Symbol                string   `s2m:"symbol,omitempty"`
+	Symbol string `s2m:"symbol,omitempty"`
+	// Do not set orderIdList and origClientOrderIdList together
 	OrderIdList           []int64  `s2m:"orderIdList,omitempty"`           // max length: 10
 	OrigClientOrderIdList []string `s2m:"origClientOrderIdList,omitempty"` // max length: 10
 }
@@ -357,4 +358,30 @@ var FuCancelMultiOrdersConfig = cex.ReqConfig[FuCancelMultiOrdersParams, []FuOrd
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrder]),
+}
+
+type FuAutoCancelAllOpenOrdersParams struct {
+	Symbol string `s2m:"symbol,omitempty"`
+	// millisecond
+	// system will check all countdowns approximately every 10 milliseconds
+	// 0 to cancel timer
+	CountdownTime int64 `s2m:"countdownTime,omitempty"`
+}
+
+type FuAutoCancelAllOpenOrdersResponse struct {
+	Symbol        string `json:"symbol,omitempty"`
+	CountdownTime int64  `json:"countdownTime,omitempty"`
+}
+
+var FuAutoCancelAllOpenOrdersConfig = cex.ReqConfig[FuAutoCancelAllOpenOrdersParams, FuAutoCancelAllOpenOrdersResponse]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/countdownCancelAll",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuAutoCancelAllOpenOrdersResponse]),
 }
