@@ -193,20 +193,20 @@ type SimpleEarnFlexiblePositionsParams struct {
 }
 
 type SimpleEarnFlexiblePosition struct {
-	TotalAmount                    float64            `json:"totalAmount,string"`
-	TierAnnualPercentageRate       map[string]float64 `json:"tierAnnualPercentageRate"`
-	LatestAnnualPercentageRate     float64            `json:"latestAnnualPercentageRate,string"`
-	YesterdayAirdropPercentageRate float64            `json:"yesterdayAirdropPercentageRate,string"`
-	Asset                          string             `json:"asset"`        // raw symbol, is not with prefix, LD
-	AirDropAsset                   string             `json:"airDropAsset"` // do not know meanings of this
-	CanRedeem                      bool               `json:"canRedeem"`
-	CollateralAmount               float64            `json:"collateralAmount,string"`
-	ProductId                      string             `json:"productId"`
-	YesterdayRealTimeRewards       float64            `json:"yesterdayRealTimeRewards,string"`
-	CumulativeBonusRewards         float64            `json:"cumulativeBonusRewards,string"`
-	CumulativeRealTimeRewards      float64            `json:"cumulativeRealTimeRewards,string"`
-	CumulativeTotalRewards         float64            `json:"cumulativeTotalRewards,string"`
-	AutoSubscribe                  bool               `json:"autoSubscribe"`
+	TotalAmount                    float64           `json:"totalAmount,string"`
+	TierAnnualPercentageRate       map[string]string `json:"tierAnnualPercentageRate"`
+	LatestAnnualPercentageRate     float64           `json:"latestAnnualPercentageRate,string"`
+	YesterdayAirdropPercentageRate float64           `json:"yesterdayAirdropPercentageRate,string"`
+	Asset                          string            `json:"asset"`        // raw symbol, is not with prefix, LD
+	AirDropAsset                   string            `json:"airDropAsset"` // do not know meanings of this
+	CanRedeem                      bool              `json:"canRedeem"`
+	CollateralAmount               float64           `json:"collateralAmount,string"`
+	ProductId                      string            `json:"productId"`
+	YesterdayRealTimeRewards       float64           `json:"yesterdayRealTimeRewards,string"`
+	CumulativeBonusRewards         float64           `json:"cumulativeBonusRewards,string"`
+	CumulativeRealTimeRewards      float64           `json:"cumulativeRealTimeRewards,string"`
+	CumulativeTotalRewards         float64           `json:"cumulativeTotalRewards,string"`
+	AutoSubscribe                  bool              `json:"autoSubscribe"`
 }
 
 var SimpleEarnFlexiblePositionsConfig = cex.ReqConfig[SimpleEarnFlexiblePositionsParams, Page[[]SimpleEarnFlexiblePosition]]{
