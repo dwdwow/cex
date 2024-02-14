@@ -75,6 +75,10 @@ func (u *User) FlexibleProducts(asset string) (*resty.Response, Page[[]FlexibleP
 	return cex.Request(u, FlexibleProductConfig, FlexibleProductListParams{Asset: asset})
 }
 
+func (u *User) SimpleEarnFlexiblePositions(asset, productId string) (*resty.Response, Page[[]SimpleEarnFlexiblePosition], *cex.RequestError) {
+	return cex.Request(u, SimpleEarnFlexiblePositionsConfig, SimpleEarnFlexiblePositionsParams{Asset: asset, ProductId: productId})
+}
+
 func (u *User) FlexibleRedeem(productId string, redeemAll bool, amount float64, destAccount FlexibleRedeemDestType) (*resty.Response, FlexibleRedeemResponse, *cex.RequestError) {
 	return cex.Request(u, FlexibleRedeemConfig, FlexibleRedeemParams{ProductId: productId, RedeemAll: redeemAll, Amount: amount, DestAccount: destAccount})
 }

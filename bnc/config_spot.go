@@ -200,7 +200,7 @@ type SimpleEarnFlexiblePosition struct {
 	Asset                          string            `json:"asset"`        // raw symbol, is not with prefix, LD
 	AirDropAsset                   string            `json:"airDropAsset"` // do not know meanings of this
 	CanRedeem                      bool              `json:"canRedeem"`
-	CollateralAmount               float64           `json:"collateralAmount,string"`
+	CollateralAmount               float64           `json:"collateralAmount,string"` // is the amount of crypto loans
 	ProductId                      string            `json:"productId"`
 	YesterdayRealTimeRewards       float64           `json:"yesterdayRealTimeRewards,string"`
 	CumulativeBonusRewards         float64           `json:"cumulativeBonusRewards,string"`
