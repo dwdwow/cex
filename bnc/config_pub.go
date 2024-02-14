@@ -13,8 +13,8 @@ type OrderBookParams struct {
 
 type RawOrderBook struct {
 	LastUpdateId int64      `json:"lastUpdateId"`
-	Bids         [][]string `json:"bids"`
 	Asks         [][]string `json:"asks"`
+	Bids         [][]string `json:"bids"`
 
 	// futures order book fields
 	E int64 `json:"e"` // Message output time
@@ -26,8 +26,8 @@ type RawOrderBook struct {
 
 type OrderBook struct {
 	LastUpdateId int64
-	Bids         [][]float64
 	Asks         [][]float64
+	Bids         [][]float64
 
 	// futures order book fields
 	E int64 `json:"e"` // Message output time
