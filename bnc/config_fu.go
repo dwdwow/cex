@@ -496,7 +496,7 @@ type FuAccountPosition struct {
 	BidNotional            float64        `json:"bidNotional,string"`
 	AskNotional            float64        `json:"askNotional,string"`
 	PositionSide           FuPositionSide `json:"positionSide"`
-	PositionAmt            float64        `json:"positionAmt,string"`
+	PositionAmt            float64        `json:"positionAmt,string"` // long: > 0, short: < 0
 	UpdateTime             int64          `json:"updateTime"`
 
 	// multi asset mode
@@ -655,7 +655,7 @@ type FuPosition struct {
 	LiquidationPrice float64               `json:"liquidationPrice,string"`
 	MarkPrice        float64               `json:"markPrice,string"`
 	MaxNotionalValue float64               `json:"maxNotionalValue,string"`
-	PositionAmt      float64               `json:"positionAmt,string"`
+	PositionAmt      float64               `json:"positionAmt,string"` // long: > 0, short: < 0
 	Notional         float64               `json:"notional,string"`
 	IsolatedWallet   float64               `json:"isolatedWallet,string"`
 	UnRealizedProfit float64               `json:"unRealizedProfit,string"`
@@ -673,4 +673,43 @@ var FuPositionsConfig = cex.ReqConfig[FuPositionsParams, []FuPosition]{
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuPosition]),
+}
+
+type FuAccountTradeListParams struct {
+	Symbol    string `s2m:"symbol,omitempty"`
+	OrderId   int64  `s2m:"orderId,omitempty"` // This can only be used in combination with symbol
+	StartTime int64  `s2m:"startTime,omitempty"`
+	EndTime   int64  `s2m:"endTime,omitempty"`
+	FromId    int64  `s2m:"fromId,omitempty"` // Trade id to fetch from.Default gets most recent trades.
+	Limit     int    `s2m:"limit,omitempty"`  // Default 500 max 1000.
+}
+
+type FuTradeHistory struct {
+	Id              int64          `json:"id"`
+	OrderId         int64          `json:"orderId"`
+	Symbol          string         `json:"symbol"`
+	Buyer           bool           `json:"buyer"`
+	Maker           bool           `json:"maker"`
+	PositionSide    FuPositionSide `json:"positionSide"`
+	Side            OrderSide      `json:"side"`
+	Qty             float64        `json:"qty,string"`
+	Price           float64        `json:"price,string"`
+	QuoteQty        float64        `json:"quoteQty,string"`
+	RealizedPnl     float64        `json:"realizedPnl,string"`
+	Commission      float64        `json:"commission,string"`
+	CommissionAsset string         `json:"commissionAsset"`
+	Time            int64          `json:"time"`
+}
+
+var FuAccountTradeListConfig = cex.ReqConfig[FuAccountTradeListParams, []FuTradeHistory]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/userTrades",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuTradeHistory]),
 }

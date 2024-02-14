@@ -281,3 +281,14 @@ func TestFuPositionMarginChangeHistories(t *testing.T) {
 func TestFuPositions(t *testing.T) {
 	testConfig(FuPositionsConfig, FuPositionsParams{Symbol: ""})
 }
+
+func TestFuTradeList(t *testing.T) {
+	testConfig(FuAccountTradeListConfig, FuAccountTradeListParams{
+		Symbol:    "ETHUSDT",
+		OrderId:   0,
+		StartTime: 0,
+		EndTime:   0,
+		FromId:    0,
+		Limit:     0,
+	})
+}
