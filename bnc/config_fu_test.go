@@ -292,3 +292,14 @@ func TestFuTradeList(t *testing.T) {
 		Limit:     0,
 	})
 }
+
+func TestFuIncomeHistories(t *testing.T) {
+	testConfig(FuIncomeHistoriesConfig, FuIncomeHistoriesParams{
+		Symbol:     "",
+		IncomeType: "",
+		StartTime:  0,
+		EndTime:    0,
+		Page:       0,
+		Limit:      0,
+	})
+}

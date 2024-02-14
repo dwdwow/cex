@@ -713,3 +713,36 @@ var FuAccountTradeListConfig = cex.ReqConfig[FuAccountTradeListParams, []FuTrade
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuTradeHistory]),
 }
+
+type FuIncomeHistoriesParams struct {
+	Symbol     string       `s2m:"symbol,omitempty"`
+	IncomeType FuIncomeType `s2m:"incomeType,omitempty"`
+	StartTime  int64        `s2m:"startTime,omitempty"` // Timestamp in ms to get funding from INCLUSIVE.
+	EndTime    int64        `s2m:"endTime,omitempty"`   // Timestamp in ms to get funding until INCLUSIVE.
+	Page       int          `s2m:"page,omitempty"`
+	Limit      int          `s2m:"limit,omitempty"` // Default 100 max 1000
+}
+
+type FuIncome struct {
+	Symbol     string       `json:"symbol"`
+	IncomeType FuIncomeType `json:"incomeType"`
+	Income     float64      `json:"income,string"`
+	Asset      string       `json:"asset"`
+	Info       string       `json:"info"`
+	Time       int64        `json:"time"`
+	TranId     string       `json:"tranId"`
+	TradeId    string       `json:"tradeId"`
+}
+
+var FuIncomeHistoriesConfig = cex.ReqConfig[FuIncomeHistoriesParams, []FuIncome]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/income",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuIncome]),
+}

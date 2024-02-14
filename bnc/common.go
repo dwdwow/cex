@@ -200,6 +200,30 @@ const (
 	FuMarginModifyType_USER_ADJUST FuMarginDeltaType = "USER_ADJUST"
 )
 
+type FuIncomeType string
+
+const (
+	FuIncomeType_TRANSFER                    FuIncomeType = "TRANSFER"
+	FuIncomeType_WELCOME_BONUS               FuIncomeType = "WELCOME_BONUS"
+	FuIncomeType_REALIZED_PNL                FuIncomeType = "REALIZED_PNL"
+	FuIncomeType_FUNDING_FEE                 FuIncomeType = "FUNDING_FEE"
+	FuIncomeType_COMMISSION                  FuIncomeType = "COMMISSION"
+	FuIncomeType_INSURANCE_CLEAR             FuIncomeType = "INSURANCE_CLEAR"
+	FuIncomeType_REFERRAL_KICKBACK           FuIncomeType = "REFERRAL_KICKBACK"
+	FuIncomeType_COMMISSION_REBATE           FuIncomeType = "COMMISSION_REBATE"
+	FuIncomeType_API_REBATE                  FuIncomeType = "API_REBATE"
+	FuIncomeType_CONTEST_REWARD              FuIncomeType = "CONTEST_REWARD"
+	FuIncomeType_CROSS_COLLATERAL_TRANSFER   FuIncomeType = "CROSS_COLLATERAL_TRANSFER"
+	FuIncomeType_OPTIONS_PREMIUM_FEE         FuIncomeType = "OPTIONS_PREMIUM_FEE"
+	FuIncomeType_OPTIONS_SETTLE_PROFIT       FuIncomeType = "OPTIONS_SETTLE_PROFIT"
+	FuIncomeType_INTERNAL_TRANSFER           FuIncomeType = "INTERNAL_TRANSFER"
+	FuIncomeType_AUTO_EXCHANGE               FuIncomeType = "AUTO_EXCHANGE"
+	FuIncomeType_DELIVERED_SETTELMENT        FuIncomeType = "DELIVERED_SETTELMENT"
+	FuIncomeType_COIN_SWAP_DEPOSIT           FuIncomeType = "COIN_SWAP_DEPOSIT"
+	FuIncomeType_COIN_SWAP_WITHDRAW          FuIncomeType = "COIN_SWAP_WITHDRAW"
+	FuIncomeType_POSITION_LIMIT_INCREASE_FEE FuIncomeType = "POSITION_LIMIT_INCREASE_FEE"
+)
+
 type BSwapOrderStatus string
 
 const (
