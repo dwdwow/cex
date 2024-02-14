@@ -34,11 +34,7 @@ func UserOptPositionSide(side FuPositionSide) func(*User) {
 
 func NewUser(apiKey, secretKey string, opts ...UserOpt) *User {
 	user := &User{
-		api: cex.Api{
-			Cex:       cex.BINANCE,
-			ApiKey:    apiKey,
-			SecretKey: secretKey,
-		},
+		api: cex.Api{Cex: cex.BINANCE, ApiKey: apiKey, SecretKey: secretKey},
 		cfg: UserConfig{},
 	}
 	for _, opt := range opts {
@@ -67,6 +63,14 @@ func (u *User) SpotAccount() (*resty.Response, SpotAccount, *cex.RequestError) {
 
 func (u *User) Transfer(tranType TranType, asset string, amount float64) (*resty.Response, UniversalTransferResp, *cex.RequestError) {
 	return cex.Request(u, UniversalTransferConfig, UniversalTransferParams{Type: tranType, Asset: asset, Amount: amount})
+}
+
+func (u *User) FuturesAccount() (*resty.Response, FuAccount, *cex.RequestError) {
+	return cex.Request(u, FuAccountConfig, nil)
+}
+
+func (u *User) FuturesPositions(symbol string) (*resty.Response, []FuPosition, *cex.RequestError) {
+	return cex.Request(u, FuPositionsConfig, FuPositionsParams{Symbol: symbol})
 }
 
 // ------------------------------------------------------------

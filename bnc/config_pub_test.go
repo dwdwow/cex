@@ -18,8 +18,15 @@ func testPubConfig[ReqDataType, RespDataType any](
 	props.PrintlnIndent(ob)
 }
 
-func TestOrderBook(t *testing.T) {
-	testPubConfig(OrderBookConfig, OrderBookParams{
+func TestSpotOrderBook(t *testing.T) {
+	testPubConfig(SpotOrderBookConfig, OrderBookParams{
+		Symbol: "ETHUSDT",
+		Limit:  0,
+	})
+}
+
+func TestFuturesOrderBook(t *testing.T) {
+	testPubConfig(FuturesOrderBookConfig, OrderBookParams{
 		Symbol: "ETHUSDT",
 		Limit:  0,
 	})

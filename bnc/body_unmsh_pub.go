@@ -37,7 +37,7 @@ func obBodyUnmsher(body []byte) (OrderBook, *cex.RespBodyUnmarshalerError) {
 	if err != nil {
 		return OrderBook{}, &cex.RespBodyUnmarshalerError{Err: fmt.Errorf("parse raw orderbook asks, %w", err)}
 	}
-	return OrderBook{Bids: bids, Asks: asks, LastUpdateId: raw.LastUpdateId}, nil
+	return OrderBook{Bids: bids, Asks: asks, LastUpdateId: raw.LastUpdateId, E: raw.E, T: raw.T}, nil
 }
 
 func convRawStrBookToFloatBook(raw [][]string) ([][]float64, error) {
