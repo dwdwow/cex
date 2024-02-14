@@ -218,8 +218,18 @@ var FuPlaceMultiOrdersConfig = cex.ReqConfig[FuPlaceMultiOrdersParams, []FuOrder
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrder]),
 }
 
+type FuModifyMultiOrdersOrderParams struct {
+	OrderId           string    `s2m:"orderId,omitempty"`
+	OrigClientOrderId string    `s2m:"origClientOrderId,omitempty"`
+	Symbol            string    `s2m:"symbol,omitempty"`
+	Side              OrderSide `s2m:"side,omitempty"` // needs to be same as origin order
+	Quantity          string    `s2m:"quantity,omitempty"`
+	Price             string    `s2m:"price,omitempty"`
+	PriceMatch        string    `s2m:"priceMatch,omitempty"`
+}
+
 type FuModifyMultiOrdersParams struct {
-	BatchOrders []FuModifyOrderParams `s2m:"batchOrders"`
+	BatchOrders []FuModifyMultiOrdersOrderParams `s2m:"batchOrders"`
 }
 
 var FuModifyMultiOrdersConfig = cex.ReqConfig[FuModifyMultiOrdersParams, []FuOrder]{
