@@ -240,3 +240,7 @@ func TestFuAllOrders(t *testing.T) {
 func TestFuAccountBalances(t *testing.T) {
 	testConfig(FuAccountBalancesConfig, nil)
 }
+
+func TestFuAccount(t *testing.T) {
+	testConfig(FuAccountConfig, nil)
+}

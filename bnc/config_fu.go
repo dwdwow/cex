@@ -464,3 +464,77 @@ var FuAccountBalancesConfig = cex.ReqConfig[cex.NilReqData, []FuAccountBalance]{
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuAccountBalance]),
 }
+
+type FuAccountAsset struct {
+	Asset                  string  `json:"asset"`
+	WalletBalance          float64 `json:"walletBalance,string"`
+	UnrealizedProfit       float64 `json:"unrealizedProfit,string"`
+	MarginBalance          float64 `json:"marginBalance,string"`
+	MaintMargin            float64 `json:"maintMargin,string"`
+	InitialMargin          float64 `json:"initialMargin,string"`
+	PositionInitialMargin  float64 `json:"positionInitialMargin,string"`
+	OpenOrderInitialMargin float64 `json:"openOrderInitialMargin,string"`
+	CrossWalletBalance     float64 `json:"crossWalletBalance,string"`
+	CrossUnPnl             float64 `json:"crossUnPnl,string"`
+	AvailableBalance       float64 `json:"availableBalance,string"`
+	MaxWithdrawAmount      float64 `json:"maxWithdrawAmount,string"`
+	MarginAvailable        bool    `json:"marginAvailable"`
+	UpdateTime             int64   `json:"updateTime"`
+}
+
+type FuAccountPosition struct {
+	Symbol                 string         `json:"symbol"`
+	InitialMargin          float64        `json:"initialMargin,string"`
+	MaintMargin            float64        `json:"maintMargin,string"`
+	UnrealizedProfit       float64        `json:"unrealizedProfit,string"`
+	PositionInitialMargin  float64        `json:"positionInitialMargin,string"`
+	OpenOrderInitialMargin float64        `json:"openOrderInitialMargin,string"`
+	Leverage               float64        `json:"leverage,string"`
+	Isolated               bool           `json:"isolated"`
+	EntryPrice             float64        `json:"entryPrice,string"`
+	MaxNotional            float64        `json:"maxNotional,string"`
+	BidNotional            float64        `json:"bidNotional,string"`
+	AskNotional            float64        `json:"askNotional,string"`
+	PositionSide           FuPositionSide `json:"positionSide"`
+	PositionAmt            float64        `json:"positionAmt,string"`
+	UpdateTime             int64          `json:"updateTime"`
+
+	// multi asset mode
+	BreakEvenPrice string `json:"breakEvenPrice"`
+}
+
+type FuAccount struct {
+	FeeTier                     float64             `json:"feeTier"`
+	CanTrade                    bool                `json:"canTrade"`
+	CanDeposit                  bool                `json:"canDeposit"`
+	CanWithdraw                 bool                `json:"canWithdraw"`
+	UpdateTime                  int64               `json:"updateTime"`
+	MultiAssetsMargin           bool                `json:"multiAssetsMargin"`
+	TradeGroupId                int64               `json:"tradeGroupId"`
+	TotalInitialMargin          float64             `json:"totalInitialMargin,string"`
+	TotalMaintMargin            float64             `json:"totalMaintMargin,string"`
+	TotalWalletBalance          float64             `json:"totalWalletBalance,string"`
+	TotalUnrealizedProfit       float64             `json:"totalUnrealizedProfit,string"`
+	TotalMarginBalance          float64             `json:"totalMarginBalance,string"`
+	TotalPositionInitialMargin  float64             `json:"totalPositionInitialMargin,string"`
+	TotalOpenOrderInitialMargin float64             `json:"totalOpenOrderInitialMargin,string"`
+	TotalCrossWalletBalance     float64             `json:"totalCrossWalletBalance,string"`
+	TotalCrossUnPnl             float64             `json:"totalCrossUnPnl,string"`
+	AvailableBalance            float64             `json:"availableBalance,string"`
+	MaxWithdrawAmount           float64             `json:"maxWithdrawAmount,string"`
+	Assets                      []FuAccountAsset    `json:"assets"`
+	Positions                   []FuAccountPosition `json:"positions"`
+}
+
+var FuAccountConfig = cex.ReqConfig[cex.NilReqData, FuAccount]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV2 + "/account",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuAccount]),
+}
