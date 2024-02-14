@@ -224,3 +224,9 @@ func TestFuCurrentOpenOrder(t *testing.T) {
 		OrigClientOrderId: "",
 	})
 }
+
+func TestFuCurrentAllOpenOrders(t *testing.T) {
+	testConfig(FuCurrentAllOpenOrdersConfig, FuQueryOrCancelOrderParams{
+		Symbol: "ETHUSDT",
+	})
+}
