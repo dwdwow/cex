@@ -385,3 +385,16 @@ var FuAutoCancelAllOpenOrdersConfig = cex.ReqConfig[FuAutoCancelAllOpenOrdersPar
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuAutoCancelAllOpenOrdersResponse]),
 }
+
+var FuCurrentOpenOrderConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, FuOrder]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/openOrder",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrder]),
+}

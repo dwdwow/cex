@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/url"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/dwdwow/cex"
@@ -120,8 +119,7 @@ func signReqData(data any, key string) (query string, err error) {
 		"timestamp": []string{strconv.FormatInt(time.Now().UnixMilli(), 10)},
 	}
 	for k, v := range m {
-		// Binance require some query params can not contain spaces.
-		val.Set(k, strings.ReplaceAll(v, " ", ""))
+		val.Set(k, v)
 	}
 	query = val.Encode()
 	sig := cex.SignByHmacSHA256ToHex(query, key)

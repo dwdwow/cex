@@ -216,3 +216,11 @@ func TestFuAutoCancelAllOpenOrders(t *testing.T) {
 		CountdownTime: 10 * 1000,
 	})
 }
+
+func TestFuCurrentOpenOrder(t *testing.T) {
+	testConfig(FuCurrentOpenOrderConfig, FuQueryOrCancelOrderParams{
+		Symbol:            "ETHUSDT",
+		OrderId:           0,
+		OrigClientOrderId: "",
+	})
+}
