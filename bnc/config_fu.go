@@ -730,7 +730,7 @@ type FuIncome struct {
 	Asset      string       `json:"asset"`
 	Info       string       `json:"info"`
 	Time       int64        `json:"time"`
-	TranId     int64        `json:"tranId,string"`
+	TranId     int64        `json:"tranId"`
 	TradeId    string       `json:"tradeId"`
 }
 
