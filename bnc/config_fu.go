@@ -369,8 +369,8 @@ type FuAutoCancelAllOpenOrdersParams struct {
 }
 
 type FuAutoCancelAllOpenOrdersResponse struct {
-	Symbol        string `json:"symbol,omitempty"`
-	CountdownTime int64  `json:"countdownTime,omitempty"`
+	Symbol        string `json:"symbol"`
+	CountdownTime int64  `json:"countdownTime,string"`
 }
 
 var FuAutoCancelAllOpenOrdersConfig = cex.ReqConfig[FuAutoCancelAllOpenOrdersParams, FuAutoCancelAllOpenOrdersResponse]{
