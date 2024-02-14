@@ -556,7 +556,7 @@ func (u *User) makePublicReq(config cex.ReqBaseConfig, reqData any, opts ...cex.
 		val.Set(k, v)
 	}
 	clt := resty.New().
-		SetBaseURL(config.BaseUrl + config.Path + val.Encode())
+		SetBaseURL(config.BaseUrl + config.Path + "?" + val.Encode())
 	req := clt.R()
 	for _, opt := range opts {
 		opt(clt, req)
