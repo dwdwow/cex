@@ -144,3 +144,79 @@ var FuturesExchangeInfosConfig = cex.ReqConfig[cex.NilReqData, ExchangeInfo]{
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[ExchangeInfo]),
 }
+
+type FuturesFundingRateHistoriesParams struct {
+	Symbol    string `s2m:"symbol,omitempty"`
+	StartTime int64  `s2m:"startTime,omitempty"` // Timestamp in ms to get funding rate from INCLUSIVE.
+	EndTime   int64  `s2m:"endTime,omitempty"`   // Timestamp in ms to get funding rate until INCLUSIVE.
+	Limit     int    `s2m:"limit,omitempty"`     // Default 100; max 1000
+}
+
+type FuturesFundingRateHistory struct {
+	Symbol      string  `json:"symbol"`
+	FundingTime int64   `json:"fundingTime"`
+	FundingRate float64 `json:"fundingRate,string"`
+	MarkPrice   string  `json:"markPrice"` // mark price maybe empty string
+}
+
+var FuturesFundingRateHistoriesConfig = cex.ReqConfig[FuturesFundingRateHistoriesParams, []FuturesFundingRateHistory]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/fundingRate",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesFundingRateHistory]),
+}
+
+type FuturesFundingRateInfo struct {
+	Symbol                   string  `json:"symbol"`
+	AdjustedFundingRateCap   string  `json:"adjustedFundingRateCap"`
+	AdjustedFundingRateFloor string  `json:"adjustedFundingRateFloor"`
+	FundingIntervalHours     float64 `json:"fundingIntervalHours"`
+	Disclaimer               bool    `json:"disclaimer"` // ignore
+}
+
+var FuturesFundingRateInfosConfig = cex.ReqConfig[cex.NilReqData, []FuturesFundingRateInfo]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/fundingInfo",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesFundingRateInfo]),
+}
+
+type FuturesFundingRatesParams struct {
+	Symbol string `s2m:"symbol"`
+}
+
+type FuturesFundingRate struct {
+	Symbol               string  `json:"symbol"`
+	MarkPrice            float64 `json:"markPrice,string"`
+	IndexPrice           float64 `json:"indexPrice,string"`
+	EstimatedSettlePrice float64 `json:"estimatedSettlePrice,string"`
+	LastFundingRate      float64 `json:"lastFundingRate,string"`
+	NextFundingTime      int64   `json:"nextFundingTime"`
+	InterestRate         float64 `json:"interestRate,string"`
+	Time                 int64   `json:"time"`
+}
+
+var FuturesFundingRatesConfig = cex.ReqConfig[FuturesFundingRatesParams, []FuturesFundingRate]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/premiumIndex",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesFundingRate]),
+}

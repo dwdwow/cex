@@ -39,3 +39,20 @@ func TestSpotExchangeInfo(t *testing.T) {
 func TestFuturesExchangeInfo(t *testing.T) {
 	testPubConfig(FuturesExchangeInfosConfig, nil)
 }
+
+func TestFuturesFundingRateHistories(t *testing.T) {
+	testPubConfig(FuturesFundingRateHistoriesConfig, FuturesFundingRateHistoriesParams{
+		Symbol:    "",
+		StartTime: 0,
+		EndTime:   0,
+		Limit:     0,
+	})
+}
+
+func TestFuturesFundingRateInfos(t *testing.T) {
+	testPubConfig(FuturesFundingRateInfosConfig, nil)
+}
+
+func TestFuturesFundingRates(t *testing.T) {
+	testPubConfig(FuturesFundingRatesConfig, FuturesFundingRatesParams{Symbol: ""})
+}
