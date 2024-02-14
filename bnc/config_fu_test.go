@@ -181,9 +181,17 @@ func TestFuModifyMultiOrders(t *testing.T) {
 }
 
 func TestFuQueryOrder(t *testing.T) {
-	testConfig(FuQueryOrderConfig, FuQueryOrderParams{
+	testConfig(FuQueryOrderConfig, FuQueryOrCancelOrderParams{
 		Symbol:            "ETHUSDT",
 		OrderId:           8389765651924056174,
 		OrigClientOrderId: "",
+	})
+}
+
+func TestFuCancelOrder(t *testing.T) {
+	testConfig(FuCancelOrderConfig, FuQueryOrCancelOrderParams{
+		Symbol:            "ETHUSDT",
+		OrderId:           8389765651928248535,
+		OrigClientOrderId: "asdfljksdhkf",
 	})
 }

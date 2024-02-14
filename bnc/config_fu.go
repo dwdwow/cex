@@ -293,17 +293,30 @@ var FuOrderModifyHistoriesConfig = cex.ReqConfig[FuOrderModifyHistoriesParams, [
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrderModifyHistory]),
 }
 
-type FuQueryOrderParams struct {
+type FuQueryOrCancelOrderParams struct {
 	Symbol            string `s2m:"symbol,omitempty"`
 	OrderId           int64  `s2m:"orderId,omitempty"`
 	OrigClientOrderId string `s2m:"origClientOrderId,omitempty"`
 }
 
-var FuQueryOrderConfig = cex.ReqConfig[FuQueryOrderParams, FuOrder]{
+var FuQueryOrderConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, FuOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/order",
 		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrder]),
+}
+
+var FuCancelOrderConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, FuOrder]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/order",
+		Method:           http.MethodDelete,
 		IsUserData:       true,
 		UserTimeInterval: 0,
 		IpTimeInterval:   0,
