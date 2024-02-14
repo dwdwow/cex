@@ -558,7 +558,7 @@ func (u *User) makePublicReq(config cex.ReqBaseConfig, reqData any, opts ...cex.
 	for _, opt := range opts {
 		opt(clt, req)
 	}
-	return nil, nil
+	return req, nil
 }
 
 func (u *User) makePrivateReq(config cex.ReqBaseConfig, reqData any, opts ...cex.ReqOpt) (*resty.Request, error) {
