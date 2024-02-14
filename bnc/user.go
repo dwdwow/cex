@@ -47,6 +47,12 @@ func NewUser(apiKey, secretKey string, opts ...UserOpt) *User {
 	return user
 }
 
+var emptyUser = &User{}
+
+func EmptyUser() *User {
+	return emptyUser
+}
+
 // ============================================================
 // Account API
 // ------------------------------------------------------------
