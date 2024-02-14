@@ -37,3 +37,26 @@ func QuerySpotExchangeInfo() (ExchangeInfo, error) {
 func QueryFuturesExchangeInfo() (ExchangeInfo, error) {
 	return queryExchangeInfo(FuturesExchangeInfosConfig)
 }
+
+func queryInfoAboutFundingRate[Req any, Resp any](config cex.ReqConfig[Req, Resp], params Req) (Resp, error) {
+	_, resp, err := cex.Request(emptyUser, config, params)
+	if err != nil {
+		return resp, errors.New(err.Error())
+	}
+	return resp, nil
+}
+
+func QueryFundingRateHistories(symbol string, startTime, endTime int64, limit int) ([]FuturesFundingRateHistory, error) {
+	return queryInfoAboutFundingRate(FuturesFundingRateHistoriesConfig, FuturesFundingRateHistoriesParams{Symbol: symbol, StartTime: startTime, EndTime: endTime, Limit: limit})
+}
+
+// QueryFundingRateInfos
+// Query funding rate info for symbols that had FundingRateCap/ FundingRateFloor / fundingIntervalHours adjustment
+// Be careful! Some symbols have no funding rate info!!!
+func QueryFundingRateInfos() ([]FuturesFundingRateInfo, error) {
+	return queryInfoAboutFundingRate(FuturesFundingRateInfosConfig, nil)
+}
+
+func QueryFundingRates() ([]FuturesFundingRate, error) {
+	return queryInfoAboutFundingRate(FuturesFundingRatesConfig, FuturesFundingRatesParams{Symbol: ""})
+}

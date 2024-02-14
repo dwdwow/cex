@@ -180,6 +180,9 @@ type FuturesFundingRateInfo struct {
 	Disclaimer               bool    `json:"disclaimer"` // ignore
 }
 
+// FuturesFundingRateInfosConfig
+// Query funding rate info for symbols that had FundingRateCap/ FundingRateFloor / fundingIntervalHours adjustment
+// Be careful! Some symbols have no funding rate info!!!
 var FuturesFundingRateInfosConfig = cex.ReqConfig[cex.NilReqData, []FuturesFundingRateInfo]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
