@@ -24,7 +24,7 @@ func TestFuNewOrder(t *testing.T) {
 	testConfig(FuNewOrderConfig, FuNewOrderParams{
 		Symbol:                  "ETHUSDT",
 		Side:                    OrderSideBuy,
-		PositionSide:            FuPosBoth,
+		PositionSide:            FuturesPositionSideBoth,
 		Type:                    OrderTypeLimit,
 		TimeInForce:             TimeInForceGtc,
 		Quantity:                0.02,
@@ -61,7 +61,7 @@ func TestFuPlaceMultiOrders(t *testing.T) {
 		BatchOrders: []FuNewMultiOrdersOrderParams{
 			{
 				Symbol:                  "ETHUSDT",
-				PositionSide:            FuPosBoth,
+				PositionSide:            FuturesPositionSideBoth,
 				Type:                    OrderTypeLimit,
 				Side:                    OrderSideBuy,
 				Quantity:                "0.02",
@@ -82,7 +82,7 @@ func TestFuPlaceMultiOrders(t *testing.T) {
 			},
 			{
 				Symbol:                  "ETHUSDT",
-				PositionSide:            FuPosBoth,
+				PositionSide:            FuturesPositionSideBoth,
 				Type:                    OrderTypeLimit,
 				Side:                    OrderSideBuy,
 				Quantity:                "0.02",
@@ -103,7 +103,7 @@ func TestFuPlaceMultiOrders(t *testing.T) {
 			},
 			{
 				Symbol:                  "ETHUSDT",
-				PositionSide:            FuPosBoth,
+				PositionSide:            FuturesPositionSideBoth,
 				Type:                    OrderTypeLimit,
 				Side:                    OrderSideBuy,
 				Quantity:                "0.02",
@@ -255,16 +255,16 @@ func TestChangeInitialLeverage(t *testing.T) {
 func TestChangeMarginType(t *testing.T) {
 	testConfig(FuChangeMarginTypeConfig, FuChangeMarginTypeParams{
 		Symbol:     "ETHUSDT",
-		MarginType: FuMarginIsolated,
+		MarginType: FuturesMarginTypeIsolated,
 	})
 }
 
 func TestModifyIsolatedPositionMargin(t *testing.T) {
 	testConfig(FuModifyIsolatedPositionMarginConfig, FuModifyIsolatedPositionMarginParams{
 		Symbol:       "ETHUSDT",
-		PositionSide: FuPosBoth,
+		PositionSide: FuturesPositionSideBoth,
 		Amount:       10,
-		Type:         FuAddMargin,
+		Type:         FuturesAddMargin,
 	})
 }
 

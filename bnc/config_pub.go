@@ -86,7 +86,7 @@ type Exchange struct {
 	IsSpotTradingAllowed            bool             `json:"isSpotTradingAllowed"`
 	IsMarginTradingAllowed          bool             `json:"isMarginTradingAllowed"`
 	Filters                         []map[string]any `json:"filters"`
-	Permissions                     []TradeType      `json:"permissions"`
+	Permissions                     []PairType       `json:"permissions"`
 	DefaultSelfTradePreventionMode  string           `json:"defaultSelfTradePreventionMode"`
 	AllowedSelfTradePreventionModes []string         `json:"allowedSelfTradePreventionModes"`
 
@@ -207,7 +207,7 @@ type FuturesFundingRate struct {
 	MarkPrice            float64 `json:"markPrice,string"`
 	IndexPrice           float64 `json:"indexPrice,string"`
 	EstimatedSettlePrice float64 `json:"estimatedSettlePrice,string"`
-	LastFundingRate      float64 `json:"lastFundingRate,string"`
+	LastFundingRate      float64 `json:"lastFundingRate,string"` // This is the Latest funding rate
 	NextFundingTime      int64   `json:"nextFundingTime"`
 	InterestRate         float64 `json:"interestRate,string"`
 	Time                 int64   `json:"time"`

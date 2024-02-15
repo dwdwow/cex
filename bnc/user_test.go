@@ -10,7 +10,7 @@ import (
 
 func newTestUser() *User {
 	apiKey := readApiKey()
-	return NewUser(apiKey.ApiKey, apiKey.SecretKey, UserOptPositionSide(FuPosBoth))
+	return NewUser(apiKey.ApiKey, apiKey.SecretKey, UserOptPositionSide(FuturesPositionSideBoth))
 }
 
 func userTestChecker[RespData any](resp *resty.Response, respData RespData, err *cex.RequestError) {
@@ -63,7 +63,7 @@ func TestUser_CryptoLoanFlexibleBorrowHistories(t *testing.T) {
 }
 
 func TestUser_CryptoLoanFlexibleRepay(t *testing.T) {
-	userTestChecker(newTestUser().CryptoLoanFlexibleRepay("USDT", "ETH", 100, TRUE, FALSE))
+	userTestChecker(newTestUser().CryptoLoanFlexibleRepay("USDT", "ETH", 100, BigTrue, BigFalse))
 }
 
 func TestUser_CryptoLoanFlexibleRepaymentHistories(t *testing.T) {
@@ -71,7 +71,7 @@ func TestUser_CryptoLoanFlexibleRepaymentHistories(t *testing.T) {
 }
 
 func TestUser_CryptoLoanFlexibleAdjustLtv(t *testing.T) {
-	userTestChecker(newTestUser().CryptoLoanFlexibleAdjustLtv("USDT", "ETH", 0.03, LTVAdDireReduced))
+	userTestChecker(newTestUser().CryptoLoanFlexibleAdjustLtv("USDT", "ETH", 0.03, LTVReduced))
 }
 
 func TestUser_CryptoLoanFlexibleAdjustLtvHistories(t *testing.T) {

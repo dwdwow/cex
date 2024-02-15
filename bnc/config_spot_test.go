@@ -5,12 +5,11 @@ import (
 	"testing"
 
 	"github.com/dwdwow/cex"
-	"github.com/dwdwow/cex/test/cextest"
 	"github.com/dwdwow/props"
 )
 
 func readApiKey() cex.Api {
-	apiKeys := cextest.MustReadApiKey()
+	apiKeys := cex.MustReadApiKey()
 	apiKey, ok := apiKeys[cex.BINANCE]
 	if !ok {
 		panic("no binance api key")
@@ -24,7 +23,7 @@ func testConfig[ReqDataType, RespDataType any](
 	opts ...cex.ReqOpt,
 ) {
 	apiKey := readApiKey()
-	user := NewUser(apiKey.ApiKey, apiKey.SecretKey, UserOptPositionSide(FuPosBoth))
+	user := NewUser(apiKey.ApiKey, apiKey.SecretKey, UserOptPositionSide(FuturesPositionSideBoth))
 	_, respData, err := cex.Request(user, config, reqData, opts...)
 	props.PanicIfNotNil(err)
 	props.PrintlnIndent(respData)
@@ -92,8 +91,8 @@ func TestFlexibleRepay(t *testing.T) {
 		LoanCoin:         "USDT",
 		CollateralCoin:   "ETH",
 		RepayAmount:      100,
-		CollateralReturn: TRUE,
-		FullRepayment:    FALSE,
+		CollateralReturn: BigTrue,
+		FullRepayment:    BigFalse,
 	})
 }
 
@@ -113,7 +112,7 @@ func TestFlexibleAdjustLtv(t *testing.T) {
 		LoanCoin:         "USDT",
 		CollateralCoin:   "ETH",
 		AdjustmentAmount: 0.05,
-		Direction:        LTVAdDireReduced,
+		Direction:        LTVReduced,
 	})
 }
 

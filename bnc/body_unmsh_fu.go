@@ -42,11 +42,11 @@ func fuBodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 	}
 
 	errCtm := spotCexCustomErrCodes[code]
-	switch errCtm {
-	case ErrFutureNoNeedToChangePositionSide:
-		return nil
-	default:
-	}
+	//switch errCtm {
+	//case ErrFutureNoNeedToChangePositionSide:
+	//	return nil
+	//default:
+	//}
 	if errCtm == nil {
 		errCtm = fmt.Errorf("%v, %v", code, msg)
 	}

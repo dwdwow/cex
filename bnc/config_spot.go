@@ -79,9 +79,9 @@ type SpotAccount struct {
 	Brokered                   bool          `json:"brokered" bson:"brokered"`
 	RequireSelfTradePrevention bool          `json:"requireSelfTradePrevention" bson:"requireSelfTradePrevention"`
 	UpdateTime                 int64         `json:"updateTime" bson:"updateTime"`
-	AccountType                AcctType      `json:"accountType" bson:"accountType"`
+	AccountType                AccountType   `json:"accountType" bson:"accountType"`
 	Balances                   []SpotBalance `json:"balances" bson:"balances"`
-	Permissions                []TradeType   `json:"permissions" bson:"permissions"`
+	Permissions                []PairType    `json:"permissions" bson:"permissions"`
 }
 
 var SpotAccountConfig = cex.ReqConfig[cex.NilReqData, SpotAccount]{
@@ -539,7 +539,7 @@ type SpotNewOrderParams struct {
 	StopPrice               float64                 `s2m:"stopPrice,omitempty"`               // Used with STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, and TAKE_PROFIT_LIMIT orders.
 	TrailingDelta           int64                   `s2m:"trailingDelta,omitempty"`           // Used with STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, and TAKE_PROFIT_LIMIT orders. For more details on SPOT implementation on trailing stops, please refer to Trailing Stop FAQ
 	IcebergQty              float64                 `s2m:"icebergQty,omitempty"`              // Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
-	NewOrderRespType        SpotOrderResponseType   `s2m:"newOrderRespType,omitempty"`        // Set the response JSON. ACK, RESULT, or FULL; MARKET and LIMIT order types default to FULL, all other orders default to ACK.
+	NewOrderRespType        OrderResponseType       `s2m:"newOrderRespType,omitempty"`        // Set the response JSON. ACK, RESULT, or FULL; MARKET and LIMIT order types default to FULL, all other orders default to ACK.
 	SelfTradePreventionMode SelfTradePreventionMode `s2m:"selfTradePreventionMode,omitempty"` // The allowed enums is dependent on what is configured on the symbol.The possible supported values are EXPIRE_TAKER, EXPIRE_MAKER, EXPIRE_BOTH, NONE.
 }
 
@@ -682,7 +682,7 @@ type SpotReplaceOrderParams struct {
 	StopPrice               float64                    `s2m:"stopPrice,omitempty"`
 	TrailingDelta           int64                      `s2m:"trailingDelta,omitempty"`
 	IcebergQty              float64                    `s2m:"icebergQty,omitempty"`
-	NewOrderRespType        SpotOrderResponseType      `s2m:"newOrderRespType,omitempty"`
+	NewOrderRespType        OrderResponseType          `s2m:"newOrderRespType,omitempty"`
 	SelfTradePreventionMode SelfTradePreventionMode    `s2m:"selfTradePreventionMode,omitempty"` // The allowed enums is dependent on what is configured on the symbol. The possible supported values are EXPIRE_TAKER, EXPIRE_MAKER, EXPIRE_BOTH, NONE.
 	CancelRestrictions      SpotOrderCancelRestriction `s2m:"cancelRestrictions,omitempty"`      // Supported values: ONLY_NEW - Cancel will succeed if the order status is NEW. ONLY_PARTIALLY_FILLED - Cancel will succeed if order status is PARTIALLY_FILLED.
 }

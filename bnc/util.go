@@ -52,15 +52,15 @@ func ExchangeInfoToPair(info Exchange) (cex.Pair, error) {
 	if info.ContractType == "" {
 		pairType = cex.SpotPair
 		sybMid = SpotSymbolMid
-		// TODO not correct
-		makerFeeTier, takerFeeTier = SpotMakerFeeTier, SpotTakerFeeTier
 		minTradeQuote = 10
+		// TODO not correct
+		//makerFeeTier, takerFeeTier = SpotMakerFeeTier, SpotTakerFeeTier
 	} else {
 		pairType = cex.FuturePair
-		sybMid = FutureSymbolMid
-		// TODO not correct
-		makerFeeTier, takerFeeTier = FutureMakerFeeTier, FutureTakerFeeTier
+		sybMid = FuturesSymbolMid
 		minTradeQuote = 20
+		// TODO not correct
+		//makerFeeTier, takerFeeTier = FuturesMakerFeeTier, FuturesTakerFeeTier
 	}
 	pair := cex.Pair{
 		Cex:           cex.BINANCE,

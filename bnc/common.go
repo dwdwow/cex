@@ -1,32 +1,31 @@
 package bnc
 
 const (
-	ApiBaseUrl = "https://api.binance.com"
-	ApiV3      = "/api/v3"
-	SapiV1     = "/sapi/v1"
-
+	ApiBaseUrl  = "https://api.binance.com"
+	ApiV3       = "/api/v3"
+	SapiV1      = "/sapi/v1"
 	FapiBaseUrl = "https://fapi.binance.com"
 	FapiV1      = "/fapi/v1"
 	FapiV2      = "/fapi/v2"
 )
 
 const (
-	SpotMakerFeeTier   = 0.00075 * 0.8 // bnb and return fee 0.8
-	SpotTakerFeeTier   = 0.00075 * 0.8
-	FutureMakerFeeTier = 0.00016 * 0.9
-	FutureTakerFeeTier = 0.00016 * 0.9
+	SpotSymbolMid    = ""
+	FuturesSymbolMid = ""
 )
 
-const (
-	SpotSymbolMid   = ""
-	FutureSymbolMid = ""
-)
+//const (
+//	SpotMakerFeeTier    = 0.00075 * 0.8 // bnb and return fee 0.8
+//	SpotTakerFeeTier    = 0.00075 * 0.8
+//	FuturesMakerFeeTier = 0.00016 * 0.9
+//	FuturesTakerFeeTier = 0.00016 * 0.9
+//)
 
 type BigBool string
 
 const (
-	TRUE  BigBool = "TRUE"
-	FALSE BigBool = "FALSE"
+	BigTrue  BigBool = "TRUE"
+	BigFalse BigBool = "FALSE"
 )
 
 type SmallBool string
@@ -36,10 +35,10 @@ const (
 	SmallFalse SmallBool = "false"
 )
 
-type AcctType string
+type AccountType string
 
 const (
-	AcctSpot AcctType = "SPOT"
+	AccountTypeSpot AccountType = "SPOT"
 )
 
 type WalletType int
@@ -87,18 +86,18 @@ const (
 	TranType_ISOLATED_MARGIN_MAIN          TranType = "ISOLATED_MARGIN_MAIN"          // Isolated margin account transfer to Spot account
 )
 
-type TransferDire int
+type TransferDirection int
 
 const (
-	TransferDireMainToCross TransferDire = 1
-	TransferDireCrossToMain TransferDire = 2
+	TransferMainToCross TransferDirection = 1
+	TransferCrossToMain TransferDirection = 2
 )
 
-type TradeType string
+type PairType string
 
 const (
-	TradeSpot   = "SPOT"
-	TradeMargin = "MARGIN"
+	PairTypeSpot   = "SPOT"
+	PairTypeMargin = "MARGIN"
 )
 
 type OrderSide string
@@ -119,7 +118,7 @@ const (
 	OrderTypeTakeProfitLimit OrderType = "TAKE_PROFIT_LIMIT"
 	OrderTypeLimitMaker      OrderType = "LIMIT_MAKER"
 
-	// future
+	// just for futures
 	OrderTypeStop               OrderType = "STOP"
 	OrderTypeStopMarket         OrderType = "STOP_MARKET"
 	OrderTypeTakeProfitMarket   OrderType = "TAKE_PROFIT_MARKET"
@@ -141,87 +140,87 @@ const (
 type OrderExecutionType string
 
 const (
-	OrderExeNew      OrderExecutionType = "NEW"
-	OrderExeCanceled OrderExecutionType = "CANCELED"
-	OrderExeReplaced OrderExecutionType = "REPLACED"
-	OrderExeRejected OrderExecutionType = "REJECTED"
-	OrderExeTrade    OrderExecutionType = "TRADE"
-	OrderExeExpired  OrderExecutionType = "EXPIRED"
-)
-
-type FuPositionSide string
-
-const (
-	FuPosBoth  = "BOTH"
-	FuPosLong  = "LONG"
-	FuPosShort = "SHORT"
+	OrderExecutionTypeNew      OrderExecutionType = "NEW"
+	OrderExecutionTypeCanceled OrderExecutionType = "CANCELED"
+	OrderExecutionTypeReplaced OrderExecutionType = "REPLACED"
+	OrderExecutionRejected     OrderExecutionType = "REJECTED"
+	OrderExecutionTrade        OrderExecutionType = "TRADE"
+	OrderExecutionExpired      OrderExecutionType = "EXPIRED"
 )
 
 type MarginOrderSideEffectType string
 
 const (
-	SideEffectTypeNoSideEffect MarginOrderSideEffectType = "NO_SIDE_EFFECT"
-	SideEffectTypeMarginBuy    MarginOrderSideEffectType = "MARGIN_BUY"
-	SideEffectTypeAutoRepay    MarginOrderSideEffectType = "AUTO_REPAY"
+	MarginOrderSideEffectTypeNoSideEffect MarginOrderSideEffectType = "NO_SIDE_EFFECT"
+	MarginOrderSideEffectTypeMarginBuy    MarginOrderSideEffectType = "MARGIN_BUY"
+	MarginOrderSideEffectTypeAutoRepay    MarginOrderSideEffectType = "AUTO_REPAY"
 )
 
-type FuMarginType string
+type FuturesPositionSide string
 
 const (
-	FuMarginIsolated FuMarginType = "ISOLATED"
-	FuMarginCrossed  FuMarginType = "CROSSED"
+	FuturesPositionSideBoth  = "BOTH"
+	FuturesPositionSideLong  = "LONG"
+	FuturesPositionSideShort = "SHORT"
 )
 
-type FuMarginLowerCaseType string
+type FuturesMarginType string
 
 const (
-	FuMargin_isolated FuMarginType = "isolated"
-	FuMargin_cross    FuMarginType = "cross"
+	FuturesMarginTypeIsolated FuturesMarginType = "ISOLATED"
+	FuturesMarginTypeCrossed  FuturesMarginType = "CROSSED"
 )
 
-type FuWorkingType string
+type FuturesMarginLowerCaseType string
 
 const (
-	FuWorkingType_MARK_PRICE     FuWorkingType = "MARK_PRICE"
-	FuWorkingType_CONTRACT_PRICE FuWorkingType = "CONTRACT_PRICE"
+	FuturesMarginLowerCaseIsolated FuturesMarginType = "isolated"
+	FuturesMarginLowerCaseCross    FuturesMarginType = "cross"
 )
 
-type FuModifyMarginType int
+type FuturesWorkingType string
 
 const (
-	FuAddMargin    FuModifyMarginType = 1
-	FuReduceMargin FuModifyMarginType = 2
+	FuturesWorkingTypeMarkPrice     FuturesWorkingType = "MARK_PRICE"
+	FuturesWorkingTypeContractPrice FuturesWorkingType = "CONTRACT_PRICE"
 )
 
-type FuMarginDeltaType string
+type FuturesModifyMarginType int
 
 const (
-	FuMarginModifyType_TRADE       FuMarginDeltaType = "TRADE"
-	FuMarginModifyType_USER_ADJUST FuMarginDeltaType = "USER_ADJUST"
+	FuturesAddMargin    FuturesModifyMarginType = 1
+	FuturesReduceMargin FuturesModifyMarginType = 2
 )
 
-type FuIncomeType string
+type FuturesMarginDeltaType string
 
 const (
-	FuIncomeType_TRANSFER                    FuIncomeType = "TRANSFER"
-	FuIncomeType_WELCOME_BONUS               FuIncomeType = "WELCOME_BONUS"
-	FuIncomeType_REALIZED_PNL                FuIncomeType = "REALIZED_PNL"
-	FuIncomeType_FUNDING_FEE                 FuIncomeType = "FUNDING_FEE"
-	FuIncomeType_COMMISSION                  FuIncomeType = "COMMISSION"
-	FuIncomeType_INSURANCE_CLEAR             FuIncomeType = "INSURANCE_CLEAR"
-	FuIncomeType_REFERRAL_KICKBACK           FuIncomeType = "REFERRAL_KICKBACK"
-	FuIncomeType_COMMISSION_REBATE           FuIncomeType = "COMMISSION_REBATE"
-	FuIncomeType_API_REBATE                  FuIncomeType = "API_REBATE"
-	FuIncomeType_CONTEST_REWARD              FuIncomeType = "CONTEST_REWARD"
-	FuIncomeType_CROSS_COLLATERAL_TRANSFER   FuIncomeType = "CROSS_COLLATERAL_TRANSFER"
-	FuIncomeType_OPTIONS_PREMIUM_FEE         FuIncomeType = "OPTIONS_PREMIUM_FEE"
-	FuIncomeType_OPTIONS_SETTLE_PROFIT       FuIncomeType = "OPTIONS_SETTLE_PROFIT"
-	FuIncomeType_INTERNAL_TRANSFER           FuIncomeType = "INTERNAL_TRANSFER"
-	FuIncomeType_AUTO_EXCHANGE               FuIncomeType = "AUTO_EXCHANGE"
-	FuIncomeType_DELIVERED_SETTELMENT        FuIncomeType = "DELIVERED_SETTELMENT"
-	FuIncomeType_COIN_SWAP_DEPOSIT           FuIncomeType = "COIN_SWAP_DEPOSIT"
-	FuIncomeType_COIN_SWAP_WITHDRAW          FuIncomeType = "COIN_SWAP_WITHDRAW"
-	FuIncomeType_POSITION_LIMIT_INCREASE_FEE FuIncomeType = "POSITION_LIMIT_INCREASE_FEE"
+	FuturesMarginModifyTypeTrade      FuturesMarginDeltaType = "TRADE"
+	FuturesMarginModifyTypeUserAdjust FuturesMarginDeltaType = "USER_ADJUST"
+)
+
+type FuturesIncomeType string
+
+const (
+	FuturesIncomeType_TRANSFER                    FuturesIncomeType = "TRANSFER"
+	FuturesIncomeType_WELCOME_BONUS               FuturesIncomeType = "WELCOME_BONUS"
+	FuturesIncomeType_REALIZED_PNL                FuturesIncomeType = "REALIZED_PNL"
+	FuturesIncomeType_FUNDING_FEE                 FuturesIncomeType = "FUNDING_FEE"
+	FuturesIncomeType_COMMISSION                  FuturesIncomeType = "COMMISSION"
+	FuturesIncomeType_INSURANCE_CLEAR             FuturesIncomeType = "INSURANCE_CLEAR"
+	FuturesIncomeType_REFERRAL_KICKBACK           FuturesIncomeType = "REFERRAL_KICKBACK"
+	FuturesIncomeType_COMMISSION_REBATE           FuturesIncomeType = "COMMISSION_REBATE"
+	FuturesIncomeType_API_REBATE                  FuturesIncomeType = "API_REBATE"
+	FuturesIncomeType_CONTEST_REWARD              FuturesIncomeType = "CONTEST_REWARD"
+	FuturesIncomeType_CROSS_COLLATERAL_TRANSFER   FuturesIncomeType = "CROSS_COLLATERAL_TRANSFER"
+	FuturesIncomeType_OPTIONS_PREMIUM_FEE         FuturesIncomeType = "OPTIONS_PREMIUM_FEE"
+	FuturesIncomeType_OPTIONS_SETTLE_PROFIT       FuturesIncomeType = "OPTIONS_SETTLE_PROFIT"
+	FuturesIncomeType_INTERNAL_TRANSFER           FuturesIncomeType = "INTERNAL_TRANSFER"
+	FuturesIncomeType_AUTO_EXCHANGE               FuturesIncomeType = "AUTO_EXCHANGE"
+	FuturesIncomeType_DELIVERED_SETTELMENT        FuturesIncomeType = "DELIVERED_SETTELMENT"
+	FuturesIncomeType_COIN_SWAP_DEPOSIT           FuturesIncomeType = "COIN_SWAP_DEPOSIT"
+	FuturesIncomeType_COIN_SWAP_WITHDRAW          FuturesIncomeType = "COIN_SWAP_WITHDRAW"
+	FuturesIncomeType_POSITION_LIMIT_INCREASE_FEE FuturesIncomeType = "POSITION_LIMIT_INCREASE_FEE"
 )
 
 type BSwapOrderStatus string
@@ -241,22 +240,22 @@ const (
 	TimeInForceIoc  TimeInForce = "IOC"
 )
 
-// SpotOrderResponseType is the response of JSON type. ACK, RESULT, or FULL; MARKET and LIMIT order types default to FULL, all other orders default to ACK.
-type SpotOrderResponseType string
+// OrderResponseType is the response of JSON type. ACK, RESULT, or FULL; MARKET and LIMIT order types default to FULL, all other orders default to ACK.
+type OrderResponseType string
 
 const (
-	SpotOrderResponse_ACK    SpotOrderResponseType = "ACK"
-	SpotOrderResponse_RESULT SpotOrderResponseType = "RESULT"
-	SpotOrderResponse_FULL   SpotOrderResponseType = "FULL"
+	SpotOrderResponseTypeAck    OrderResponseType = "ACK"
+	SpotOrderResponseTypeResult OrderResponseType = "RESULT"
+	SpotOrderResponseTypeFull   OrderResponseType = "FULL"
 )
 
 type SelfTradePreventionMode string
 
 const (
-	SpotSelfTradePreventionMode_EXPIRE_TAKER SelfTradePreventionMode = "EXPIRE_TAKER"
-	SpotSelfTradePreventionMode_EXPIRE_MAKER SelfTradePreventionMode = "EXPIRE_MAKER"
-	SpotSelfTradePreventionMode_EXPIRE_BOTH  SelfTradePreventionMode = "EXPIRE_BOTH"
-	SpotSelfTradePreventionMode_NONE         SelfTradePreventionMode = "NONE"
+	SelfTradePreventionModeExpireTaker SelfTradePreventionMode = "EXPIRE_TAKER"
+	SelfTradePreventionModeExpireMaker SelfTradePreventionMode = "EXPIRE_MAKER"
+	SelfTradePreventionModeExpireBoth  SelfTradePreventionMode = "EXPIRE_BOTH"
+	SelfTradePreventionModeNone        SelfTradePreventionMode = "NONE"
 )
 
 type SpotOrderCancelRestriction string
@@ -294,23 +293,23 @@ const (
 type DepositStatus int
 
 const (
-	DepoStatusNone           DepositStatus = -1
-	DepoStatusPending        DepositStatus = 0
-	DepoStatusCannotWithdraw DepositStatus = 6
-	DepoStatusSuccess        DepositStatus = 1
+	DepositStatusNone           DepositStatus = -1
+	DepositStatusPending        DepositStatus = 0
+	DepositStatusCannotWithdraw DepositStatus = 6
+	DepositStatusSuccess        DepositStatus = 1
 )
 
 type WithdrawStatus int
 
 const (
-	WidrStatusNone WithdrawStatus = iota - 1
-	WidrStatusEmail
-	WidrStatusCancelled
-	WidrStatusAwaiting
-	WidrStatusRejected
-	WidrStatusProcessing
-	WidrStatusFailure
-	WidrStatusCompleted
+	WithdrawStatusNone WithdrawStatus = iota - 1
+	WithdrawStatusEmail
+	WithdrawStatusCancelled
+	WithdrawStatusAwaiting
+	WithdrawStatusRejected
+	WithdrawStatusProcessing
+	WithdrawStatusFailure
+	WithdrawStatusCompleted
 )
 
 type SubObErrorCode int
@@ -331,8 +330,8 @@ const (
 type LTVAdjustDirection string
 
 const (
-	LTVAdDireAdditional LTVAdjustDirection = "ADDITIONAL"
-	LTVAdDireReduced    LTVAdjustDirection = "REDUCED"
+	LTVAdditional LTVAdjustDirection = "ADDITIONAL"
+	LTVReduced    LTVAdjustDirection = "REDUCED"
 )
 
 type CryptoLoanIncomeType string

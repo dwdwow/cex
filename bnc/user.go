@@ -16,7 +16,7 @@ import (
 )
 
 type UserConfig struct {
-	fuPosSide FuPositionSide
+	fuPosSide FuturesPositionSide
 }
 
 type User struct {
@@ -26,7 +26,7 @@ type User struct {
 
 type UserOpt func(*User)
 
-func UserOptPositionSide(side FuPositionSide) func(*User) {
+func UserOptPositionSide(side FuturesPositionSide) func(*User) {
 	return func(user *User) {
 		user.cfg.fuPosSide = side
 	}

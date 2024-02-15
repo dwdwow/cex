@@ -1,9 +1,8 @@
-package cextest
+package cex
 
 import (
 	"os"
 
-	"github.com/dwdwow/cex"
 	"gopkg.in/yaml.v3"
 )
 
@@ -11,7 +10,11 @@ const (
 	apiKeyFileRelativePath = "/cex/key/apikey.yml"
 )
 
-func ReadApiKey() (map[cex.Cex]cex.Api, error) {
+/**
+JUST FOR TEST
+*/
+
+func ReadApiKey() (map[Cex]Api, error) {
 	dirname, err := os.UserHomeDir()
 	if err != nil {
 		return nil, err
@@ -21,12 +24,12 @@ func ReadApiKey() (map[cex.Cex]cex.Api, error) {
 	if err != nil {
 		return nil, err
 	}
-	data := map[cex.Cex]cex.Api{}
+	data := map[Cex]Api{}
 	err = yaml.Unmarshal(fileByte, &data)
 	return data, err
 }
 
-func MustReadApiKey() map[cex.Cex]cex.Api {
+func MustReadApiKey() map[Cex]Api {
 	apiKey, err := ReadApiKey()
 	if err != nil {
 		panic(err)
