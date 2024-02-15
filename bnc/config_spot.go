@@ -98,11 +98,11 @@ var SpotAccountConfig = cex.ReqConfig[cex.NilReqData, SpotAccount]{
 }
 
 type UniversalTransferParams struct {
-	Type       TranType `s2m:"type,omitempty"`
-	Asset      string   `s2m:"asset,omitempty"`
-	Amount     float64  `s2m:"amount,omitempty"`
-	FromSymbol string   `s2m:"fromSymbol,omitempty"`
-	ToSymbol   string   `s2m:"toSymbol,omitempty"`
+	Type       TransferType `s2m:"type,omitempty"`
+	Asset      string       `s2m:"asset,omitempty"`
+	Amount     float64      `s2m:"amount,omitempty"`
+	FromSymbol string       `s2m:"fromSymbol,omitempty"`
+	ToSymbol   string       `s2m:"toSymbol,omitempty"`
 }
 
 type UniversalTransferResp struct {
@@ -161,10 +161,10 @@ var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListParams, Page[[]Flex
 }
 
 type FlexibleRedeemParams struct {
-	ProductId   string                 `s2m:"productId,omitempty"`
-	RedeemAll   bool                   `s2m:"redeemAll,omitempty"` //	true or false, default to false
-	Amount      float64                `s2m:"amount,omitempty"`    //	if redeemAll is false, amount is mandatory
-	DestAccount FlexibleRedeemDestType `s2m:"destAccount,omitempty"`
+	ProductId   string                              `s2m:"productId,omitempty"`
+	RedeemAll   bool                                `s2m:"redeemAll,omitempty"` //	true or false, default to false
+	Amount      float64                             `s2m:"amount,omitempty"`    //	if redeemAll is false, amount is mandatory
+	DestAccount SimpleEarnFlexibleRedeemDestination `s2m:"destAccount,omitempty"`
 }
 
 type FlexibleRedeemResponse struct {
@@ -267,11 +267,11 @@ type FlexibleBorrowParams struct {
 }
 
 type FlexibleBorrowResult struct {
-	LoanCoin         string               `json:"loanCoin"`
-	LoanAmount       float64              `json:"loanAmount,string"`
-	CollateralCoin   string               `json:"collateralCoin"`
-	CollateralAmount float64              `json:"collateralAmount,string"`
-	Status           FlexibleBorrowStatus `json:"status"`
+	LoanCoin         string                         `json:"loanCoin"`
+	LoanAmount       float64                        `json:"loanAmount,string"`
+	CollateralCoin   string                         `json:"collateralCoin"`
+	CollateralAmount float64                        `json:"collateralAmount,string"`
+	Status           CryptoLoanFlexibleBorrowStatus `json:"status"`
 }
 
 var FlexibleBorrowConfig = cex.ReqConfig[FlexibleBorrowParams, FlexibleBorrowResult]{
@@ -325,12 +325,12 @@ type FlexibleBorrowHistoriesParams struct {
 }
 
 type FlexibleBorrowHistory struct {
-	LoanCoin                string               `json:"loanCoin"`
-	InitialLoanAmount       string               `json:"initialLoanAmount"`
-	CollateralCoin          string               `json:"collateralCoin"`
-	InitialCollateralAmount string               `json:"initialCollateralAmount"`
-	BorrowTime              int64                `json:"borrowTime,string"`
-	Status                  FlexibleBorrowStatus `json:"status"`
+	LoanCoin                string                         `json:"loanCoin"`
+	InitialLoanAmount       string                         `json:"initialLoanAmount"`
+	CollateralCoin          string                         `json:"collateralCoin"`
+	InitialCollateralAmount string                         `json:"initialCollateralAmount"`
+	BorrowTime              int64                          `json:"borrowTime,string"`
+	Status                  CryptoLoanFlexibleBorrowStatus `json:"status"`
 }
 
 var FlexibleBorrowHistoriesConfig = cex.ReqConfig[FlexibleBorrowHistoriesParams, Page[[]FlexibleBorrowHistory]]{
@@ -355,13 +355,13 @@ type FlexibleRepayParams struct {
 }
 
 type FlexibleRepayResult struct {
-	LoanCoin            string              `json:"loanCoin"`
-	CollateralCoin      string              `json:"collateralCoin"`
-	RemainingDebt       string              `json:"remainingDebt"`
-	RemainingCollateral string              `json:"remainingCollateral"`
-	FullRepayment       bool                `json:"fullRepayment"`
-	CurrentLTV          string              `json:"currentLTV"`
-	RepayStatus         FlexibleRepayStatus `json:"repayStatus"`
+	LoanCoin            string                    `json:"loanCoin"`
+	CollateralCoin      string                    `json:"collateralCoin"`
+	RemainingDebt       string                    `json:"remainingDebt"`
+	RemainingCollateral string                    `json:"remainingCollateral"`
+	FullRepayment       bool                      `json:"fullRepayment"`
+	CurrentLTV          string                    `json:"currentLTV"`
+	RepayStatus         CryptoFlexibleRepayStatus `json:"repayStatus"`
 }
 
 var FlexibleRepayConfig = cex.ReqConfig[FlexibleRepayParams, FlexibleRepayResult]{
@@ -387,12 +387,12 @@ type FlexibleRepaymentHistoriesParams struct {
 }
 
 type FlexibleRepaymentHistory struct {
-	LoanCoin         string              `json:"loanCoin"`
-	RepayAmount      float64             `json:"repayAmount,string"`
-	CollateralCoin   string              `json:"collateralCoin"`
-	CollateralReturn float64             `json:"collateralReturn,string"`
-	RepayStatus      FlexibleRepayStatus `json:"repayStatus"`
-	RepayTime        int64               `json:"repayTime,string"`
+	LoanCoin         string                    `json:"loanCoin"`
+	RepayAmount      float64                   `json:"repayAmount,string"`
+	CollateralCoin   string                    `json:"collateralCoin"`
+	CollateralReturn float64                   `json:"collateralReturn,string"`
+	RepayStatus      CryptoFlexibleRepayStatus `json:"repayStatus"`
+	RepayTime        int64                     `json:"repayTime,string"`
 }
 
 var FlexibleRepaymentHistoriesConfig = cex.ReqConfig[FlexibleRepaymentHistoriesParams, Page[[]FlexibleRepaymentHistory]]{
@@ -606,11 +606,11 @@ var SpotNewOrderConfig = cex.ReqConfig[SpotNewOrderParams, SpotOrder]{
 }
 
 type SpotCancelOrderParams struct {
-	Symbol             string                     `s2m:"symbol,omitempty"`
-	OrderId            int64                      `s2m:"orderId,omitempty"`
-	OrigClientOrderId  string                     `s2m:"origClientOrderId,omitempty"`
-	NewClientOrderId   string                     `s2m:"newClientOrderId,omitempty"`   // Used to uniquely identify this cancel. Automatically generated by default.
-	CancelRestrictions SpotOrderCancelRestriction `s2m:"cancelRestrictions,omitempty"` // Supported values: ONLY_NEW - Cancel will succeed if the order status is NEW. ONLY_PARTIALLY_FILLED - Cancel will succeed if order status is PARTIALLY_FILLED
+	Symbol             string                 `s2m:"symbol,omitempty"`
+	OrderId            int64                  `s2m:"orderId,omitempty"`
+	OrigClientOrderId  string                 `s2m:"origClientOrderId,omitempty"`
+	NewClientOrderId   string                 `s2m:"newClientOrderId,omitempty"`   // Used to uniquely identify this cancel. Automatically generated by default.
+	CancelRestrictions OrderCancelRestriction `s2m:"cancelRestrictions,omitempty"` // Supported values: ONLY_NEW - Cancel will succeed if the order status is NEW. ONLY_PARTIALLY_FILLED - Cancel will succeed if order status is PARTIALLY_FILLED
 }
 
 var SpotCancelOrderConfig = cex.ReqConfig[SpotCancelOrderParams, SpotOrder]{
@@ -674,17 +674,17 @@ type SpotReplaceOrderParams struct {
 	CancelOrderId           int64                 `s2m:"cancelOrderId,omitempty"`           // Either the cancelOrigClientOrderId or cancelOrderId must be provided. If both are provided, cancelOrderId takes precedence.
 	CancelReplaceMode       SpotCancelReplaceMode `s2m:"cancelReplaceMode,omitempty"`       // The allowed values are: STOP_ON_FAILURE - If the cancel request fails, the new order placement will not be attempted. ALLOW_FAILURE - new order placement will be attempted even if cancel request fails.
 
-	QuoteOrderQty           float64                    `s2m:"quoteOrderQty,omitempty"`
-	CancelNewClientOrderId  string                     `s2m:"cancelNewClientOrderId,omitempty"` // Used to uniquely identify this cancel. Automatically generated by default.
-	NewClientOrderId        string                     `s2m:"newClientOrderId,omitempty"`       // Used to identify the new order.
-	StrategyId              int64                      `s2m:"strategyId,omitempty"`
-	StrategyType            int64                      `s2m:"strategyType,omitempty"` // The value cannot be less than 1000000.
-	StopPrice               float64                    `s2m:"stopPrice,omitempty"`
-	TrailingDelta           int64                      `s2m:"trailingDelta,omitempty"`
-	IcebergQty              float64                    `s2m:"icebergQty,omitempty"`
-	NewOrderRespType        OrderResponseType          `s2m:"newOrderRespType,omitempty"`
-	SelfTradePreventionMode SelfTradePreventionMode    `s2m:"selfTradePreventionMode,omitempty"` // The allowed enums is dependent on what is configured on the symbol. The possible supported values are EXPIRE_TAKER, EXPIRE_MAKER, EXPIRE_BOTH, NONE.
-	CancelRestrictions      SpotOrderCancelRestriction `s2m:"cancelRestrictions,omitempty"`      // Supported values: ONLY_NEW - Cancel will succeed if the order status is NEW. ONLY_PARTIALLY_FILLED - Cancel will succeed if order status is PARTIALLY_FILLED.
+	QuoteOrderQty           float64                 `s2m:"quoteOrderQty,omitempty"`
+	CancelNewClientOrderId  string                  `s2m:"cancelNewClientOrderId,omitempty"` // Used to uniquely identify this cancel. Automatically generated by default.
+	NewClientOrderId        string                  `s2m:"newClientOrderId,omitempty"`       // Used to identify the new order.
+	StrategyId              int64                   `s2m:"strategyId,omitempty"`
+	StrategyType            int64                   `s2m:"strategyType,omitempty"` // The value cannot be less than 1000000.
+	StopPrice               float64                 `s2m:"stopPrice,omitempty"`
+	TrailingDelta           int64                   `s2m:"trailingDelta,omitempty"`
+	IcebergQty              float64                 `s2m:"icebergQty,omitempty"`
+	NewOrderRespType        OrderResponseType       `s2m:"newOrderRespType,omitempty"`
+	SelfTradePreventionMode SelfTradePreventionMode `s2m:"selfTradePreventionMode,omitempty"` // The allowed enums is dependent on what is configured on the symbol. The possible supported values are EXPIRE_TAKER, EXPIRE_MAKER, EXPIRE_BOTH, NONE.
+	CancelRestrictions      OrderCancelRestriction  `s2m:"cancelRestrictions,omitempty"`      // Supported values: ONLY_NEW - Cancel will succeed if the order status is NEW. ONLY_PARTIALLY_FILLED - Cancel will succeed if order status is PARTIALLY_FILLED.
 }
 
 type SpotReplaceOrderRawData struct {

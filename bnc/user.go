@@ -61,7 +61,7 @@ func (u *User) SpotAccount() (*resty.Response, SpotAccount, *cex.RequestError) {
 	return cex.Request(u, SpotAccountConfig, nil)
 }
 
-func (u *User) Transfer(tranType TranType, asset string, amount float64) (*resty.Response, UniversalTransferResp, *cex.RequestError) {
+func (u *User) Transfer(tranType TransferType, asset string, amount float64) (*resty.Response, UniversalTransferResp, *cex.RequestError) {
 	return cex.Request(u, UniversalTransferConfig, UniversalTransferParams{Type: tranType, Asset: asset, Amount: amount})
 }
 
@@ -89,7 +89,7 @@ func (u *User) SimpleEarnFlexiblePositions(asset, productId string) (*resty.Resp
 	return cex.Request(u, SimpleEarnFlexiblePositionsConfig, SimpleEarnFlexiblePositionsParams{Asset: asset, ProductId: productId})
 }
 
-func (u *User) SimpleEarnFlexibleRedeem(productId string, redeemAll bool, amount float64, destAccount FlexibleRedeemDestType) (*resty.Response, FlexibleRedeemResponse, *cex.RequestError) {
+func (u *User) SimpleEarnFlexibleRedeem(productId string, redeemAll bool, amount float64, destAccount SimpleEarnFlexibleRedeemDestination) (*resty.Response, FlexibleRedeemResponse, *cex.RequestError) {
 	return cex.Request(u, FlexibleRedeemConfig, FlexibleRedeemParams{ProductId: productId, RedeemAll: redeemAll, Amount: amount, DestAccount: destAccount})
 }
 

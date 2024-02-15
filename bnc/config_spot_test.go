@@ -39,7 +39,7 @@ func TestSpotAccount(t *testing.T) {
 
 func TestUniversalTransfer(t *testing.T) {
 	testConfig(UniversalTransferConfig, UniversalTransferParams{
-		Type:       TranType_MAIN_UMFUTURE,
+		Type:       TransferTypeMainUmfuture,
 		Asset:      "USDT",
 		Amount:     10,
 		FromSymbol: "",

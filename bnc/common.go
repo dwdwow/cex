@@ -48,42 +48,42 @@ const (
 	FundingWallet = 1
 )
 
-type TranType string
+type TransferType string
 
 const (
-	TranType_MAIN_UMFUTURE                 TranType = "MAIN_UMFUTURE"                 // Spot account transfer to USDⓈ-M Futures account
-	TranType_MAIN_CMFUTURE                 TranType = "MAIN_CMFUTURE"                 // Spot account transfer to COIN-M Futures account
-	TranType_MAIN_MARGIN                   TranType = "MAIN_MARGIN"                   // Spot account transfer to Margin（cross）account
-	TranType_UMFUTURE_MAIN                 TranType = "UMFUTURE_MAIN"                 // USDⓈ-M Futures account transfer to Spot account
-	TranType_UMFUTURE_MARGIN               TranType = "UMFUTURE_MARGIN"               // USDⓈ-M Futures account transfer to Margin（cross）account
-	TranType_CMFUTURE_MAIN                 TranType = "CMFUTURE_MAIN"                 // COIN-M Futures account transfer to Spot account
-	TranType_CMFUTURE_MARGIN               TranType = "CMFUTURE_MARGIN"               // COIN-M Futures account transfer to Margin(cross) account
-	TranType_MARGIN_MAIN                   TranType = "MARGIN_MAIN"                   // Margin（cross）account transfer to Spot account
-	TranType_MARGIN_UMFUTURE               TranType = "MARGIN_UMFUTURE"               // Margin（cross）account transfer to USDⓈ-M Futures
-	TranType_MARGIN_CMFUTURE               TranType = "MARGIN_CMFUTURE"               // Margin（cross）account transfer to COIN-M Futures
-	TranType_ISOLATEDMARGIN_MARGIN         TranType = "ISOLATEDMARGIN_MARGIN"         // Isolated margin account transfer to Margin(cross) account
-	TranType_MARGIN_ISOLATEDMARGIN         TranType = "MARGIN_ISOLATEDMARGIN"         // Margin(cross) account transfer to Isolated margin account
-	TranType_ISOLATEDMARGIN_ISOLATEDMARGIN TranType = "ISOLATEDMARGIN_ISOLATEDMARGIN" // Isolated margin account transfer to Isolated margin account
-	TranType_MAIN_FUNDING                  TranType = "MAIN_FUNDING"                  // Spot account transfer to Funding account
-	TranType_FUNDING_MAIN                  TranType = "FUNDING_MAIN"                  // Funding account transfer to Spot account
-	TranType_FUNDING_UMFUTURE              TranType = "FUNDING_UMFUTURE"              // Funding account transfer to UMFUTURE account
-	TranType_UMFUTURE_FUNDING              TranType = "UMFUTURE_FUNDING"              // UMFUTURE account transfer to Funding account
-	TranType_MARGIN_FUNDING                TranType = "MARGIN_FUNDING"                // MARGIN account transfer to Funding account
-	TranType_FUNDING_MARGIN                TranType = "FUNDING_MARGIN"                // Funding account transfer to Margin account
-	TranType_FUNDING_CMFUTURE              TranType = "FUNDING_CMFUTURE"              // Funding account transfer to CMFUTURE account
-	TranType_CMFUTURE_FUNDING              TranType = "CMFUTURE_FUNDING"              // CMFUTURE account transfer to Funding account
-	TranType_MAIN_OPTION                   TranType = "MAIN_OPTION"                   // Spot account transfer to Options account
-	TranType_OPTION_MAIN                   TranType = "OPTION_MAIN"                   // Options account transfer to Spot account
-	TranType_UMFUTURE_OPTION               TranType = "UMFUTURE_OPTION"               // USDⓈ-M Futures account transfer to Options account
-	TranType_OPTION_UMFUTURE               TranType = "OPTION_UMFUTURE"               // Options account transfer to USDⓈ-M Futures account
-	TranType_MARGIN_OPTION                 TranType = "MARGIN_OPTION"                 // Margin（cross）account transfer to Options account
-	TranType_OPTION_MARGIN                 TranType = "OPTION_MARGIN"                 // Options account transfer to Margin（cross）account
-	TranType_FUNDING_OPTION                TranType = "FUNDING_OPTION"                // Funding account transfer to Options account
-	TranType_OPTION_FUNDING                TranType = "OPTION_FUNDING"                // Options account transfer to Funding account
-	TranType_MAIN_PORTFOLIO_MARGIN         TranType = "MAIN_PORTFOLIO_MARGIN"         // Spot account transfer to Portfolio Margin account
-	TranType_PORTFOLIO_MARGIN_MAIN         TranType = "PORTFOLIO_MARGIN_MAIN"         // Portfolio Margin account transfer to Spot account
-	TranType_MAIN_ISOLATED_MARGIN          TranType = "MAIN_ISOLATED_MARGIN"          // Spot account transfer to Isolated margin account
-	TranType_ISOLATED_MARGIN_MAIN          TranType = "ISOLATED_MARGIN_MAIN"          // Isolated margin account transfer to Spot account
+	TransferTypeMainUmfuture                 TransferType = "MAIN_UMFUTURE"                 // Spot account transfer to USDⓈ-M Futures account
+	TransferTypeMainCmfuture                 TransferType = "MAIN_CMFUTURE"                 // Spot account transfer to COIN-M Futures account
+	TransferTypeMainMargin                   TransferType = "MAIN_MARGIN"                   // Spot account transfer to Margin（cross）account
+	TransferTypeUmfutureMain                 TransferType = "UMFUTURE_MAIN"                 // USDⓈ-M Futures account transfer to Spot account
+	TransferTypeUmfutureMargin               TransferType = "UMFUTURE_MARGIN"               // USDⓈ-M Futures account transfer to Margin（cross）account
+	TransferTypeCmfutureMain                 TransferType = "CMFUTURE_MAIN"                 // COIN-M Futures account transfer to Spot account
+	TransferTypeCmfutureMargin               TransferType = "CMFUTURE_MARGIN"               // COIN-M Futures account transfer to Margin(cross) account
+	TransferTypeMarginMain                   TransferType = "MARGIN_MAIN"                   // Margin（cross）account transfer to Spot account
+	TransferTypeMarginUmfuture               TransferType = "MARGIN_UMFUTURE"               // Margin（cross）account transfer to USDⓈ-M Futures
+	TransferTypeMarginCmfuture               TransferType = "MARGIN_CMFUTURE"               // Margin（cross）account transfer to COIN-M Futures
+	TransferTypeIsolatedmarginMargin         TransferType = "ISOLATEDMARGIN_MARGIN"         // Isolated margin account transfer to Margin(cross) account
+	TransferTypeMarginIsolatedmargin         TransferType = "MARGIN_ISOLATEDMARGIN"         // Margin(cross) account transfer to Isolated margin account
+	TransferTypeIsolatedmarginIsolatedmargin TransferType = "ISOLATEDMARGIN_ISOLATEDMARGIN" // Isolated margin account transfer to Isolated margin account
+	TransferTypeMainFunding                  TransferType = "MAIN_FUNDING"                  // Spot account transfer to Funding account
+	TransferTypeFundingMain                  TransferType = "FUNDING_MAIN"                  // Funding account transfer to Spot account
+	TransferTypeFundingUmfuture              TransferType = "FUNDING_UMFUTURE"              // Funding account transfer to UMFUTURE account
+	TransferTypeUmfutureFunding              TransferType = "UMFUTURE_FUNDING"              // UMFUTURE account transfer to Funding account
+	TransferTypeMarginFunding                TransferType = "MARGIN_FUNDING"                // MARGIN account transfer to Funding account
+	TransferTypeFundingMargin                TransferType = "FUNDING_MARGIN"                // Funding account transfer to Margin account
+	TransferTypeFundingCmfuture              TransferType = "FUNDING_CMFUTURE"              // Funding account transfer to CMFUTURE account
+	TransferTypeCmfutureFunding              TransferType = "CMFUTURE_FUNDING"              // CMFUTURE account transfer to Funding account
+	TransferTypeMainOption                   TransferType = "MAIN_OPTION"                   // Spot account transfer to Options account
+	TransferTypeOptionMain                   TransferType = "OPTION_MAIN"                   // Options account transfer to Spot account
+	TransferTypeUmfutureOption               TransferType = "UMFUTURE_OPTION"               // USDⓈ-M Futures account transfer to Options account
+	TransferTypeOptionUmfuture               TransferType = "OPTION_UMFUTURE"               // Options account transfer to USDⓈ-M Futures account
+	TransferTypeMarginOption                 TransferType = "MARGIN_OPTION"                 // Margin（cross）account transfer to Options account
+	TransferTypeOptionMargin                 TransferType = "OPTION_MARGIN"                 // Options account transfer to Margin（cross）account
+	TransferTypeFundingOption                TransferType = "FUNDING_OPTION"                // Funding account transfer to Options account
+	TransferTypeOptionFunding                TransferType = "OPTION_FUNDING"                // Options account transfer to Funding account
+	TransferTypeMainPortfolioMargin          TransferType = "MAIN_PORTFOLIO_MARGIN"         // Spot account transfer to Portfolio Margin account
+	TransferTypePortfolioMarginMain          TransferType = "PORTFOLIO_MARGIN_MAIN"         // Portfolio Margin account transfer to Spot account
+	TransferTypeMainIsolatedMargin           TransferType = "MAIN_ISOLATED_MARGIN"          // Spot account transfer to Isolated margin account
+	TransferTypeIsolatedMarginMain           TransferType = "ISOLATED_MARGIN_MAIN"          // Isolated margin account transfer to Spot account
 )
 
 type TransferDirection int
@@ -202,25 +202,25 @@ const (
 type FuturesIncomeType string
 
 const (
-	FuturesIncomeType_TRANSFER                    FuturesIncomeType = "TRANSFER"
-	FuturesIncomeType_WELCOME_BONUS               FuturesIncomeType = "WELCOME_BONUS"
-	FuturesIncomeType_REALIZED_PNL                FuturesIncomeType = "REALIZED_PNL"
-	FuturesIncomeType_FUNDING_FEE                 FuturesIncomeType = "FUNDING_FEE"
-	FuturesIncomeType_COMMISSION                  FuturesIncomeType = "COMMISSION"
-	FuturesIncomeType_INSURANCE_CLEAR             FuturesIncomeType = "INSURANCE_CLEAR"
-	FuturesIncomeType_REFERRAL_KICKBACK           FuturesIncomeType = "REFERRAL_KICKBACK"
-	FuturesIncomeType_COMMISSION_REBATE           FuturesIncomeType = "COMMISSION_REBATE"
-	FuturesIncomeType_API_REBATE                  FuturesIncomeType = "API_REBATE"
-	FuturesIncomeType_CONTEST_REWARD              FuturesIncomeType = "CONTEST_REWARD"
-	FuturesIncomeType_CROSS_COLLATERAL_TRANSFER   FuturesIncomeType = "CROSS_COLLATERAL_TRANSFER"
-	FuturesIncomeType_OPTIONS_PREMIUM_FEE         FuturesIncomeType = "OPTIONS_PREMIUM_FEE"
-	FuturesIncomeType_OPTIONS_SETTLE_PROFIT       FuturesIncomeType = "OPTIONS_SETTLE_PROFIT"
-	FuturesIncomeType_INTERNAL_TRANSFER           FuturesIncomeType = "INTERNAL_TRANSFER"
-	FuturesIncomeType_AUTO_EXCHANGE               FuturesIncomeType = "AUTO_EXCHANGE"
-	FuturesIncomeType_DELIVERED_SETTELMENT        FuturesIncomeType = "DELIVERED_SETTELMENT"
-	FuturesIncomeType_COIN_SWAP_DEPOSIT           FuturesIncomeType = "COIN_SWAP_DEPOSIT"
-	FuturesIncomeType_COIN_SWAP_WITHDRAW          FuturesIncomeType = "COIN_SWAP_WITHDRAW"
-	FuturesIncomeType_POSITION_LIMIT_INCREASE_FEE FuturesIncomeType = "POSITION_LIMIT_INCREASE_FEE"
+	FuturesIncomeTypeTransfer                 FuturesIncomeType = "TRANSFER"
+	FuturesIncomeTypeWelcomeBonus             FuturesIncomeType = "WELCOME_BONUS"
+	FuturesIncomeTypeRealizedPnl              FuturesIncomeType = "REALIZED_PNL"
+	FuturesIncomeTypeFundingFee               FuturesIncomeType = "FUNDING_FEE"
+	FuturesIncomeTypeCommission               FuturesIncomeType = "COMMISSION"
+	FuturesIncomeTypeInsuranceClear           FuturesIncomeType = "INSURANCE_CLEAR"
+	FuturesIncomeTypeReferralKickback         FuturesIncomeType = "REFERRAL_KICKBACK"
+	FuturesIncomeTypeCommissionRebate         FuturesIncomeType = "COMMISSION_REBATE"
+	FuturesIncomeTypeApiRebate                FuturesIncomeType = "API_REBATE"
+	FuturesIncomeTypeContestReward            FuturesIncomeType = "CONTEST_REWARD"
+	FuturesIncomeTypeCrossCollateralTransfer  FuturesIncomeType = "CROSS_COLLATERAL_TRANSFER"
+	FuturesIncomeTypeOptionsPremiumFee        FuturesIncomeType = "OPTIONS_PREMIUM_FEE"
+	FuturesIncomeTypeOptionsSettleProfit      FuturesIncomeType = "OPTIONS_SETTLE_PROFIT"
+	FuturesIncomeTypeInternalTransfer         FuturesIncomeType = "INTERNAL_TRANSFER"
+	FuturesIncomeTypeAutoExchange             FuturesIncomeType = "AUTO_EXCHANGE"
+	FuturesIncomeTypeDeliveredSettelment      FuturesIncomeType = "DELIVERED_SETTELMENT"
+	FuturesIncomeTypeCoinSwapDeposit          FuturesIncomeType = "COIN_SWAP_DEPOSIT"
+	FuturesIncomeTypeCoinSwapWithdraw         FuturesIncomeType = "COIN_SWAP_WITHDRAW"
+	FuturesIncomeTypePositionLimitIncreaseFee FuturesIncomeType = "POSITION_LIMIT_INCREASE_FEE"
 )
 
 type BSwapOrderStatus string
@@ -244,9 +244,10 @@ const (
 type OrderResponseType string
 
 const (
-	SpotOrderResponseTypeAck    OrderResponseType = "ACK"
-	SpotOrderResponseTypeResult OrderResponseType = "RESULT"
-	SpotOrderResponseTypeFull   OrderResponseType = "FULL"
+	OrderResponseTypeAck    OrderResponseType = "ACK"
+	OrderResponseTypeResult OrderResponseType = "RESULT"
+	// OrderResponseTypeFull is only for spot new order response
+	OrderResponseTypeFull OrderResponseType = "FULL"
 )
 
 type SelfTradePreventionMode string
@@ -258,26 +259,26 @@ const (
 	SelfTradePreventionModeNone        SelfTradePreventionMode = "NONE"
 )
 
-type SpotOrderCancelRestriction string
+type OrderCancelRestriction string
 
 const (
-	SpotOrderCancelRestriction_ONLY_NEW              SpotOrderCancelRestriction = "ONLY_NEW"
-	SpotOrderCancelRestriction_ONLY_PARTIALLY_FILLED SpotOrderCancelRestriction = "ONLY_PARTIALLY_FILLED"
+	OrderCancelRestrictionOnlyNew             OrderCancelRestriction = "ONLY_NEW"
+	OrderCancelRestrictionOnlyPartiallyFilled OrderCancelRestriction = "ONLY_PARTIALLY_FILLED"
 )
 
 type SpotCancelReplaceMode string
 
 const (
-	SpotCancelReplaceMode_STOP_ON_FAILURE SpotCancelReplaceMode = "STOP_ON_FAILURE"
-	SpotCancelReplaceMode_ALLOW_FAILURE   SpotCancelReplaceMode = "ALLOW_FAILURE"
+	SpotCancelReplaceModeStopOnFailure SpotCancelReplaceMode = "STOP_ON_FAILURE"
+	SpotCancelReplaceModeAllowFailure  SpotCancelReplaceMode = "ALLOW_FAILURE"
 )
 
 type SpotOrderCancelNewStatus string
 
 const (
-	SpotOrderCancelNewStatus_SUCCESS       SpotOrderCancelNewStatus = "SUCCESS"
-	SpotOrderCancelNewStatus_FAILURE       SpotOrderCancelNewStatus = "FAILURE"
-	SpotOrderCancelNewStatus_NOT_ATTEMPTED SpotOrderCancelNewStatus = "NOT_ATTEMPTED"
+	SpotOrderCancelNewStatusSuccess      SpotOrderCancelNewStatus = "SUCCESS"
+	SpotOrderCancelNewStatusFailure      SpotOrderCancelNewStatus = "FAILURE"
+	SpotOrderCancelNewStatusNotAttempted SpotOrderCancelNewStatus = "NOT_ATTEMPTED"
 )
 
 type Network string
@@ -346,27 +347,27 @@ const (
 	CryptoLoanIncomeCollateralReturnAfterLiquidation CryptoLoanIncomeType = "collateralReturnAfterLiquidation"
 )
 
-type FlexibleBorrowStatus string
+type CryptoLoanFlexibleBorrowStatus string
 
 const (
-	FlexibleBorrowSucceeds   FlexibleBorrowStatus = "Succeeds"
-	FlexibleBorrowFailed     FlexibleBorrowStatus = "Failed"
-	FlexibleBorrowProcessing FlexibleBorrowStatus = "Processing"
+	CryptoLoanFlexibleBorrowSucceeds   CryptoLoanFlexibleBorrowStatus = "Succeeds"
+	CryptoLoanFlexibleBorrowFailed     CryptoLoanFlexibleBorrowStatus = "Failed"
+	CryptoLoanFlexibleBorrowProcessing CryptoLoanFlexibleBorrowStatus = "Processing"
 )
 
-type FlexibleRepayStatus string
+type CryptoFlexibleRepayStatus string
 
 const (
-	FlexibleRepayRepaid   FlexibleRepayStatus = "Repaid"
-	FlexibleRepayRepaying FlexibleRepayStatus = "Repaying"
-	FlexibleRepayFailed   FlexibleRepayStatus = "Failed"
+	CryptoLoanFlexibleRepayRepaid   CryptoFlexibleRepayStatus = "Repaid"
+	CryptoLoanFlexibleRepayRepaying CryptoFlexibleRepayStatus = "Repaying"
+	CryptoLoanFlexibleRepayFailed   CryptoFlexibleRepayStatus = "Failed"
 )
 
-type FlexibleRedeemDestType string
+type SimpleEarnFlexibleRedeemDestination string
 
 const (
-	FlexibleRedeemDestSpot FlexibleRedeemDestType = "SPOT"
-	FlexibleRedeemDestFund FlexibleRedeemDestType = "FUND"
+	SimpleEarnFlexibleRedeemDestinationSpot SimpleEarnFlexibleRedeemDestination = "SPOT"
+	SimpleEarnFlexibleRedeemDestinationFund SimpleEarnFlexibleRedeemDestination = "FUND"
 )
 
 type CodeMsg struct {

@@ -31,7 +31,7 @@ func TestUser_FuturesAccount(t *testing.T) {
 }
 
 func TestUser_Transfer(t *testing.T) {
-	userTestChecker(newTestUser().Transfer(TranType_MAIN_UMFUTURE, "USDT", 10))
+	userTestChecker(newTestUser().Transfer(TransferTypeMainUmfuture, "USDT", 10))
 }
 
 func TestUser_SimpleEarnFlexibleProducts(t *testing.T) {
@@ -43,7 +43,7 @@ func TestUser_SimpleEarnFlexiblePositions(t *testing.T) {
 }
 
 func TestUser_SimpleEarnFlexibleRedeem(t *testing.T) {
-	userTestChecker(newTestUser().SimpleEarnFlexibleRedeem("ETH001", false, 0.02, FlexibleRedeemDestSpot))
+	userTestChecker(newTestUser().SimpleEarnFlexibleRedeem("ETH001", false, 0.02, SimpleEarnFlexibleRedeemDestinationSpot))
 }
 
 func TestUser_CryptoLoanFlexibleOngoingOrders(t *testing.T) {

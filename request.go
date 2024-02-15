@@ -32,7 +32,8 @@ import (
 //
 // Callers just need to find target ReqConfig in the target exchange package,
 // and add opts appending needs, Request will do other things.
-// Package bnctest has many examples.
+//
+// If wanting to quickly familiarize with this frame, go directly to cex/bnc/user.go.
 //
 // Structured request error, RequestError, will help callers to check more
 // details of error occurred during resting.

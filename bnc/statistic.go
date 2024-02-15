@@ -74,7 +74,7 @@ func CountSomeFundingRateTimeSeries(infos []FuturesFundingRateInfo, start, end i
 	return
 }
 
-// CountAllFundingRateTimeSeries takes long time, need log process.
+// CountAllFundingRateTimeSeries takes long time, will log process.
 func CountAllFundingRateTimeSeries(start, end int64) (result []FrTsStatisticalResult, uncounted []FuturesFundingRateInfo, err error) {
 	infos, err := QueryAllFundingRateInfos()
 	if err != nil {
