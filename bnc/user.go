@@ -81,7 +81,7 @@ func (u *User) FuturesPositions(symbol string) (*resty.Response, []FuPosition, *
 // Flexible Simple Earn API
 // ------------------------------------------------------------
 
-func (u *User) FlexibleProducts(asset string) (*resty.Response, Page[[]FlexibleProduct], *cex.RequestError) {
+func (u *User) SimpleEarnFlexibleProducts(asset string) (*resty.Response, Page[[]FlexibleProduct], *cex.RequestError) {
 	return cex.Request(u, FlexibleProductConfig, FlexibleProductListParams{Asset: asset})
 }
 
@@ -89,7 +89,7 @@ func (u *User) SimpleEarnFlexiblePositions(asset, productId string) (*resty.Resp
 	return cex.Request(u, SimpleEarnFlexiblePositionsConfig, SimpleEarnFlexiblePositionsParams{Asset: asset, ProductId: productId})
 }
 
-func (u *User) FlexibleRedeem(productId string, redeemAll bool, amount float64, destAccount FlexibleRedeemDestType) (*resty.Response, FlexibleRedeemResponse, *cex.RequestError) {
+func (u *User) SimpleEarnFlexibleRedeem(productId string, redeemAll bool, amount float64, destAccount FlexibleRedeemDestType) (*resty.Response, FlexibleRedeemResponse, *cex.RequestError) {
 	return cex.Request(u, FlexibleRedeemConfig, FlexibleRedeemParams{ProductId: productId, RedeemAll: redeemAll, Amount: amount, DestAccount: destAccount})
 }
 
@@ -101,39 +101,43 @@ func (u *User) FlexibleRedeem(productId string, redeemAll bool, amount float64, 
 // Flexible Loan API
 // ------------------------------------------------------------
 
+func (u *User) CryptoLoanFlexibleOngoingOrders(loanCoin, collateralCoin string) (*resty.Response, Page[[]FlexibleOngoingOrder], *cex.RequestError) {
+	return cex.Request(u, FlexibleOngoingOrdersConfig, FlexibleOngoingOrdersParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin})
+}
+
 func (u *User) CryptoLoanIncomeHistories(asset string, incomeType CryptoLoanIncomeType) (*resty.Response, []CryptoLoanIncomeHistory, *cex.RequestError) {
 	return cex.Request(u, CryptoLoansIncomeHistoriesConfig, CryptoLoansIncomeHistoriesParams{Asset: asset, Type: incomeType})
 }
 
-func (u *User) FlexibleBorrow(loanCoin string, collateralCoin string, loanAmount, collateralAmount float64) (*resty.Response, FlexibleBorrowResult, *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleBorrow(loanCoin string, collateralCoin string, loanAmount, collateralAmount float64) (*resty.Response, FlexibleBorrowResult, *cex.RequestError) {
 	return cex.Request(u, FlexibleBorrowConfig, FlexibleBorrowParams{LoanCoin: loanCoin, LoanAmount: loanAmount, CollateralCoin: collateralCoin, CollateralAmount: collateralAmount})
 }
 
-func (u *User) FlexibleBorrowHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]FlexibleBorrowHistory], *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleBorrowHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]FlexibleBorrowHistory], *cex.RequestError) {
 	return cex.Request(u, FlexibleBorrowHistoriesConfig, FlexibleBorrowHistoriesParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100})
 }
 
-func (u *User) FlexibleRepay(loanCoin, collateralCoin string, repayAmount float64, collateralReturn, fullRepayment BigBool) (*resty.Response, FlexibleRepayResult, *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleRepay(loanCoin, collateralCoin string, repayAmount float64, collateralReturn, fullRepayment BigBool) (*resty.Response, FlexibleRepayResult, *cex.RequestError) {
 	return cex.Request(u, FlexibleRepayConfig, FlexibleRepayParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, RepayAmount: repayAmount, CollateralReturn: collateralReturn, FullRepayment: fullRepayment})
 }
 
-func (u *User) FlexibleRepaymentHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]FlexibleRepaymentHistory], *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleRepaymentHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]FlexibleRepaymentHistory], *cex.RequestError) {
 	return cex.Request(u, FlexibleRepaymentHistoriesConfig, FlexibleRepaymentHistoriesParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100})
 }
 
-func (u *User) FlexibleAdjustLtv(loanCoin, collateralCoin string, adjustmentAmount float64, direction LTVAdjustDirection) (*resty.Response, FlexibleLoanAdjustLtvResult, *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleAdjustLtv(loanCoin, collateralCoin string, adjustmentAmount float64, direction LTVAdjustDirection) (*resty.Response, FlexibleLoanAdjustLtvResult, *cex.RequestError) {
 	return cex.Request(u, FlexibleLoanAdjustLtvConfig, FlexibleAdjustLtvParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, AdjustmentAmount: adjustmentAmount, Direction: direction})
 }
 
-func (u *User) FlexibleAdjustLtvHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]FlexibleAdjustLtvHistory], *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleAdjustLtvHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]FlexibleAdjustLtvHistory], *cex.RequestError) {
 	return cex.Request(u, FlexibleAdjustLtvHistoriesConfig, FlexibleAdjustLtvHistoriesParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100})
 }
 
-func (u *User) FlexibleLoanAssets(loanCoin string) (*resty.Response, Page[[]FlexibleLoanAsset], *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleLoanAssets(loanCoin string) (*resty.Response, Page[[]FlexibleLoanAsset], *cex.RequestError) {
 	return cex.Request(u, FlexibleLoanAssetsConfig, FlexibleLoanAssetsParams{loanCoin})
 }
 
-func (u *User) FlexibleCollateralAssets(collateralCoin string) (*resty.Response, Page[[]FlexibleCollateralCoin], *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleCollateralAssets(collateralCoin string) (*resty.Response, Page[[]FlexibleCollateralCoin], *cex.RequestError) {
 	return cex.Request(u, FlexibleCollateralCoinsConfig, FlexibleCollateralCoinsParams{collateralCoin})
 }
 
