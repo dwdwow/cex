@@ -59,6 +59,38 @@ func QueryFundingRateInfos() ([]FuturesFundingRateInfo, error) {
 	return queryInfoAboutFundingRate(FuturesFundingRateInfosConfig, nil)
 }
 
+func QueryAllFundingRateInfos() ([]FuturesFundingRateInfo, error) {
+	var result []FuturesFundingRateInfo
+	frInfos, err := QueryFundingRateInfos()
+	if err != nil {
+		return nil, err
+	}
+	frInfoBySyb := map[string]FuturesFundingRateInfo{}
+	for _, info := range frInfos {
+		frInfoBySyb[info.Symbol] = info
+	}
+	futuresExchangeInfo, err := QueryFuturesExchangeInfo()
+	if err != nil {
+		return nil, err
+	}
+	exchanges := futuresExchangeInfo.Symbols
+	for _, ex := range exchanges {
+		info, ok := frInfoBySyb[ex.Symbol]
+		if ok {
+			result = append(result, info)
+			continue
+		}
+		info = FuturesFundingRateInfo{
+			Symbol:                   ex.Symbol,
+			AdjustedFundingRateCap:   0,
+			AdjustedFundingRateFloor: 0,
+			FundingIntervalHours:     8,
+			Disclaimer:               false,
+		}
+	}
+	return result, nil
+}
+
 func QueryFundingRates() ([]FuturesFundingRate, error) {
 	return queryInfoAboutFundingRate(FuturesFundingRatesConfig, FuturesFundingRatesParams{Symbol: ""})
 }

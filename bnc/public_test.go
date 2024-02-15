@@ -35,6 +35,17 @@ func TestQueryFundingRateInfos(t *testing.T) {
 	publicTestChecker(QueryFundingRateInfos())
 }
 
+func TestQueryAllFundingRateInfos(t *testing.T) {
+	infos, err := QueryAllFundingRateInfos()
+	props.PanicIfNotNil(err)
+	for _, info := range infos {
+		if info.Symbol == "ETHUSDT" {
+			props.PrintlnIndent(info)
+			return
+		}
+	}
+}
+
 func TestQueryFundingRates(t *testing.T) {
 	publicTestChecker(QueryFundingRates())
 }

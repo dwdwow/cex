@@ -48,17 +48,19 @@ func ExchangeInfoToPair(info Exchange) (cex.Pair, error) {
 	}
 	var pairType cex.PairType
 	var sybMid string
-	var makerFeeTier, takerFeeTier float64
+	var makerFeeTier, takerFeeTier, minTradeQuote float64
 	if info.ContractType == "" {
 		pairType = cex.SpotPair
 		sybMid = SpotSymbolMid
 		// TODO not correct
 		makerFeeTier, takerFeeTier = SpotMakerFeeTier, SpotTakerFeeTier
+		minTradeQuote = 10
 	} else {
 		pairType = cex.FuturePair
 		sybMid = FutureSymbolMid
 		// TODO not correct
 		makerFeeTier, takerFeeTier = FutureMakerFeeTier, FutureTakerFeeTier
+		minTradeQuote = 20
 	}
 	pair := cex.Pair{
 		Cex:           cex.BINANCE,
@@ -72,7 +74,7 @@ func ExchangeInfoToPair(info Exchange) (cex.Pair, error) {
 		TakerFeeTier:  takerFeeTier,
 		MakerFeeTier:  makerFeeTier,
 		MinTradeQty:   0,
-		MinTradeQuote: 15,
+		MinTradeQuote: minTradeQuote,
 		Tradable:      info.Status == ExchangeTrading,
 		CanMarket:     true,
 		CanMargin:     info.IsMarginTradingAllowed,

@@ -176,8 +176,8 @@ var FuturesFundingRateHistoriesConfig = cex.ReqConfig[FuturesFundingRateHistorie
 
 type FuturesFundingRateInfo struct {
 	Symbol                   string  `json:"symbol"`
-	AdjustedFundingRateCap   string  `json:"adjustedFundingRateCap"`
-	AdjustedFundingRateFloor string  `json:"adjustedFundingRateFloor"`
+	AdjustedFundingRateCap   float64 `json:"adjustedFundingRateCap,string"`
+	AdjustedFundingRateFloor float64 `json:"adjustedFundingRateFloor,string"`
 	FundingIntervalHours     float64 `json:"fundingIntervalHours"`
 	Disclaimer               bool    `json:"disclaimer"` // ignore
 }
