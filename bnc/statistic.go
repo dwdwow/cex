@@ -2,6 +2,7 @@ package bnc
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/montanaflynn/stats"
 )
@@ -16,7 +17,7 @@ type FrTsStatisticalResult struct {
 }
 
 // CountFundingRateTimeSeries
-// within 3 years
+// within 8000 or 4000 hours
 func CountFundingRateTimeSeries(frInfo FuturesFundingRateInfo, start, end int64) (FrTsStatisticalResult, error) {
 	hours := frInfo.FundingIntervalHours
 	if hours <= 0 {
@@ -28,7 +29,8 @@ func CountFundingRateTimeSeries(frInfo FuturesFundingRateInfo, start, end int64)
 	}
 	var frs []float64
 	for _, his := range hiss {
-		frs = append(frs, his.FundingRate)
+		yr := 24 / hours * 365 * his.FundingRate
+		frs = append(frs, yr)
 	}
 	mean, err := stats.Mean(frs)
 	if err != nil {
@@ -39,4 +41,43 @@ func CountFundingRateTimeSeries(frInfo FuturesFundingRateInfo, start, end int64)
 		return FrTsStatisticalResult{}, err
 	}
 	return FrTsStatisticalResult{frInfo, start, end, 0, mean, std}, nil
+}
+
+// CountSomeFundingRateTimeSeries takes long time, need log process.
+func CountSomeFundingRateTimeSeries(infos []FuturesFundingRateInfo, start, end int64) (result []FrTsStatisticalResult, uncounted []FuturesFundingRateInfo) {
+	for _, info := range infos {
+		fmt.Println("counting", info.Symbol)
+		var res FrTsStatisticalResult
+		var errCount error
+		for i := 0; i < 3; i++ {
+			time.Sleep(time.Second * time.Duration(i+1))
+			res, errCount = CountFundingRateTimeSeries(info, start, end)
+			if errCount == nil {
+				result = append(result, res)
+				fmt.Println("counted", info.Symbol)
+				break
+			}
+			fmt.Println("err", errCount)
+		}
+		if errCount != nil {
+			fmt.Println("can not count", info.Symbol)
+			uncounted = append(uncounted, info)
+		}
+	}
+	return
+}
+
+// CountAllFundingRateTimeSeries takes long time, need log process.
+func CountAllFundingRateTimeSeries(start, end int64) (result []FrTsStatisticalResult, uncounted []FuturesFundingRateInfo, err error) {
+	fmt.Println("start to count all funding rate time series")
+	infos, err := QueryAllFundingRateInfos()
+	if err != nil {
+		return
+	}
+	fmt.Println("exchange amount: ", len(infos))
+	result, uncounted = CountSomeFundingRateTimeSeries(infos, start, end)
+	if len(uncounted) != 0 {
+		result, uncounted = CountSomeFundingRateTimeSeries(uncounted, start, end)
+	}
+	return
 }

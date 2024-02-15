@@ -74,8 +74,10 @@ func QueryAllFundingRateInfos() ([]FuturesFundingRateInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	exchanges := futuresExchangeInfo.Symbols
-	for _, ex := range exchanges {
+	for _, ex := range futuresExchangeInfo.Symbols {
+		if ex.Status != ExchangeTrading {
+			continue
+		}
 		info, ok := frInfoBySyb[ex.Symbol]
 		if !ok {
 			info = FuturesFundingRateInfo{

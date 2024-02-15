@@ -22,3 +22,13 @@ func TestCountFundingRateTimeSeries(t *testing.T) {
 	props.PanicIfNotNil(err)
 	props.PrintlnIndent(res)
 }
+
+func TestCountAllFundingRateTimeSeries(t *testing.T) {
+	days := 60.0
+	interval := int64(days * 24 * 60 * 60 * 1000)
+	now := time.Now().UnixMilli()
+	res, uncounted, err := CountAllFundingRateTimeSeries(now-interval, now)
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(res)
+	props.PrintlnIndent(uncounted)
+}
