@@ -39,10 +39,13 @@ func TestQueryAllFundingRateInfos(t *testing.T) {
 	infos, err := QueryAllFundingRateInfos()
 	props.PanicIfNotNil(err)
 	for _, info := range infos {
-		if info.Symbol == "ETHUSDT" {
+		if info.FundingIntervalHours == 4 {
 			props.PrintlnIndent(info)
-			return
 		}
+		//if info.Symbol == "ETHUSDT" {
+		//	props.PrintlnIndent(info)
+		//	return
+		//}
 	}
 }
 

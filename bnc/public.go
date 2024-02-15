@@ -61,12 +61,13 @@ func QueryFundingRateInfos() ([]FuturesFundingRateInfo, error) {
 
 func QueryAllFundingRateInfos() ([]FuturesFundingRateInfo, error) {
 	var result []FuturesFundingRateInfo
-	frInfos, err := QueryFundingRateInfos()
+	var err error
+	result, err = QueryFundingRateInfos()
 	if err != nil {
 		return nil, err
 	}
 	frInfoBySyb := map[string]FuturesFundingRateInfo{}
-	for _, info := range frInfos {
+	for _, info := range result {
 		frInfoBySyb[info.Symbol] = info
 	}
 	futuresExchangeInfo, err := QueryFuturesExchangeInfo()
@@ -76,17 +77,16 @@ func QueryAllFundingRateInfos() ([]FuturesFundingRateInfo, error) {
 	exchanges := futuresExchangeInfo.Symbols
 	for _, ex := range exchanges {
 		info, ok := frInfoBySyb[ex.Symbol]
-		if ok {
-			result = append(result, info)
-			continue
+		if !ok {
+			info = FuturesFundingRateInfo{
+				Symbol:                   ex.Symbol,
+				AdjustedFundingRateCap:   0,
+				AdjustedFundingRateFloor: 0,
+				FundingIntervalHours:     8,
+				Disclaimer:               false,
+			}
 		}
-		info = FuturesFundingRateInfo{
-			Symbol:                   ex.Symbol,
-			AdjustedFundingRateCap:   0,
-			AdjustedFundingRateFloor: 0,
-			FundingIntervalHours:     8,
-			Disclaimer:               false,
-		}
+		result = append(result, info)
 	}
 	return result, nil
 }

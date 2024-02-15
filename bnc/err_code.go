@@ -2,6 +2,7 @@ package bnc
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/dwdwow/cex"
@@ -91,7 +92,7 @@ func HTTPStatusCodeChecker(code int) error {
 	if err != nil {
 		return err
 	}
-	return cex.ErrHTTPCodeNotInEnum
+	return fmt.Errorf("%w: status code %v is not in enum", cex.ErrHTTPCodeNotInEnum, code)
 }
 
 // ---------------------------------------------

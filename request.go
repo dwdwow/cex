@@ -106,6 +106,11 @@ func request[ReqDataType, RespDataType any](
 		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: resp and err are all nil, resty may have bugs"))
 	}
 
+	var errResty error
+	if err != nil {
+		errResty = err
+	}
+
 	if config.HTTPStatusCodeChecker == nil {
 		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: config http status code checker is nil"))
 	}
@@ -136,7 +141,7 @@ func request[ReqDataType, RespDataType any](
 		reqErr.RespBodyUnmarshalerError = errBodyUnmarshal
 	}
 
-	reqErr.Err = fmt.Errorf("cex: request, http err: %w, body unmarshal err: %w", errHttp, errBodyUnmarshal)
+	reqErr.Err = fmt.Errorf("cex: request, resty err: %w, http err: %w, body unmarshal err: %w", errResty, errHttp, errBodyUnmarshal)
 
 	return resp, respData, reqErr
 }
