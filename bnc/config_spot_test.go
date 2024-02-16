@@ -190,7 +190,7 @@ func TestSpotReplaceOrder(t *testing.T) {
 		Symbol:                  "ETHUSDT",
 		Type:                    OrderTypeLimit,
 		Side:                    OrderSideSell,
-		CancelReplaceMode:       SpotCancelReplaceMode_STOP_ON_FAILURE,
+		CancelReplaceMode:       SpotCancelReplaceModeStopOnFailure,
 		TimeInForce:             TimeInForceGtc,
 		Quantity:                10,
 		QuoteOrderQty:           0,

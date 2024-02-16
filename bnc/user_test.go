@@ -93,11 +93,11 @@ func TestUser_NewSpotOrder(t *testing.T) {
 }
 
 func TestUser_QuerySpotOrder(t *testing.T) {
-	userTestChecker(newTestUser().QuerySpotOrder("ETH", "USDT", 0, ""))
+	userTestChecker(newTestUser().QuerySpotOrder("ETHUSDT", 0, ""))
 }
 
 func TestUser_CancelSpotOrder(t *testing.T) {
-	userTestChecker(newTestUser().CancelSpotOrder("ETH", "USDT", 0, ""))
+	userTestChecker(newTestUser().CancelSpotOrder("ETHUSDT", 0, ""))
 }
 
 func TestUser_NewSpotLimitBuyOrder(t *testing.T) {
@@ -121,11 +121,11 @@ func TestUser_NewFuturesOrder(t *testing.T) {
 }
 
 func TestUser_QueryFuturesOrder(t *testing.T) {
-	userTestChecker(newTestUser().QueryFuturesOrder("ETH", "USDT", 0, ""))
+	userTestChecker(newTestUser().QueryFuturesOrder("ETHUSDT", 0, ""))
 }
 
 func TestUser_CancelFuturesOrder(t *testing.T) {
-	userTestChecker(newTestUser().CancelFuturesOrder("ETH", "USDT", 0, ""))
+	userTestChecker(newTestUser().CancelFuturesOrder("ETHUSDT", 0, ""))
 }
 
 func TestUser_NewFuturesLimitBuyOrder(t *testing.T) {

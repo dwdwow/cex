@@ -209,12 +209,12 @@ func (u *User) NewFuturesMarketSellOrder(asset, quote string, qty float64) (*res
 // Spot API
 // ------------------------------------------------------------
 
-func (u *User) CancelSpotOrder(asset, quote string, orderId int64, cltOrdId string) (*resty.Response, SpotOrder, *cex.RequestError) {
-	return cex.Request(u, SpotCancelOrderConfig, SpotCancelOrderParams{Symbol: asset + quote, OrderId: orderId, OrigClientOrderId: cltOrdId})
+func (u *User) CancelSpotOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, SpotOrder, *cex.RequestError) {
+	return cex.Request(u, SpotCancelOrderConfig, SpotCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
 }
 
-func (u *User) QuerySpotOrder(asset, quote string, orderId int64, cltOrdId string) (*resty.Response, SpotOrder, *cex.RequestError) {
-	return cex.Request(u, SpotQueryOrderConfig, SpotQueryOrderParams{Symbol: asset + quote, OrderId: orderId, OrigClientOrderId: cltOrdId})
+func (u *User) QuerySpotOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, SpotOrder, *cex.RequestError) {
+	return cex.Request(u, SpotQueryOrderConfig, SpotQueryOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
 }
 
 // ------------------------------------------------------------
@@ -225,12 +225,12 @@ func (u *User) QuerySpotOrder(asset, quote string, orderId int64, cltOrdId strin
 // Futures API
 // ------------------------------------------------------------
 
-func (u *User) CancelFuturesOrder(asset, quote string, orderId int64, cltOrdId string) (*resty.Response, FuOrder, *cex.RequestError) {
-	return cex.Request(u, FuCancelOrderConfig, FuQueryOrCancelOrderParams{Symbol: asset + quote, OrderId: orderId, OrigClientOrderId: cltOrdId})
+func (u *User) CancelFuturesOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, FuOrder, *cex.RequestError) {
+	return cex.Request(u, FuCancelOrderConfig, FuQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
 }
 
-func (u *User) QueryFuturesOrder(asset, quote string, orderId int64, cltOrdId string) (*resty.Response, FuOrder, *cex.RequestError) {
-	return cex.Request(u, FuQueryOrderConfig, FuQueryOrCancelOrderParams{Symbol: asset + quote, OrderId: orderId, OrigClientOrderId: cltOrdId})
+func (u *User) QueryFuturesOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, FuOrder, *cex.RequestError) {
+	return cex.Request(u, FuQueryOrderConfig, FuQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
 }
 
 // ------------------------------------------------------------

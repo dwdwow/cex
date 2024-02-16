@@ -121,8 +121,8 @@ func spotFailedOrderReplaceUnmarshaler(body []byte) (SpotReplaceOrderResult, *ce
 	// just in case
 	rawResCode := rawResult.Code
 	if rawResCode == 0 &&
-		cancelResult == SpotOrderCancelNewStatus_SUCCESS &&
-		newResult == SpotOrderCancelNewStatus_SUCCESS {
+		cancelResult == SpotOrderCancelNewStatusSuccess &&
+		newResult == SpotOrderCancelNewStatusSuccess {
 		result.OK = true
 		return result, nil
 	}
@@ -133,9 +133,9 @@ func spotFailedOrderReplaceUnmarshaler(body []byte) (SpotReplaceOrderResult, *ce
 		rawErr = errors.New(rawResMsg)
 	}
 
-	if cancelResult == SpotOrderCancelNewStatus_NOT_ATTEMPTED {
+	if cancelResult == SpotOrderCancelNewStatusNotAttempted {
 		result.ErrCancel = ErrSpotOrderNotAttempted
-	} else if cancelResult == SpotOrderCancelNewStatus_FAILURE {
+	} else if cancelResult == SpotOrderCancelNewStatusFailure {
 		code := rawCancelResp.Code
 		err := SpotCodeMsgChecker(code)
 		if err == nil {
@@ -144,9 +144,9 @@ func spotFailedOrderReplaceUnmarshaler(body []byte) (SpotReplaceOrderResult, *ce
 		result.ErrCancel = err
 	}
 
-	if newResult == SpotOrderCancelNewStatus_NOT_ATTEMPTED {
+	if newResult == SpotOrderCancelNewStatusNotAttempted {
 		result.ErrNew = ErrSpotOrderNotAttempted
-	} else if newResult == SpotOrderCancelNewStatus_FAILURE {
+	} else if newResult == SpotOrderCancelNewStatusFailure {
 		code := rawNewResp.Code
 		err := SpotCodeMsgChecker(code)
 		if err == nil {
