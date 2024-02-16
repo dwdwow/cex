@@ -429,11 +429,11 @@ type rawMapCexKV interface {
 
 func mapStrStr[K, V rawMapCexKV](raw K, m map[K]V) V {
 	if m == nil {
-		return any(raw).(V)
+		return V(raw)
 	}
 	s, ok := m[raw]
 	if !ok {
-		return any(raw).(V)
+		return V(raw)
 	}
 	return s
 }
