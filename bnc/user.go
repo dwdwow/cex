@@ -487,6 +487,7 @@ func UpdateOrderWithRawSpotOrder(ord *cex.Order, rawOrd SpotOrder) {
 	ord.FilledQty = filledQty
 	ord.FilledQuote = filledQuote
 	ord.FilledAvgPrice = avgp
+	ord.RawOrder = rawOrd
 }
 
 func SwitchFutureOrderToCexOrder(rawOrd FuOrder) cex.Order {
@@ -525,6 +526,7 @@ func UpdateOrderWithRawFuturesOrder(ord *cex.Order, rawOrd FuOrder) {
 	ord.FilledQty = filledQty
 	ord.FilledQuote = filledQuote
 	ord.FilledAvgPrice = avgp
+	ord.RawOrder = rawOrd
 }
 
 // ------------------------------------------------------------
