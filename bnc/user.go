@@ -360,9 +360,8 @@ func (u *User) waitOrd(ctx context.Context, ord *cex.Order) *cex.RequestError {
 	if ord.IsFinished() {
 		return nil
 	}
-	var err error
 	for {
-		_, err = u.queryOrd(ord)
+		_, err := u.queryOrd(ord)
 		if err == nil && ord.IsFinished() {
 			return nil
 		}
