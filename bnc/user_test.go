@@ -169,13 +169,13 @@ func TestUser_WaitOrder(t *testing.T) {
 		cancel()
 	}()
 	fmt.Println("wait order")
-	_, err = newTestUser().WaitOrder(ctx, ord)
+	err = newTestUser().WaitOrder(ctx, ord)
 	props.PrintlnIndent(ord)
-	if errors.Is(err, context.Canceled) {
+	if err != nil && errors.Is(err, context.Canceled) {
 		fmt.Println("ctx canceled")
 		fmt.Println("cancel order")
 		_, err = newTestUser().CancelOrder(ord)
-		if !errors.Is(err, cex.ErrUnknownOrder) {
+		if err != nil && !errors.Is(err, cex.ErrUnknownOrder) {
 			panic(err)
 		}
 		props.PrintlnIndent(ord)

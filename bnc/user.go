@@ -158,7 +158,7 @@ func (u *User) CancelOrder(order *cex.Order) (*resty.Response, *cex.RequestError
 	return u.cancelOrd(order)
 }
 
-func (u *User) WaitOrder(ctx context.Context, order *cex.Order) (*resty.Response, *cex.RequestError) {
+func (u *User) WaitOrder(ctx context.Context, order *cex.Order) *cex.RequestError {
 	return u.waitOrd(ctx, order)
 }
 
@@ -354,21 +354,23 @@ func (u *User) queryOrd(ord *cex.Order) (*resty.Response, *cex.RequestError) {
 	}
 }
 
-func (u *User) waitOrd(ctx context.Context, ord *cex.Order) (*resty.Response, *cex.RequestError) {
+func (u *User) waitOrd(ctx context.Context, ord *cex.Order) *cex.RequestError {
 	if ord == nil {
-		return nil, &cex.RequestError{Err: errors.New("nil order")}
+		return &cex.RequestError{Err: errors.New("nil order")}
 	}
-	var resp *resty.Response
+	if ord.IsFinished() {
+		return nil
+	}
 	var err error
 	for {
 		select {
 		case <-ctx.Done():
-			return nil, &cex.RequestError{Err: fmt.Errorf("ctxerr: %w, requesterr: %w", ctx.Err(), err)}
+			return &cex.RequestError{Err: fmt.Errorf("ctxerr: %w, requesterr: %w", ctx.Err(), err)}
 		case <-time.After(time.Second):
 		}
-		resp, err = u.queryOrd(ord)
+		_, err = u.queryOrd(ord)
 		if props.IsNil(err) && ord.IsFinished() {
-			return resp, nil
+			return nil
 		}
 	}
 }

@@ -29,7 +29,7 @@ type FuTrader interface {
 type Trader interface {
 	QueryOrder(*Order) (*resty.Response, *RequestError)
 	CancelOrder(*Order) (*resty.Response, *RequestError)
-	WaitOrder(context.Context, *Order) (*resty.Response, *RequestError)
+	WaitOrder(context.Context, *Order) *RequestError
 	SpotTrader
 	FuTrader
 }
