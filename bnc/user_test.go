@@ -2,6 +2,8 @@ package bnc
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"testing"
 	"time"
 
@@ -157,6 +159,7 @@ func TestUser_QueryOrder(t *testing.T) {
 }
 
 func TestUser_WaitOrder(t *testing.T) {
+	fmt.Println("new order")
 	_, ord, err := newTestUser().NewSpotLimitBuyOrder("ETH", "USDT", 0.01, 1900)
 	props.PanicIfNotNil(err)
 	props.PrintlnIndent(ord)
@@ -165,6 +168,20 @@ func TestUser_WaitOrder(t *testing.T) {
 		time.Sleep(time.Second * 10)
 		cancel()
 	}()
+	fmt.Println("wait order")
 	_, err = newTestUser().WaitOrder(ctx, ord)
+	props.PrintlnIndent(ord)
+	if errors.Is(err, context.Canceled) {
+		fmt.Println("ctx canceled")
+		fmt.Println("cancel order")
+		_, err = newTestUser().CancelOrder(ord)
+		if !errors.Is(err, cex.ErrUnknownOrder) {
+			panic(err)
+		}
+		props.PrintlnIndent(ord)
+	}
+	fmt.Println("query order")
+	_, err = newTestUser().queryOrd(ord)
 	props.PanicIfNotNil(err)
+	props.PrintlnIndent(ord)
 }
