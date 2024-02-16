@@ -476,14 +476,13 @@ func UpdateOrderWithRawSpotOrder(ord *cex.Order, rawOrd SpotOrder) {
 	if ord == nil {
 		return
 	}
-	ordStatus := mapStrStr(rawOrd.Status, cexOrdStatusByOrdStatus)
 	filledQty := rawOrd.ExecutedQty
 	filledQuote := rawOrd.CummulativeQuoteQty
 	var avgp float64
 	if filledQty != 0 {
 		avgp = filledQuote / filledQty
 	}
-	ord.Status = ordStatus
+	ord.Status = mapStrStr(rawOrd.Status, cexOrdStatusByOrdStatus)
 	ord.FilledQty = filledQty
 	ord.FilledQuote = filledQuote
 	ord.FilledAvgPrice = avgp
@@ -515,17 +514,10 @@ func UpdateOrderWithRawFuturesOrder(ord *cex.Order, rawOrd FuOrder) {
 	if ord == nil {
 		return
 	}
-	ordStatus := mapStrStr(rawOrd.Status, cexOrdStatusByOrdStatus)
-	filledQty := rawOrd.ExecutedQty
-	filledQuote := rawOrd.CumQuote
-	var avgp float64
-	if filledQty != 0 {
-		avgp = filledQuote / filledQty
-	}
-	ord.Status = ordStatus
-	ord.FilledQty = filledQty
-	ord.FilledQuote = filledQuote
-	ord.FilledAvgPrice = avgp
+	ord.Status = mapStrStr(rawOrd.Status, cexOrdStatusByOrdStatus)
+	ord.FilledQty = rawOrd.ExecutedQty
+	ord.FilledQuote = rawOrd.CumQuote
+	ord.FilledAvgPrice = rawOrd.AvgPrice
 	ord.RawOrder = rawOrd
 }
 
