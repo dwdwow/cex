@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/dwdwow/cex"
+	"github.com/dwdwow/props"
 	"github.com/dwdwow/s2m"
 	"github.com/go-resty/resty/v2"
 )
@@ -366,7 +367,7 @@ func (u *User) waitOrd(ctx context.Context, ord *cex.Order) (*resty.Response, *c
 		case <-time.After(time.Second):
 		}
 		resp, err = u.queryOrd(ord)
-		if err == nil && ord.IsFinished() {
+		if props.IsNil(err) && ord.IsFinished() {
 			return resp, nil
 		}
 	}
