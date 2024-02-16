@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/dwdwow/cex"
-	"github.com/dwdwow/props"
 	"github.com/dwdwow/s2m"
 	"github.com/go-resty/resty/v2"
 )
@@ -363,14 +362,14 @@ func (u *User) waitOrd(ctx context.Context, ord *cex.Order) *cex.RequestError {
 	}
 	var err error
 	for {
+		_, err = u.queryOrd(ord)
+		if err == nil && ord.IsFinished() {
+			return nil
+		}
 		select {
 		case <-ctx.Done():
 			return &cex.RequestError{Err: fmt.Errorf("ctxerr: %w, requesterr: %w", ctx.Err(), err)}
 		case <-time.After(time.Second):
-		}
-		_, err = u.queryOrd(ord)
-		if props.IsNil(err) && ord.IsFinished() {
-			return nil
 		}
 	}
 }
