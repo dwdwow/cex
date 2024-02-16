@@ -19,11 +19,11 @@ type SpotTrader interface {
 }
 
 type FuTrader interface {
-	NewFutureOrder(asset, quote string, tradeType OrderType, side OrderSide, qty, price float64) (*resty.Response, *Order, *RequestError)
-	NewFutureLimitBuyOrder(asset, quote string, qty, price float64) (*resty.Response, *Order, *RequestError)
-	NewFutureLimitSellOrder(asset, quote string, qty, price float64) (*resty.Response, *Order, *RequestError)
-	NewFutureMarketBuyOrder(asset, quote string, qty float64) (*resty.Response, *Order, *RequestError)
-	NewFutureMarketSellOrder(asset, quote string, qty float64) (*resty.Response, *Order, *RequestError)
+	NewFuturesOrder(asset, quote string, tradeType OrderType, side OrderSide, qty, price float64) (*resty.Response, *Order, *RequestError)
+	NewFuturesLimitBuyOrder(asset, quote string, qty, price float64) (*resty.Response, *Order, *RequestError)
+	NewFuturesLimitSellOrder(asset, quote string, qty, price float64) (*resty.Response, *Order, *RequestError)
+	NewFuturesMarketBuyOrder(asset, quote string, qty float64) (*resty.Response, *Order, *RequestError)
+	NewFuturesMarketSellOrder(asset, quote string, qty float64) (*resty.Response, *Order, *RequestError)
 }
 
 type Trader interface {

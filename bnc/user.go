@@ -162,7 +162,7 @@ func (u *User) WaitOrder(ctx context.Context, order *cex.Order) (*resty.Response
 }
 
 func (u *User) NewSpotOrder(asset, quote string, tradeType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
-	return u.newSpotOrd(asset+quote, tradeType, orderSide, qty, price)
+	return u.newSpotOrd(asset, quote, tradeType, orderSide, qty, price)
 }
 
 func (u *User) NewSpotLimitBuyOrder(asset, quote string, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
@@ -181,24 +181,24 @@ func (u *User) NewSpotMarketSellOrder(asset, quote string, qty float64) (*resty.
 	return u.NewSpotOrder(asset, quote, cex.OrderTypeMarket, cex.OrderSideSell, qty, 0)
 }
 
-func (u *User) NewFutureOrder(asset, quote string, tradeType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
-	return u.newFuOrd(asset+quote, tradeType, orderSide, qty, price)
+func (u *User) NewFuturesOrder(asset, quote string, tradeType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+	return u.newFuOrd(asset, quote, tradeType, orderSide, qty, price)
 }
 
-func (u *User) NewFutureLimitBuyOrder(asset, quote string, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
-	return u.NewFutureOrder(asset, quote, cex.OrderTypeLimit, cex.OrderSideBuy, qty, price)
+func (u *User) NewFuturesLimitBuyOrder(asset, quote string, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+	return u.NewFuturesOrder(asset, quote, cex.OrderTypeLimit, cex.OrderSideBuy, qty, price)
 }
 
-func (u *User) NewFutureLimitSellOrder(asset, quote string, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
-	return u.NewFutureOrder(asset, quote, cex.OrderTypeLimit, cex.OrderSideSell, qty, price)
+func (u *User) NewFuturesLimitSellOrder(asset, quote string, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+	return u.NewFuturesOrder(asset, quote, cex.OrderTypeLimit, cex.OrderSideSell, qty, price)
 }
 
-func (u *User) NewFutureMarketBuyOrder(asset, quote string, qty float64) (*resty.Response, *cex.Order, *cex.RequestError) {
-	return u.NewFutureOrder(asset, quote, cex.OrderTypeMarket, cex.OrderSideBuy, qty, 0)
+func (u *User) NewFuturesMarketBuyOrder(asset, quote string, qty float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+	return u.NewFuturesOrder(asset, quote, cex.OrderTypeMarket, cex.OrderSideBuy, qty, 0)
 }
 
-func (u *User) NewFutureMarketSellOrder(asset, quote string, qty float64) (*resty.Response, *cex.Order, *cex.RequestError) {
-	return u.NewFutureOrder(asset, quote, cex.OrderTypeMarket, cex.OrderSideSell, qty, 0)
+func (u *User) NewFuturesMarketSellOrder(asset, quote string, qty float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+	return u.NewFuturesOrder(asset, quote, cex.OrderTypeMarket, cex.OrderSideSell, qty, 0)
 }
 
 // ------------------------------------------------------------
@@ -209,12 +209,12 @@ func (u *User) NewFutureMarketSellOrder(asset, quote string, qty float64) (*rest
 // Spot API
 // ------------------------------------------------------------
 
-func (u *User) CancelSpotOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, SpotOrder, *cex.RequestError) {
-	return cex.Request(u, SpotCancelOrderConfig, SpotCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
+func (u *User) CancelSpotOrder(asset, quote string, orderId int64, cltOrdId string) (*resty.Response, SpotOrder, *cex.RequestError) {
+	return cex.Request(u, SpotCancelOrderConfig, SpotCancelOrderParams{Symbol: asset + quote, OrderId: orderId, OrigClientOrderId: cltOrdId})
 }
 
-func (u *User) QuerySpotOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, SpotOrder, *cex.RequestError) {
-	return cex.Request(u, SpotQueryOrderConfig, SpotQueryOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
+func (u *User) QuerySpotOrder(asset, quote string, orderId int64, cltOrdId string) (*resty.Response, SpotOrder, *cex.RequestError) {
+	return cex.Request(u, SpotQueryOrderConfig, SpotQueryOrderParams{Symbol: asset + quote, OrderId: orderId, OrigClientOrderId: cltOrdId})
 }
 
 // ------------------------------------------------------------
@@ -225,12 +225,12 @@ func (u *User) QuerySpotOrder(symbol string, orderId int64, cltOrdId string) (*r
 // Futures API
 // ------------------------------------------------------------
 
-func (u *User) CancelFuturesOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, FuOrder, *cex.RequestError) {
-	return cex.Request(u, FuCancelOrderConfig, FuQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
+func (u *User) CancelFuturesOrder(asset, quote string, orderId int64, cltOrdId string) (*resty.Response, FuOrder, *cex.RequestError) {
+	return cex.Request(u, FuCancelOrderConfig, FuQueryOrCancelOrderParams{Symbol: asset + quote, OrderId: orderId, OrigClientOrderId: cltOrdId})
 }
 
-func (u *User) QueryFuturesOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, FuOrder, *cex.RequestError) {
-	return cex.Request(u, FuQueryOrderConfig, FuQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
+func (u *User) QueryFuturesOrder(asset, quote string, orderId int64, cltOrdId string) (*resty.Response, FuOrder, *cex.RequestError) {
+	return cex.Request(u, FuQueryOrderConfig, FuQueryOrCancelOrderParams{Symbol: asset + quote, OrderId: orderId, OrigClientOrderId: cltOrdId})
 }
 
 // ------------------------------------------------------------
@@ -241,7 +241,8 @@ func (u *User) QueryFuturesOrder(symbol string, orderId int64, cltOrdId string) 
 // Private Trade Functions
 // ------------------------------------------------------------
 
-func (u *User) newSpotOrd(symbol string, orderType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+func (u *User) newSpotOrd(asset, quote string, orderType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+	symbol := asset + quote
 	var tif TimeInForce
 	if orderType == cex.OrderTypeLimit {
 		tif = TimeInForceGtc
@@ -281,7 +282,8 @@ func (u *User) querySpotOrd(ord *cex.Order) (*resty.Response, *cex.RequestError)
 	return resp, err
 }
 
-func (u *User) newFuOrd(symbol string, orderType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+func (u *User) newFuOrd(asset, quote string, orderType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+	symbol := asset + quote
 	var tif TimeInForce
 	if orderType == cex.OrderTypeLimit {
 		tif = TimeInForceGtc
