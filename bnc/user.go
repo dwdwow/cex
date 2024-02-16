@@ -488,33 +488,22 @@ func UpdateOrderWithRawSpotOrder(ord *cex.Order, rawOrd SpotOrder) {
 }
 
 func SwitchFutureOrderToCexOrder(rawOrd FuOrder) cex.Order {
-	ordTyp := mapStrStr(rawOrd.Type, cexOrdTypByOrdTyp)
-	ordSide := mapStrStr(rawOrd.Side, cexOrdSideByOrdSide)
-	ordStatus := mapStrStr(rawOrd.Status, cexOrdStatusByOrdStatus)
-
-	filledQty := rawOrd.ExecutedQty
-	filledQuote := rawOrd.CumQuote
-	var avgp float64
-	if filledQty != 0 {
-		avgp = filledQuote / filledQty
-	}
-
 	return cex.Order{
 		OriQty:         rawOrd.OrigQty,
 		OriPrice:       rawOrd.Price,
 		Cex:            cex.BINANCE,
 		PairType:       cex.PairTypeFutures,
-		OrderType:      ordTyp,
-		OrderSide:      ordSide,
+		OrderType:      mapStrStr(rawOrd.Type, cexOrdTypByOrdTyp),
+		OrderSide:      mapStrStr(rawOrd.Side, cexOrdSideByOrdSide),
 		Symbol:         rawOrd.Symbol,
 		TimeInForce:    string(rawOrd.TimeInForce),
 		ClientOrderId:  rawOrd.ClientOrderId,
 		ApiKey:         "",
 		OrderId:        strconv.FormatInt(rawOrd.OrderId, 10),
-		Status:         ordStatus,
-		FilledQty:      filledQty,
-		FilledQuote:    filledQuote,
-		FilledAvgPrice: avgp,
+		Status:         mapStrStr(rawOrd.Status, cexOrdStatusByOrdStatus),
+		FilledQty:      rawOrd.ExecutedQty,
+		FilledQuote:    rawOrd.CumQuote,
+		FilledAvgPrice: rawOrd.AvgPrice,
 		RawOrder:       rawOrd,
 	}
 }
