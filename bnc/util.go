@@ -50,13 +50,13 @@ func ExchangeInfoToPair(info Exchange) (cex.Pair, error) {
 	var sybMid string
 	var makerFeeTier, takerFeeTier, minTradeQuote float64
 	if info.ContractType == "" {
-		pairType = cex.SpotPair
+		pairType = cex.PairTypeSpot
 		sybMid = SpotSymbolMid
 		minTradeQuote = 10
 		// TODO not correct
 		//makerFeeTier, takerFeeTier = SpotMakerFeeTier, SpotTakerFeeTier
 	} else {
-		pairType = cex.FuturePair
+		pairType = cex.PairTypeFutures
 		sybMid = FuturesSymbolMid
 		minTradeQuote = 20
 		// TODO not correct

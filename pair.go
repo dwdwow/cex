@@ -3,8 +3,8 @@ package cex
 type PairType string
 
 const (
-	SpotPair   PairType = "SPOT"
-	FuturePair PairType = "FUTURE"
+	PairTypeSpot    PairType = "SPOT"
+	PairTypeFutures PairType = "FUTURES"
 )
 
 type Pair struct {

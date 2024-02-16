@@ -330,9 +330,9 @@ func (u *User) cancelOrd(ord *cex.Order) (*resty.Response, *cex.RequestError) {
 		return nil, &cex.RequestError{Err: errors.New("nil order")}
 	}
 	switch ord.PairType {
-	case cex.SpotPair:
+	case cex.PairTypeSpot:
 		return u.cancelSpotOrd(ord)
-	case cex.FuturePair:
+	case cex.PairTypeFutures:
 		return u.cancelFuturesOrd(ord)
 	default:
 		return nil, &cex.RequestError{Err: fmt.Errorf("unknown order pair type %v", ord.PairType)}
@@ -344,9 +344,9 @@ func (u *User) queryOrd(ord *cex.Order) (*resty.Response, *cex.RequestError) {
 		return nil, &cex.RequestError{Err: errors.New("nil order")}
 	}
 	switch ord.PairType {
-	case cex.SpotPair:
+	case cex.PairTypeSpot:
 		return u.querySpotOrd(ord)
-	case cex.FuturePair:
+	case cex.PairTypeFutures:
 		return u.queryFuturesOrd(ord)
 	default:
 		return nil, &cex.RequestError{Err: fmt.Errorf("unknown order pair type %v", ord.PairType)}
@@ -454,7 +454,7 @@ func SwitchSpotOrderToCexOrder(rawOrd SpotOrder) cex.Order {
 		OriQty:         rawOrd.OrigQty,
 		OriPrice:       rawOrd.Price,
 		Cex:            cex.BINANCE,
-		PairType:       cex.SpotPair,
+		PairType:       cex.PairTypeSpot,
 		OrderType:      ordTyp,
 		OrderSide:      ordSide,
 		Symbol:         rawOrd.Symbol,
@@ -503,7 +503,7 @@ func SwitchFutureOrderToCexOrder(rawOrd FuOrder) cex.Order {
 		OriQty:         rawOrd.OrigQty,
 		OriPrice:       rawOrd.Price,
 		Cex:            cex.BINANCE,
-		PairType:       cex.FuturePair,
+		PairType:       cex.PairTypeFutures,
 		OrderType:      ordTyp,
 		OrderSide:      ordSide,
 		Symbol:         rawOrd.Symbol,
