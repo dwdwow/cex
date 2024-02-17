@@ -29,7 +29,7 @@ const (
 // Every field value in Order must be certain.
 type Order struct {
 	// popular by user or code
-	Cex       Cex       `json:"cex" bson:"cex"`
+	Cex       Name      `json:"cex" bson:"cex"`
 	PairType  PairType  `json:"pairType" bson:"pairType"`
 	OrderType OrderType `json:"orderType" bson:"orderType"`
 	OrderSide OrderSide `json:"orderSide" bson:"orderSide"`

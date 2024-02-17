@@ -9,7 +9,7 @@ const (
 
 type Pair struct {
 	// must be contained
-	Cex        Cex      `json:"cex" bson:"cex"`
+	Cex        Name     `json:"cex" bson:"cex"`
 	Type       PairType `json:"type" bson:"type"`
 	Asset      string   `json:"asset" bson:"asset"`
 	Quote      string   `json:"quote" bson:"quote"`

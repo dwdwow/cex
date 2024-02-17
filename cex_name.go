@@ -1,7 +1,7 @@
 package cex
 
-type Cex string
+type Name string
 
 const (
-	BINANCE Cex = "BINANCE"
+	BINANCE Name = "BINANCE"
 )
