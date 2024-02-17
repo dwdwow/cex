@@ -48,7 +48,7 @@ func TestUniversalTransfer(t *testing.T) {
 }
 
 func TestFlexibleProduct(t *testing.T) {
-	testConfig(FlexibleProductConfig, FlexibleProductListParams{
+	testConfig(SimpleEarnFlexibleProductConfig, SimpleEarnFlexibleProductListParams{
 		Asset: "BTC",
 	})
 }
@@ -58,7 +58,7 @@ func TestCryptoLoansIncomeHistories(t *testing.T) {
 }
 
 func TestFlexibleBorrow(t *testing.T) {
-	testConfig(FlexibleBorrowConfig, FlexibleBorrowParams{
+	testConfig(CryptoLoanFlexibleBorrowConfig, CryptoLoanFlexibleBorrowParams{
 		LoanCoin:         "USDT",
 		LoanAmount:       100,
 		CollateralCoin:   "ETH",
@@ -67,7 +67,7 @@ func TestFlexibleBorrow(t *testing.T) {
 }
 
 func TestFlexibleOngoingOrders(t *testing.T) {
-	testConfig(FlexibleOngoingOrdersConfig, FlexibleOngoingOrdersParams{
+	testConfig(CryptoLoanFlexibleOngoingOrdersConfig, CryptoLoanFlexibleOngoingOrdersParams{
 		LoanCoin:       "USDT",
 		CollateralCoin: "ETH",
 		Current:        0,
@@ -76,7 +76,7 @@ func TestFlexibleOngoingOrders(t *testing.T) {
 }
 
 func TestFlexibleBorrowHistories(t *testing.T) {
-	testConfig(FlexibleBorrowHistoriesConfig, FlexibleBorrowHistoriesParams{
+	testConfig(CryptoLoanFlexibleBorrowHistoriesConfig, CryptoLoanFlexibleBorrowHistoriesParams{
 		LoanCoin:       "USDT",
 		CollateralCoin: "ETH",
 		StartTime:      0,
@@ -87,7 +87,7 @@ func TestFlexibleBorrowHistories(t *testing.T) {
 }
 
 func TestFlexibleRepay(t *testing.T) {
-	testConfig(FlexibleRepayConfig, FlexibleRepayParams{
+	testConfig(CryptoLoanFlexibleRepayConfig, CryptoLoanFlexibleRepayParams{
 		LoanCoin:         "USDT",
 		CollateralCoin:   "ETH",
 		RepayAmount:      100,
@@ -97,7 +97,7 @@ func TestFlexibleRepay(t *testing.T) {
 }
 
 func TestFlexibleRepayHistories(t *testing.T) {
-	testConfig(FlexibleRepaymentHistoriesConfig, FlexibleRepaymentHistoriesParams{
+	testConfig(CryptoLoanFlexibleRepaymentHistoriesConfig, CryptoLoanFlexibleRepaymentHistoriesParams{
 		LoanCoin:       "",
 		CollateralCoin: "",
 		StartTime:      0,
@@ -108,7 +108,7 @@ func TestFlexibleRepayHistories(t *testing.T) {
 }
 
 func TestFlexibleAdjustLtv(t *testing.T) {
-	testConfig(FlexibleLoanAdjustLtvConfig, FlexibleAdjustLtvParams{
+	testConfig(CryptoLoanFlexibleLoanAdjustLtvConfig, CryptoLoanFlexibleAdjustLtvParams{
 		LoanCoin:         "USDT",
 		CollateralCoin:   "ETH",
 		AdjustmentAmount: 0.05,
@@ -117,7 +117,7 @@ func TestFlexibleAdjustLtv(t *testing.T) {
 }
 
 func TestFlexibleAdjustLtvHistories(t *testing.T) {
-	testConfig(FlexibleAdjustLtvHistoriesConfig, FlexibleAdjustLtvHistoriesParams{
+	testConfig(CryptoLoanFlexibleAdjustLtvHistoriesConfig, CryptoLoanFlexibleAdjustLtvHistoriesParams{
 		LoanCoin:       "USDT",
 		CollateralCoin: "ETH",
 		StartTime:      0,
@@ -128,13 +128,13 @@ func TestFlexibleAdjustLtvHistories(t *testing.T) {
 }
 
 func TestFlexibleLoanAssets(t *testing.T) {
-	testConfig(FlexibleLoanAssetsConfig, FlexibleLoanAssetsParams{
+	testConfig(CryptoLoanFlexibleLoanAssetsConfig, CryptoLoanFlexibleLoanAssetsParams{
 		LoanCoin: "",
 	})
 }
 
 func TestFlexibleCollateralCoins(t *testing.T) {
-	testConfig(FlexibleCollateralCoinsConfig, FlexibleCollateralCoinsParams{
+	testConfig(CryptoLoanFlexibleCollateralCoinsConfig, CryptoLoanFlexibleCollateralCoinsParams{
 		CollateralCoin: "",
 	})
 }

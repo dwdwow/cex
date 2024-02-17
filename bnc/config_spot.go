@@ -126,13 +126,13 @@ var UniversalTransferConfig = cex.ReqConfig[UniversalTransferParams, UniversalTr
 // Flexible Simple Earn
 // ---------------------------------------------
 
-type FlexibleProductListParams struct {
+type SimpleEarnFlexibleProductListParams struct {
 	Asset   string `s2m:"asset,omitempty"`
 	Current int64  `s2m:"current,omitempty"`
 	Size    int64  `s2m:"size,omitempty"`
 }
 
-type FlexibleProduct struct {
+type SimpleEarnFlexibleProduct struct {
 	Asset                      string            `json:"asset"`
 	LatestAnnualPercentageRate float64           `json:"latestAnnualPercentageRate,string"`
 	TierAnnualPercentageRate   map[string]string `json:"tierAnnualPercentageRate"`
@@ -147,7 +147,7 @@ type FlexibleProduct struct {
 	Status                     string            `json:"status"`
 }
 
-var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListParams, Page[[]FlexibleProduct]]{
+var SimpleEarnFlexibleProductConfig = cex.ReqConfig[SimpleEarnFlexibleProductListParams, Page[[]SimpleEarnFlexibleProduct]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/simple-earn/flexible/list",
@@ -157,22 +157,22 @@ var FlexibleProductConfig = cex.ReqConfig[FlexibleProductListParams, Page[[]Flex
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleProduct]]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]SimpleEarnFlexibleProduct]]),
 }
 
-type FlexibleRedeemParams struct {
+type SimpleEarnFlexibleRedeemParams struct {
 	ProductId   string                              `s2m:"productId,omitempty"`
 	RedeemAll   bool                                `s2m:"redeemAll,omitempty"` //	true or false, default to false
 	Amount      float64                             `s2m:"amount,omitempty"`    //	if redeemAll is false, amount is mandatory
 	DestAccount SimpleEarnFlexibleRedeemDestination `s2m:"destAccount,omitempty"`
 }
 
-type FlexibleRedeemResponse struct {
+type SimpleEarnFlexibleRedeemResponse struct {
 	RedeemId int64 `json:"redeemId,omitempty"`
 	Success  bool  `json:"success,omitempty"`
 }
 
-var FlexibleRedeemConfig = cex.ReqConfig[FlexibleRedeemParams, FlexibleRedeemResponse]{
+var SimpleEarnFlexibleRedeemConfig = cex.ReqConfig[SimpleEarnFlexibleRedeemParams, SimpleEarnFlexibleRedeemResponse]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/simple-earn/flexible/redeem",
@@ -182,7 +182,7 @@ var FlexibleRedeemConfig = cex.ReqConfig[FlexibleRedeemParams, FlexibleRedeemRes
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleRedeemResponse]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[SimpleEarnFlexibleRedeemResponse]),
 }
 
 type SimpleEarnFlexiblePositionsParams struct {
@@ -259,14 +259,14 @@ var CryptoLoansIncomeHistoriesConfig = cex.ReqConfig[CryptoLoansIncomeHistoriesP
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]CryptoLoanIncomeHistory]),
 }
 
-type FlexibleBorrowParams struct {
+type CryptoLoanFlexibleBorrowParams struct {
 	LoanCoin         string  `s2m:"loanCoin,omitempty"`
 	LoanAmount       float64 `s2m:"loanAmount,omitempty"`
 	CollateralCoin   string  `s2m:"collateralCoin,omitempty"`
 	CollateralAmount float64 `s2m:"collateralAmount,omitempty"`
 }
 
-type FlexibleBorrowResult struct {
+type CryptoLoanFlexibleBorrowResult struct {
 	LoanCoin         string                         `json:"loanCoin"`
 	LoanAmount       float64                        `json:"loanAmount,string"`
 	CollateralCoin   string                         `json:"collateralCoin"`
@@ -274,7 +274,7 @@ type FlexibleBorrowResult struct {
 	Status           CryptoLoanFlexibleBorrowStatus `json:"status"`
 }
 
-var FlexibleBorrowConfig = cex.ReqConfig[FlexibleBorrowParams, FlexibleBorrowResult]{
+var CryptoLoanFlexibleBorrowConfig = cex.ReqConfig[CryptoLoanFlexibleBorrowParams, CryptoLoanFlexibleBorrowResult]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/loan/flexible/borrow",
@@ -284,17 +284,17 @@ var FlexibleBorrowConfig = cex.ReqConfig[FlexibleBorrowParams, FlexibleBorrowRes
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleBorrowResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[CryptoLoanFlexibleBorrowResult]),
 }
 
-type FlexibleOngoingOrdersParams struct {
+type CryptoLoanFlexibleOngoingOrdersParams struct {
 	LoanCoin       string `s2m:"loanCoin,omitempty"`
 	CollateralCoin string `s2m:"collateralCoin,omitempty"`
 	Current        int    `s2m:"current,omitempty"` // default: 1, max: 1000
 	Limit          int    `s2m:"limit,omitempty"`   // default: 10, max: 100
 }
 
-type FlexibleOngoingOrder struct {
+type CryptoLoanFlexibleOngoingOrder struct {
 	LoanCoin         string  `json:"loanCoin" bson:"loanCoin"`
 	TotalDebt        float64 `json:"totalDebt,string" bson:"totalDebt"`
 	CollateralCoin   string  `json:"collateralCoin" bson:"collateralCoin"`
@@ -302,7 +302,7 @@ type FlexibleOngoingOrder struct {
 	CurrentLTV       float64 `json:"currentLTV,string" bson:"currentLTV"`
 }
 
-var FlexibleOngoingOrdersConfig = cex.ReqConfig[FlexibleOngoingOrdersParams, Page[[]FlexibleOngoingOrder]]{
+var CryptoLoanFlexibleOngoingOrdersConfig = cex.ReqConfig[CryptoLoanFlexibleOngoingOrdersParams, Page[[]CryptoLoanFlexibleOngoingOrder]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/loan/flexible/ongoing/orders",
@@ -312,10 +312,10 @@ var FlexibleOngoingOrdersConfig = cex.ReqConfig[FlexibleOngoingOrdersParams, Pag
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleOngoingOrder]]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]CryptoLoanFlexibleOngoingOrder]]),
 }
 
-type FlexibleBorrowHistoriesParams struct {
+type CryptoLoanFlexibleBorrowHistoriesParams struct {
 	LoanCoin       string `s2m:"loanCoin,omitempty"`
 	CollateralCoin string `s2m:"collateralCoin,omitempty"`
 	StartTime      int64  `s2m:"startTime,omitempty"`
@@ -324,7 +324,7 @@ type FlexibleBorrowHistoriesParams struct {
 	Limit          int64  `s2m:"limit,omitempty"`   // default: 10, max: 100
 }
 
-type FlexibleBorrowHistory struct {
+type CryptoLoanFlexibleBorrowHistory struct {
 	LoanCoin                string                         `json:"loanCoin"`
 	InitialLoanAmount       string                         `json:"initialLoanAmount"`
 	CollateralCoin          string                         `json:"collateralCoin"`
@@ -333,7 +333,7 @@ type FlexibleBorrowHistory struct {
 	Status                  CryptoLoanFlexibleBorrowStatus `json:"status"`
 }
 
-var FlexibleBorrowHistoriesConfig = cex.ReqConfig[FlexibleBorrowHistoriesParams, Page[[]FlexibleBorrowHistory]]{
+var CryptoLoanFlexibleBorrowHistoriesConfig = cex.ReqConfig[CryptoLoanFlexibleBorrowHistoriesParams, Page[[]CryptoLoanFlexibleBorrowHistory]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/loan/flexible/borrow/history",
@@ -343,10 +343,10 @@ var FlexibleBorrowHistoriesConfig = cex.ReqConfig[FlexibleBorrowHistoriesParams,
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleBorrowHistory]]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]CryptoLoanFlexibleBorrowHistory]]),
 }
 
-type FlexibleRepayParams struct {
+type CryptoLoanFlexibleRepayParams struct {
 	LoanCoin         string  `s2m:"loanCoin,omitempty"`
 	CollateralCoin   string  `s2m:"collateralCoin,omitempty"`
 	RepayAmount      float64 `s2m:"repayAmount,omitempty"`
@@ -354,7 +354,7 @@ type FlexibleRepayParams struct {
 	FullRepayment    BigBool `s2m:"fullRepayment,omitempty"`
 }
 
-type FlexibleRepayResult struct {
+type CryptoLoanFlexibleRepayResult struct {
 	LoanCoin            string                    `json:"loanCoin"`
 	CollateralCoin      string                    `json:"collateralCoin"`
 	RemainingDebt       string                    `json:"remainingDebt"`
@@ -364,7 +364,7 @@ type FlexibleRepayResult struct {
 	RepayStatus         CryptoFlexibleRepayStatus `json:"repayStatus"`
 }
 
-var FlexibleRepayConfig = cex.ReqConfig[FlexibleRepayParams, FlexibleRepayResult]{
+var CryptoLoanFlexibleRepayConfig = cex.ReqConfig[CryptoLoanFlexibleRepayParams, CryptoLoanFlexibleRepayResult]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/loan/flexible/repay",
@@ -374,10 +374,10 @@ var FlexibleRepayConfig = cex.ReqConfig[FlexibleRepayParams, FlexibleRepayResult
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleRepayResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[CryptoLoanFlexibleRepayResult]),
 }
 
-type FlexibleRepaymentHistoriesParams struct {
+type CryptoLoanFlexibleRepaymentHistoriesParams struct {
 	LoanCoin       string `s2m:"loanCoin,omitempty"`
 	CollateralCoin string `s2m:"collateralCoin,omitempty"`
 	StartTime      int64  `s2m:"startTime,omitempty"`
@@ -386,7 +386,7 @@ type FlexibleRepaymentHistoriesParams struct {
 	Limit          int64  `s2m:"limit,omitempty"`   // default: 10; max: 100
 }
 
-type FlexibleRepaymentHistory struct {
+type CryptoLoanFlexibleRepaymentHistory struct {
 	LoanCoin         string                    `json:"loanCoin"`
 	RepayAmount      float64                   `json:"repayAmount,string"`
 	CollateralCoin   string                    `json:"collateralCoin"`
@@ -395,7 +395,7 @@ type FlexibleRepaymentHistory struct {
 	RepayTime        int64                     `json:"repayTime,string"`
 }
 
-var FlexibleRepaymentHistoriesConfig = cex.ReqConfig[FlexibleRepaymentHistoriesParams, Page[[]FlexibleRepaymentHistory]]{
+var CryptoLoanFlexibleRepaymentHistoriesConfig = cex.ReqConfig[CryptoLoanFlexibleRepaymentHistoriesParams, Page[[]CryptoLoanFlexibleRepaymentHistory]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/loan/flexible/repay/history",
@@ -405,17 +405,17 @@ var FlexibleRepaymentHistoriesConfig = cex.ReqConfig[FlexibleRepaymentHistoriesP
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleRepaymentHistory]]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]CryptoLoanFlexibleRepaymentHistory]]),
 }
 
-type FlexibleAdjustLtvParams struct {
+type CryptoLoanFlexibleAdjustLtvParams struct {
 	LoanCoin         string             `s2m:"loanCoin,omitempty"`
 	CollateralCoin   string             `s2m:"collateralCoin,omitempty"`
 	AdjustmentAmount float64            `s2m:"adjustmentAmount,omitempty"`
 	Direction        LTVAdjustDirection `s2m:"direction,omitempty"`
 }
 
-type FlexibleLoanAdjustLtvResult struct {
+type CryptoLoanFlexibleLoanAdjustLtvResult struct {
 	LoanCoin         string             `json:"loanCoin"`
 	CollateralCoin   string             `json:"collateralCoin"`
 	Direction        LTVAdjustDirection `json:"direction"`
@@ -423,7 +423,7 @@ type FlexibleLoanAdjustLtvResult struct {
 	CurrentLTV       float64            `json:"currentLTV,string"`
 }
 
-var FlexibleLoanAdjustLtvConfig = cex.ReqConfig[FlexibleAdjustLtvParams, FlexibleLoanAdjustLtvResult]{
+var CryptoLoanFlexibleLoanAdjustLtvConfig = cex.ReqConfig[CryptoLoanFlexibleAdjustLtvParams, CryptoLoanFlexibleLoanAdjustLtvResult]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/loan/flexible/adjust/ltv",
@@ -433,10 +433,10 @@ var FlexibleLoanAdjustLtvConfig = cex.ReqConfig[FlexibleAdjustLtvParams, Flexibl
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[FlexibleLoanAdjustLtvResult]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[CryptoLoanFlexibleLoanAdjustLtvResult]),
 }
 
-type FlexibleAdjustLtvHistoriesParams struct {
+type CryptoLoanFlexibleAdjustLtvHistoriesParams struct {
 	LoanCoin       string `s2m:"loanCoin,omitempty"`
 	CollateralCoin string `s2m:"collateralCoin,omitempty"`
 	StartTime      int64  `s2m:"startTime,omitempty"`
@@ -445,7 +445,7 @@ type FlexibleAdjustLtvHistoriesParams struct {
 	Limit          int64  `s2m:"limit,omitempty"`   // default: 10; max: 100
 }
 
-type FlexibleAdjustLtvHistory struct {
+type CryptoLoanFlexibleAdjustLtvHistory struct {
 	LoanCoin         string `json:"loanCoin"`
 	CollateralCoin   string `json:"collateralCoin"`
 	Direction        string `json:"direction"`
@@ -455,7 +455,7 @@ type FlexibleAdjustLtvHistory struct {
 	AdjustTime       int64  `json:"adjustTime,string"`
 }
 
-var FlexibleAdjustLtvHistoriesConfig = cex.ReqConfig[FlexibleAdjustLtvHistoriesParams, Page[[]FlexibleAdjustLtvHistory]]{
+var CryptoLoanFlexibleAdjustLtvHistoriesConfig = cex.ReqConfig[CryptoLoanFlexibleAdjustLtvHistoriesParams, Page[[]CryptoLoanFlexibleAdjustLtvHistory]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/loan/flexible/ltv/adjustment/history",
@@ -465,21 +465,21 @@ var FlexibleAdjustLtvHistoriesConfig = cex.ReqConfig[FlexibleAdjustLtvHistoriesP
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleAdjustLtvHistory]]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]CryptoLoanFlexibleAdjustLtvHistory]]),
 }
 
-type FlexibleLoanAssetsParams struct {
+type CryptoLoanFlexibleLoanAssetsParams struct {
 	LoanCoin string `s2m:"loanCoin,omitempty"`
 }
 
-type FlexibleLoanAsset struct {
+type CryptoLoanFlexibleLoanAsset struct {
 	LoanCoin             string  `json:"loanCoin"`
 	FlexibleInterestRate float64 `json:"flexibleInterestRate,string"`
 	FlexibleMinLimit     float64 `json:"flexibleMinLimit,string"`
 	FlexibleMaxLimit     float64 `json:"flexibleMaxLimit,string"`
 }
 
-var FlexibleLoanAssetsConfig = cex.ReqConfig[FlexibleLoanAssetsParams, Page[[]FlexibleLoanAsset]]{
+var CryptoLoanFlexibleLoanAssetsConfig = cex.ReqConfig[CryptoLoanFlexibleLoanAssetsParams, Page[[]CryptoLoanFlexibleLoanAsset]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/loan/flexible/loanable/data",
@@ -489,14 +489,14 @@ var FlexibleLoanAssetsConfig = cex.ReqConfig[FlexibleLoanAssetsParams, Page[[]Fl
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleLoanAsset]]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]CryptoLoanFlexibleLoanAsset]]),
 }
 
-type FlexibleCollateralCoinsParams struct {
+type CryptoLoanFlexibleCollateralCoinsParams struct {
 	CollateralCoin string `s2m:"collateralCoin,omitempty"`
 }
 
-type FlexibleCollateralCoin struct {
+type CryptoLoanFlexibleCollateralCoin struct {
 	CollateralCoin string  `json:"collateralCoin"`
 	InitialLTV     float64 `json:"initialLTV,string"`
 	MarginCallLTV  float64 `json:"marginCallLTV,string"`
@@ -504,7 +504,7 @@ type FlexibleCollateralCoin struct {
 	MaxLimit       float64 `json:"maxLimit,string"`
 }
 
-var FlexibleCollateralCoinsConfig = cex.ReqConfig[FlexibleCollateralCoinsParams, Page[[]FlexibleCollateralCoin]]{
+var CryptoLoanFlexibleCollateralCoinsConfig = cex.ReqConfig[CryptoLoanFlexibleCollateralCoinsParams, Page[[]CryptoLoanFlexibleCollateralCoin]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             SapiV1 + "/loan/flexible/collateral/data",
@@ -514,7 +514,7 @@ var FlexibleCollateralCoinsConfig = cex.ReqConfig[FlexibleCollateralCoinsParams,
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]FlexibleCollateralCoin]]),
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]CryptoLoanFlexibleCollateralCoin]]),
 }
 
 // ---------------------------------------------
@@ -744,7 +744,7 @@ var SpotCurrentOpenOrdersConfig = cex.ReqConfig[SpotCurrentOpenOrdersParams, []S
 }
 
 // SpotAllOrdersParams
-// If orderId is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
+// If orderId is set, it will get orders >= that orderId. Otherwise, most recent orders are returned.
 // For some historical orders cummulativeQuoteQty will be < 0, meaning the data is not available at this time.
 // If startTime and/or endTime provided, orderId is not required.
 // The payload sample does not show all fields that can appear.

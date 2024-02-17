@@ -6,11 +6,11 @@ import (
 	"github.com/dwdwow/cex"
 )
 
-type ChangePositionModParams struct {
+type FuturesChangePositionModParams struct {
 	DualSidePosition SmallBool `s2m:"dualSidePosition"`
 }
 
-var FuChangePositionModeConfig = cex.ReqConfig[ChangePositionModParams, CodeMsg]{
+var FuturesChangePositionModeConfig = cex.ReqConfig[FuturesChangePositionModParams, CodeMsg]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/positionSide/dual",
@@ -23,11 +23,11 @@ var FuChangePositionModeConfig = cex.ReqConfig[ChangePositionModParams, CodeMsg]
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[CodeMsg]),
 }
 
-type CurrentPositionModeResult struct {
+type FuturesCurrentPositionModeResponse struct {
 	DualSidePosition bool `json:"dualSidePosition"`
 }
 
-var FuPositionModeConfig = cex.ReqConfig[cex.NilReqData, CurrentPositionModeResult]{
+var FuturesPositionModeConfig = cex.ReqConfig[cex.NilReqData, FuturesCurrentPositionModeResponse]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/positionSide/dual",
@@ -37,14 +37,14 @@ var FuPositionModeConfig = cex.ReqConfig[cex.NilReqData, CurrentPositionModeResu
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[CurrentPositionModeResult]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesCurrentPositionModeResponse]),
 }
 
-type FuChangeMultiAssetsModeParams struct {
+type FuturesChangeMultiAssetsModeParams struct {
 	MultiAssetsMargin SmallBool `s2m:"multiAssetsMargin"`
 }
 
-var FuChangeMultiAssetsModeConfig = cex.ReqConfig[FuChangeMultiAssetsModeParams, CodeMsg]{
+var FuturesChangeMultiAssetsModeConfig = cex.ReqConfig[FuturesChangeMultiAssetsModeParams, CodeMsg]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/multiAssetsMargin",
@@ -61,7 +61,7 @@ type FuCurrentMultiAssetsModeResponse struct {
 	MultiAssetsMargin bool `json:"multiAssetsMargin"`
 }
 
-var FuCurrentMultiAssetsModeConfig = cex.ReqConfig[cex.NilReqData, FuCurrentMultiAssetsModeResponse]{
+var FuturesCurrentMultiAssetsModeConfig = cex.ReqConfig[cex.NilReqData, FuCurrentMultiAssetsModeResponse]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/multiAssetsMargin",
@@ -74,7 +74,7 @@ var FuCurrentMultiAssetsModeConfig = cex.ReqConfig[cex.NilReqData, FuCurrentMult
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuCurrentMultiAssetsModeResponse]),
 }
 
-type FuNewOrderParams struct {
+type FuturesNewOrderParams struct {
 	Symbol                  string                  `s2m:"symbol,omitempty" json:"symbol,omitempty"`
 	PositionSide            FuturesPositionSide     `s2m:"positionSide,omitempty" json:"positionSide,omitempty"`
 	Type                    OrderType               `s2m:"type,omitempty" json:"type,omitempty"`
@@ -96,7 +96,7 @@ type FuNewOrderParams struct {
 	GoodTillDate            int64                   `s2m:"goodTillDate,omitempty" json:"goodTillDate,omitempty"`
 }
 
-type FuOrder struct {
+type FuturesOrder struct {
 	// common
 	Symbol                  string                  `json:"symbol"`
 	OrderId                 int64                   `json:"orderId"`
@@ -141,7 +141,7 @@ type FuOrder struct {
 	Msg  string `json:"msg"`
 }
 
-var FuNewOrderConfig = cex.ReqConfig[FuNewOrderParams, FuOrder]{
+var FuturesNewOrderConfig = cex.ReqConfig[FuturesNewOrderParams, FuturesOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/order",
@@ -151,10 +151,10 @@ var FuNewOrderConfig = cex.ReqConfig[FuNewOrderParams, FuOrder]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrder]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesOrder]),
 }
 
-type FuModifyOrderParams struct {
+type FuturesModifyOrderParams struct {
 	OrderId           int64     `s2m:"orderId,omitempty"`
 	OrigClientOrderId string    `s2m:"origClientOrderId,omitempty"`
 	Symbol            string    `s2m:"symbol,omitempty"`
@@ -164,7 +164,7 @@ type FuModifyOrderParams struct {
 	PriceMatch        string    `s2m:"priceMatch,omitempty"`
 }
 
-var FuModifyOrderConfig = cex.ReqConfig[FuModifyOrderParams, FuOrder]{
+var FuturesModifyOrderConfig = cex.ReqConfig[FuturesModifyOrderParams, FuturesOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/order",
@@ -174,14 +174,14 @@ var FuModifyOrderConfig = cex.ReqConfig[FuModifyOrderParams, FuOrder]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrder]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesOrder]),
 }
 
-// FuNewMultiOrdersOrderParams is different with FuNewOrderParams.
+// FuturesNewMultiOrdersOrderParams is different with FuturesNewOrderParams.
 // All fields are string.
 // Binance doc example just show that quantity and price are string.
 // Do not know if other float/int fields are string or not.
-type FuNewMultiOrdersOrderParams struct {
+type FuturesNewMultiOrdersOrderParams struct {
 	Symbol                  string                  `s2m:"symbol,omitempty" json:"symbol,omitempty"`
 	PositionSide            FuturesPositionSide     `s2m:"positionSide,omitempty" json:"positionSide,omitempty"`
 	Type                    OrderType               `s2m:"type,omitempty" json:"type,omitempty"`
@@ -203,14 +203,14 @@ type FuNewMultiOrdersOrderParams struct {
 	GoodTillDate            string                  `s2m:"goodTillDate,omitempty" json:"goodTillDate,omitempty"`
 }
 
-type FuPlaceMultiOrdersParams struct {
-	BatchOrders []FuNewMultiOrdersOrderParams `s2m:"batchOrders"` // max 5 orders
+type FuturesPlaceMultiOrdersParams struct {
+	BatchOrders []FuturesNewMultiOrdersOrderParams `s2m:"batchOrders"` // max 5 orders
 }
 
-// FuPlaceMultiOrdersConfig
-// Response []FuOrder may contain failed orders with error code and msg.
+// FuturesPlaceMultiOrdersConfig
+// Response []FuturesOrder may contain failed orders with error code and msg.
 // TODO should add ErrFuMultiOrdersAllFailed or ErrFuMultiOrdersSomeFailed?
-var FuPlaceMultiOrdersConfig = cex.ReqConfig[FuPlaceMultiOrdersParams, []FuOrder]{
+var FuturesPlaceMultiOrdersConfig = cex.ReqConfig[FuturesPlaceMultiOrdersParams, []FuturesOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/batchOrders",
@@ -220,10 +220,10 @@ var FuPlaceMultiOrdersConfig = cex.ReqConfig[FuPlaceMultiOrdersParams, []FuOrder
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrder]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesOrder]),
 }
 
-type FuModifyMultiOrdersOrderParams struct {
+type FuturesModifyMultiOrdersOrderParams struct {
 	OrderId           string    `s2m:"orderId,omitempty"`
 	OrigClientOrderId string    `s2m:"origClientOrderId,omitempty"`
 	Symbol            string    `s2m:"symbol,omitempty"`
@@ -233,11 +233,11 @@ type FuModifyMultiOrdersOrderParams struct {
 	PriceMatch        string    `s2m:"priceMatch,omitempty"`
 }
 
-type FuModifyMultiOrdersParams struct {
-	BatchOrders []FuModifyMultiOrdersOrderParams `s2m:"batchOrders"`
+type FuturesModifyMultiOrdersParams struct {
+	BatchOrders []FuturesModifyMultiOrdersOrderParams `s2m:"batchOrders"`
 }
 
-var FuModifyMultiOrdersConfig = cex.ReqConfig[FuModifyMultiOrdersParams, []FuOrder]{
+var FuturesModifyMultiOrdersConfig = cex.ReqConfig[FuturesModifyMultiOrdersParams, []FuturesOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/batchOrders",
@@ -247,10 +247,10 @@ var FuModifyMultiOrdersConfig = cex.ReqConfig[FuModifyMultiOrdersParams, []FuOrd
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrder]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesOrder]),
 }
 
-type FuOrderModifyHistoriesParams struct {
+type FuturesOrderModifyHistoriesParams struct {
 	Symbol            string `s2m:"symbol,omitempty"`
 	OrderId           int64  `s2m:"orderId,omitempty"`
 	OrigClientOrderId string `s2m:"origClientOrderId,omitempty"`
@@ -259,7 +259,7 @@ type FuOrderModifyHistoriesParams struct {
 	Limit             int    `s2m:"limit,omitempty"` // Default 1000; max 1000
 }
 
-type FuOrderModifyHistory struct {
+type FuturesOrderModifyHistory struct {
 	AmendmentId   int    `json:"amendmentId"`
 	Symbol        string `json:"symbol"`
 	Pair          string `json:"pair"`
@@ -280,7 +280,7 @@ type FuOrderModifyHistory struct {
 	PriceMatch string `json:"priceMatch"`
 }
 
-var FuOrderModifyHistoriesConfig = cex.ReqConfig[FuOrderModifyHistoriesParams, []FuOrderModifyHistory]{
+var FuturesOrderModifyHistoriesConfig = cex.ReqConfig[FuturesOrderModifyHistoriesParams, []FuturesOrderModifyHistory]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/orderAmendment",
@@ -290,10 +290,10 @@ var FuOrderModifyHistoriesConfig = cex.ReqConfig[FuOrderModifyHistoriesParams, [
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrderModifyHistory]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesOrderModifyHistory]),
 }
 
-type FuQueryOrCancelOrderParams struct {
+type FuturesQueryOrCancelOrderParams struct {
 	Symbol string `s2m:"symbol,omitempty"`
 
 	// If canceling all orders, ignore.
@@ -301,7 +301,7 @@ type FuQueryOrCancelOrderParams struct {
 	OrigClientOrderId string `s2m:"origClientOrderId,omitempty"`
 }
 
-var FuQueryOrderConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, FuOrder]{
+var FuturesQueryOrderConfig = cex.ReqConfig[FuturesQueryOrCancelOrderParams, FuturesOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/order",
@@ -311,10 +311,10 @@ var FuQueryOrderConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, FuOrder]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrder]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesOrder]),
 }
 
-var FuCancelOrderConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, FuOrder]{
+var FuturesCancelOrderConfig = cex.ReqConfig[FuturesQueryOrCancelOrderParams, FuturesOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/order",
@@ -324,10 +324,10 @@ var FuCancelOrderConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, FuOrder]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrder]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesOrder]),
 }
 
-var FuCancelAllOpenOrdersConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, CodeMsg]{
+var FuturesCancelAllOpenOrdersConfig = cex.ReqConfig[FuturesQueryOrCancelOrderParams, CodeMsg]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/allOpenOrders",
@@ -340,14 +340,14 @@ var FuCancelAllOpenOrdersConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, Code
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[CodeMsg]),
 }
 
-type FuCancelMultiOrdersParams struct {
+type FuturesCancelMultiOrdersParams struct {
 	Symbol string `s2m:"symbol,omitempty"`
 	// Do not set orderIdList and origClientOrderIdList together
 	OrderIdList           []int64  `s2m:"orderIdList,omitempty"`           // max length: 10
 	OrigClientOrderIdList []string `s2m:"origClientOrderIdList,omitempty"` // max length: 10
 }
 
-var FuCancelMultiOrdersConfig = cex.ReqConfig[FuCancelMultiOrdersParams, []FuOrder]{
+var FuturesCancelMultiOrdersConfig = cex.ReqConfig[FuturesCancelMultiOrdersParams, []FuturesOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/batchOrders",
@@ -357,10 +357,10 @@ var FuCancelMultiOrdersConfig = cex.ReqConfig[FuCancelMultiOrdersParams, []FuOrd
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrder]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesOrder]),
 }
 
-type FuAutoCancelAllOpenOrdersParams struct {
+type FuturesAutoCancelAllOpenOrdersParams struct {
 	Symbol string `s2m:"symbol,omitempty"`
 	// millisecond
 	// system will check all countdowns approximately every 10 milliseconds
@@ -368,12 +368,12 @@ type FuAutoCancelAllOpenOrdersParams struct {
 	CountdownTime int64 `s2m:"countdownTime"`
 }
 
-type FuAutoCancelAllOpenOrdersResponse struct {
+type FuturesAutoCancelAllOpenOrdersResponse struct {
 	Symbol        string `json:"symbol"`
 	CountdownTime int64  `json:"countdownTime,string"`
 }
 
-var FuAutoCancelAllOpenOrdersConfig = cex.ReqConfig[FuAutoCancelAllOpenOrdersParams, FuAutoCancelAllOpenOrdersResponse]{
+var FuturesAutoCancelAllOpenOrdersConfig = cex.ReqConfig[FuturesAutoCancelAllOpenOrdersParams, FuturesAutoCancelAllOpenOrdersResponse]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/countdownCancelAll",
@@ -383,10 +383,10 @@ var FuAutoCancelAllOpenOrdersConfig = cex.ReqConfig[FuAutoCancelAllOpenOrdersPar
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuAutoCancelAllOpenOrdersResponse]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesAutoCancelAllOpenOrdersResponse]),
 }
 
-var FuCurrentOpenOrderConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, FuOrder]{
+var FuturesCurrentOpenOrderConfig = cex.ReqConfig[FuturesQueryOrCancelOrderParams, FuturesOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/openOrder",
@@ -396,10 +396,10 @@ var FuCurrentOpenOrderConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, FuOrder
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuOrder]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesOrder]),
 }
 
-var FuCurrentAllOpenOrdersConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, []FuOrder]{
+var FuturesCurrentAllOpenOrdersConfig = cex.ReqConfig[FuturesQueryOrCancelOrderParams, []FuturesOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/openOrders",
@@ -409,13 +409,13 @@ var FuCurrentAllOpenOrdersConfig = cex.ReqConfig[FuQueryOrCancelOrderParams, []F
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrder]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesOrder]),
 }
 
-// FuAllOrdersParams
-// If orderId is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
-// The query time period must be less then 7 days( default as the recent 7 days).
-type FuAllOrdersParams struct {
+// FuturesAllOrdersParams
+// If orderId is set, it will get orders >= that orderId. Otherwise, most recent orders are returned.
+// The query time period must be less than 7 days( default as the recent 7 days).
+type FuturesAllOrdersParams struct {
 	Symbol    string `s2m:"symbol,omitempty"`
 	OrderId   int64  `s2m:"orderId,omitempty"`
 	StartTime int64  `s2m:"startTime,omitempty"`
@@ -423,11 +423,11 @@ type FuAllOrdersParams struct {
 	Limit     int    `s2m:"limit,omitempty"` // default: 500, max: 1000
 }
 
-// FuAllOrdersConfig
+// FuturesAllOrdersConfig
 // These orders will not be found:
 // order status is CANCELED or EXPIRED AND order has NO filled trade AND created time + 3 days < current time
 // order create time + 90 days < current time
-var FuAllOrdersConfig = cex.ReqConfig[FuAllOrdersParams, []FuOrder]{
+var FuturesAllOrdersConfig = cex.ReqConfig[FuturesAllOrdersParams, []FuturesOrder]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/allOrders",
@@ -437,10 +437,10 @@ var FuAllOrdersConfig = cex.ReqConfig[FuAllOrdersParams, []FuOrder]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuOrder]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesOrder]),
 }
 
-type FuAccountBalance struct {
+type FuturesAccountBalance struct {
 	AccountAlias       string  `json:"accountAlias"`
 	Asset              string  `json:"asset"`
 	Balance            float64 `json:"balance,string"`
@@ -452,7 +452,7 @@ type FuAccountBalance struct {
 	UpdateTime         int64   `json:"updateTime"`
 }
 
-var FuAccountBalancesConfig = cex.ReqConfig[cex.NilReqData, []FuAccountBalance]{
+var FuturesAccountBalancesConfig = cex.ReqConfig[cex.NilReqData, []FuturesAccountBalance]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV2 + "/balance",
@@ -462,10 +462,10 @@ var FuAccountBalancesConfig = cex.ReqConfig[cex.NilReqData, []FuAccountBalance]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuAccountBalance]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesAccountBalance]),
 }
 
-type FuAccountAsset struct {
+type FuturesAccountAsset struct {
 	Asset                  string  `json:"asset"`
 	WalletBalance          float64 `json:"walletBalance,string"`
 	UnrealizedProfit       float64 `json:"unrealizedProfit,string"`
@@ -482,7 +482,7 @@ type FuAccountAsset struct {
 	UpdateTime             int64   `json:"updateTime"`
 }
 
-type FuAccountPosition struct {
+type FuturesAccountPosition struct {
 	Symbol                 string              `json:"symbol"`
 	InitialMargin          float64             `json:"initialMargin,string"`
 	MaintMargin            float64             `json:"maintMargin,string"`
@@ -503,30 +503,30 @@ type FuAccountPosition struct {
 	BreakEvenPrice string `json:"breakEvenPrice"`
 }
 
-type FuAccount struct {
-	FeeTier                     float64             `json:"feeTier"`
-	CanTrade                    bool                `json:"canTrade"`
-	CanDeposit                  bool                `json:"canDeposit"`
-	CanWithdraw                 bool                `json:"canWithdraw"`
-	UpdateTime                  int64               `json:"updateTime"`
-	MultiAssetsMargin           bool                `json:"multiAssetsMargin"`
-	TradeGroupId                int64               `json:"tradeGroupId"`
-	TotalInitialMargin          float64             `json:"totalInitialMargin,string"`
-	TotalMaintMargin            float64             `json:"totalMaintMargin,string"`
-	TotalWalletBalance          float64             `json:"totalWalletBalance,string"`
-	TotalUnrealizedProfit       float64             `json:"totalUnrealizedProfit,string"`
-	TotalMarginBalance          float64             `json:"totalMarginBalance,string"`
-	TotalPositionInitialMargin  float64             `json:"totalPositionInitialMargin,string"`
-	TotalOpenOrderInitialMargin float64             `json:"totalOpenOrderInitialMargin,string"`
-	TotalCrossWalletBalance     float64             `json:"totalCrossWalletBalance,string"`
-	TotalCrossUnPnl             float64             `json:"totalCrossUnPnl,string"`
-	AvailableBalance            float64             `json:"availableBalance,string"`
-	MaxWithdrawAmount           float64             `json:"maxWithdrawAmount,string"`
-	Assets                      []FuAccountAsset    `json:"assets"`
-	Positions                   []FuAccountPosition `json:"positions"`
+type FuturesAccount struct {
+	FeeTier                     float64                  `json:"feeTier"`
+	CanTrade                    bool                     `json:"canTrade"`
+	CanDeposit                  bool                     `json:"canDeposit"`
+	CanWithdraw                 bool                     `json:"canWithdraw"`
+	UpdateTime                  int64                    `json:"updateTime"`
+	MultiAssetsMargin           bool                     `json:"multiAssetsMargin"`
+	TradeGroupId                int64                    `json:"tradeGroupId"`
+	TotalInitialMargin          float64                  `json:"totalInitialMargin,string"`
+	TotalMaintMargin            float64                  `json:"totalMaintMargin,string"`
+	TotalWalletBalance          float64                  `json:"totalWalletBalance,string"`
+	TotalUnrealizedProfit       float64                  `json:"totalUnrealizedProfit,string"`
+	TotalMarginBalance          float64                  `json:"totalMarginBalance,string"`
+	TotalPositionInitialMargin  float64                  `json:"totalPositionInitialMargin,string"`
+	TotalOpenOrderInitialMargin float64                  `json:"totalOpenOrderInitialMargin,string"`
+	TotalCrossWalletBalance     float64                  `json:"totalCrossWalletBalance,string"`
+	TotalCrossUnPnl             float64                  `json:"totalCrossUnPnl,string"`
+	AvailableBalance            float64                  `json:"availableBalance,string"`
+	MaxWithdrawAmount           float64                  `json:"maxWithdrawAmount,string"`
+	Assets                      []FuturesAccountAsset    `json:"assets"`
+	Positions                   []FuturesAccountPosition `json:"positions"`
 }
 
-var FuAccountConfig = cex.ReqConfig[cex.NilReqData, FuAccount]{
+var FuturesAccountConfig = cex.ReqConfig[cex.NilReqData, FuturesAccount]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV2 + "/account",
@@ -536,21 +536,21 @@ var FuAccountConfig = cex.ReqConfig[cex.NilReqData, FuAccount]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuAccount]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesAccount]),
 }
 
-type FuChangeInitialLeverageParams struct {
+type FuturesChangeInitialLeverageParams struct {
 	Symbol   string `s2m:"symbol"`
 	Leverage int    `s2m:"leverage"`
 }
 
-type FuChangeInitialLeverageResponse struct {
+type FuturesChangeInitialLeverageResponse struct {
 	Symbol           string  `json:"symbol"`
 	Leverage         int     `json:"leverage"`
 	MaxNotionalValue float64 `json:"maxNotionalValue,string"`
 }
 
-var FuChangeInitialLeverageConfig = cex.ReqConfig[FuChangeInitialLeverageParams, FuChangeInitialLeverageResponse]{
+var FuturesChangeInitialLeverageConfig = cex.ReqConfig[FuturesChangeInitialLeverageParams, FuturesChangeInitialLeverageResponse]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/leverage",
@@ -560,15 +560,15 @@ var FuChangeInitialLeverageConfig = cex.ReqConfig[FuChangeInitialLeverageParams,
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuChangeInitialLeverageResponse]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesChangeInitialLeverageResponse]),
 }
 
-type FuChangeMarginTypeParams struct {
+type FuturesChangeMarginTypeParams struct {
 	Symbol     string            `s2m:"symbol"`
 	MarginType FuturesMarginType `s2m:"marginType"`
 }
 
-var FuChangeMarginTypeConfig = cex.ReqConfig[FuChangeMarginTypeParams, CodeMsg]{
+var FuturesChangeMarginTypeConfig = cex.ReqConfig[FuturesChangeMarginTypeParams, CodeMsg]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/marginType",
@@ -581,21 +581,21 @@ var FuChangeMarginTypeConfig = cex.ReqConfig[FuChangeMarginTypeParams, CodeMsg]{
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[CodeMsg]),
 }
 
-type FuModifyIsolatedPositionMarginParams struct {
+type FuturesModifyIsolatedPositionMarginParams struct {
 	Symbol       string                  `s2m:"symbol,omitempty"`
 	PositionSide FuturesPositionSide     `s2m:"positionSide,omitempty"`
 	Amount       float64                 `s2m:"amount,omitempty"`
 	Type         FuturesModifyMarginType `s2m:"type,omitempty"` // 1: add position margin; 2: reduce position margin
 }
 
-type FuModifyIsolatedPositionMarginResponse struct {
+type FuturesModifyIsolatedPositionMarginResponse struct {
 	Amount float64                 `json:"amount"`
 	Code   int                     `json:"code"`
 	Msg    string                  `json:"msg"`
 	Type   FuturesModifyMarginType `json:"type"`
 }
 
-var FuModifyIsolatedPositionMarginConfig = cex.ReqConfig[FuModifyIsolatedPositionMarginParams, FuModifyIsolatedPositionMarginResponse]{
+var FuturesModifyIsolatedPositionMarginConfig = cex.ReqConfig[FuturesModifyIsolatedPositionMarginParams, FuturesModifyIsolatedPositionMarginResponse]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/positionMargin",
@@ -605,10 +605,10 @@ var FuModifyIsolatedPositionMarginConfig = cex.ReqConfig[FuModifyIsolatedPositio
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuModifyIsolatedPositionMarginResponse]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesModifyIsolatedPositionMarginResponse]),
 }
 
-type FuPositionMarginChangeHistoriesParams struct {
+type FuturesPositionMarginChangeHistoriesParams struct {
 	Symbol    string                  `s2m:"symbol,omitempty"`
 	Type      FuturesModifyMarginType `s2m:"type,omitempty"`
 	StartTime int64                   `s2m:"startTime,omitempty"`
@@ -616,7 +616,7 @@ type FuPositionMarginChangeHistoriesParams struct {
 	Limit     int                     `s2m:"limit,omitempty"` // default: 500
 }
 
-type FuPositionMarginChangeHistory struct {
+type FuturesPositionMarginChangeHistory struct {
 	Symbol       string                  `json:"symbol"`
 	Type         FuturesModifyMarginType `json:"type"`
 	DeltaType    FuturesMarginDeltaType  `json:"deltaType"`
@@ -626,7 +626,7 @@ type FuPositionMarginChangeHistory struct {
 	PositionSide FuturesPositionSide     `json:"positionSide"`
 }
 
-var FuPositionMarginChangeHistoriesConfig = cex.ReqConfig[FuPositionMarginChangeHistoriesParams, []FuPositionMarginChangeHistory]{
+var FuturesPositionMarginChangeHistoriesConfig = cex.ReqConfig[FuturesPositionMarginChangeHistoriesParams, []FuturesPositionMarginChangeHistory]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/positionMargin/history",
@@ -636,14 +636,14 @@ var FuPositionMarginChangeHistoriesConfig = cex.ReqConfig[FuPositionMarginChange
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuPositionMarginChangeHistory]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesPositionMarginChangeHistory]),
 }
 
-type FuPositionsParams struct {
+type FuturesPositionsParams struct {
 	Symbol string `s2m:"symbol"`
 }
 
-type FuPosition struct {
+type FuturesPosition struct {
 	Symbol           string                     `json:"symbol"`
 	PositionSide     string                     `json:"positionSide"`
 	EntryPrice       float64                    `json:"entryPrice,string"`
@@ -662,7 +662,7 @@ type FuPosition struct {
 	UpdateTime       int                        `json:"updateTime"`
 }
 
-var FuPositionsConfig = cex.ReqConfig[FuPositionsParams, []FuPosition]{
+var FuturesPositionsConfig = cex.ReqConfig[FuturesPositionsParams, []FuturesPosition]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV2 + "/positionRisk",
@@ -672,10 +672,10 @@ var FuPositionsConfig = cex.ReqConfig[FuPositionsParams, []FuPosition]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuPosition]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesPosition]),
 }
 
-type FuAccountTradeListParams struct {
+type FuturesAccountTradeListParams struct {
 	Symbol    string `s2m:"symbol,omitempty"`
 	OrderId   int64  `s2m:"orderId,omitempty"` // This can only be used in combination with symbol
 	StartTime int64  `s2m:"startTime,omitempty"`
@@ -684,7 +684,7 @@ type FuAccountTradeListParams struct {
 	Limit     int    `s2m:"limit,omitempty"`  // Default 500 max 1000.
 }
 
-type FuTradeHistory struct {
+type FuturesTradeHistory struct {
 	Id              int64               `json:"id"`
 	OrderId         int64               `json:"orderId"`
 	Symbol          string              `json:"symbol"`
@@ -701,7 +701,7 @@ type FuTradeHistory struct {
 	Time            int64               `json:"time"`
 }
 
-var FuAccountTradeListConfig = cex.ReqConfig[FuAccountTradeListParams, []FuTradeHistory]{
+var FuturesAccountTradeListConfig = cex.ReqConfig[FuturesAccountTradeListParams, []FuturesTradeHistory]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/userTrades",
@@ -711,10 +711,10 @@ var FuAccountTradeListConfig = cex.ReqConfig[FuAccountTradeListParams, []FuTrade
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuTradeHistory]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesTradeHistory]),
 }
 
-type FuIncomeHistoriesParams struct {
+type FuturesIncomeHistoriesParams struct {
 	Symbol     string            `s2m:"symbol,omitempty"`
 	IncomeType FuturesIncomeType `s2m:"incomeType,omitempty"`
 	StartTime  int64             `s2m:"startTime,omitempty"` // Timestamp in ms to get funding from INCLUSIVE.
@@ -723,7 +723,7 @@ type FuIncomeHistoriesParams struct {
 	Limit      int               `s2m:"limit,omitempty"` // Default 100 max 1000
 }
 
-type FuIncome struct {
+type FuturesIncome struct {
 	Symbol     string            `json:"symbol"`
 	IncomeType FuturesIncomeType `json:"incomeType"`
 	Income     float64           `json:"income,string"`
@@ -734,7 +734,7 @@ type FuIncome struct {
 	TradeId    string            `json:"tradeId"`
 }
 
-var FuIncomeHistoriesConfig = cex.ReqConfig[FuIncomeHistoriesParams, []FuIncome]{
+var FuturesIncomeHistoriesConfig = cex.ReqConfig[FuturesIncomeHistoriesParams, []FuturesIncome]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/income",
@@ -744,20 +744,20 @@ var FuIncomeHistoriesConfig = cex.ReqConfig[FuIncomeHistoriesParams, []FuIncome]
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuIncome]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesIncome]),
 }
 
-type FuCommissionRateParams struct {
+type FuturesCommissionRateParams struct {
 	Symbol string `s2m:"symbol"`
 }
 
-type FuCommissionRate struct {
+type FuturesCommissionRate struct {
 	Symbol              string  `json:"symbol"`
 	MakerCommissionRate float64 `json:"makerCommissionRate,string"`
 	TakerCommissionRate float64 `json:"takerCommissionRate,string"`
 }
 
-var FuCommissionRateConfig = cex.ReqConfig[FuCommissionRateParams, FuCommissionRate]{
+var FuturesCommissionRateConfig = cex.ReqConfig[FuturesCommissionRateParams, FuturesCommissionRate]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/commissionRate",
@@ -767,5 +767,5 @@ var FuCommissionRateConfig = cex.ReqConfig[FuCommissionRateParams, FuCommissionR
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuCommissionRate]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesCommissionRate]),
 }

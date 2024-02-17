@@ -65,12 +65,12 @@ func (u *User) Transfer(tranType TransferType, asset string, amount float64) (*r
 	return cex.Request(u, UniversalTransferConfig, UniversalTransferParams{Type: tranType, Asset: asset, Amount: amount})
 }
 
-func (u *User) FuturesAccount() (*resty.Response, FuAccount, *cex.RequestError) {
-	return cex.Request(u, FuAccountConfig, nil)
+func (u *User) FuturesAccount() (*resty.Response, FuturesAccount, *cex.RequestError) {
+	return cex.Request(u, FuturesAccountConfig, nil)
 }
 
-func (u *User) FuturesPositions(symbol string) (*resty.Response, []FuPosition, *cex.RequestError) {
-	return cex.Request(u, FuPositionsConfig, FuPositionsParams{Symbol: symbol})
+func (u *User) FuturesPositions(symbol string) (*resty.Response, []FuturesPosition, *cex.RequestError) {
+	return cex.Request(u, FuturesPositionsConfig, FuturesPositionsParams{Symbol: symbol})
 }
 
 // ------------------------------------------------------------
@@ -81,16 +81,16 @@ func (u *User) FuturesPositions(symbol string) (*resty.Response, []FuPosition, *
 // Flexible Simple Earn API
 // ------------------------------------------------------------
 
-func (u *User) SimpleEarnFlexibleProducts(asset string) (*resty.Response, Page[[]FlexibleProduct], *cex.RequestError) {
-	return cex.Request(u, FlexibleProductConfig, FlexibleProductListParams{Asset: asset})
+func (u *User) SimpleEarnFlexibleProducts(asset string) (*resty.Response, Page[[]SimpleEarnFlexibleProduct], *cex.RequestError) {
+	return cex.Request(u, SimpleEarnFlexibleProductConfig, SimpleEarnFlexibleProductListParams{Asset: asset})
 }
 
 func (u *User) SimpleEarnFlexiblePositions(asset, productId string) (*resty.Response, Page[[]SimpleEarnFlexiblePosition], *cex.RequestError) {
 	return cex.Request(u, SimpleEarnFlexiblePositionsConfig, SimpleEarnFlexiblePositionsParams{Asset: asset, ProductId: productId})
 }
 
-func (u *User) SimpleEarnFlexibleRedeem(productId string, redeemAll bool, amount float64, destAccount SimpleEarnFlexibleRedeemDestination) (*resty.Response, FlexibleRedeemResponse, *cex.RequestError) {
-	return cex.Request(u, FlexibleRedeemConfig, FlexibleRedeemParams{ProductId: productId, RedeemAll: redeemAll, Amount: amount, DestAccount: destAccount})
+func (u *User) SimpleEarnFlexibleRedeem(productId string, redeemAll bool, amount float64, destAccount SimpleEarnFlexibleRedeemDestination) (*resty.Response, SimpleEarnFlexibleRedeemResponse, *cex.RequestError) {
+	return cex.Request(u, SimpleEarnFlexibleRedeemConfig, SimpleEarnFlexibleRedeemParams{ProductId: productId, RedeemAll: redeemAll, Amount: amount, DestAccount: destAccount})
 }
 
 // ------------------------------------------------------------
@@ -101,44 +101,44 @@ func (u *User) SimpleEarnFlexibleRedeem(productId string, redeemAll bool, amount
 // Flexible Loan API
 // ------------------------------------------------------------
 
-func (u *User) CryptoLoanFlexibleOngoingOrders(loanCoin, collateralCoin string) (*resty.Response, Page[[]FlexibleOngoingOrder], *cex.RequestError) {
-	return cex.Request(u, FlexibleOngoingOrdersConfig, FlexibleOngoingOrdersParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin})
+func (u *User) CryptoLoanFlexibleOngoingOrders(loanCoin, collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleOngoingOrder], *cex.RequestError) {
+	return cex.Request(u, CryptoLoanFlexibleOngoingOrdersConfig, CryptoLoanFlexibleOngoingOrdersParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin})
 }
 
 func (u *User) CryptoLoanIncomeHistories(asset string, incomeType CryptoLoanIncomeType) (*resty.Response, []CryptoLoanIncomeHistory, *cex.RequestError) {
 	return cex.Request(u, CryptoLoansIncomeHistoriesConfig, CryptoLoansIncomeHistoriesParams{Asset: asset, Type: incomeType})
 }
 
-func (u *User) CryptoLoanFlexibleBorrow(loanCoin string, collateralCoin string, loanAmount, collateralAmount float64) (*resty.Response, FlexibleBorrowResult, *cex.RequestError) {
-	return cex.Request(u, FlexibleBorrowConfig, FlexibleBorrowParams{LoanCoin: loanCoin, LoanAmount: loanAmount, CollateralCoin: collateralCoin, CollateralAmount: collateralAmount})
+func (u *User) CryptoLoanFlexibleBorrow(loanCoin string, collateralCoin string, loanAmount, collateralAmount float64) (*resty.Response, CryptoLoanFlexibleBorrowResult, *cex.RequestError) {
+	return cex.Request(u, CryptoLoanFlexibleBorrowConfig, CryptoLoanFlexibleBorrowParams{LoanCoin: loanCoin, LoanAmount: loanAmount, CollateralCoin: collateralCoin, CollateralAmount: collateralAmount})
 }
 
-func (u *User) CryptoLoanFlexibleBorrowHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]FlexibleBorrowHistory], *cex.RequestError) {
-	return cex.Request(u, FlexibleBorrowHistoriesConfig, FlexibleBorrowHistoriesParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100})
+func (u *User) CryptoLoanFlexibleBorrowHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleBorrowHistory], *cex.RequestError) {
+	return cex.Request(u, CryptoLoanFlexibleBorrowHistoriesConfig, CryptoLoanFlexibleBorrowHistoriesParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100})
 }
 
-func (u *User) CryptoLoanFlexibleRepay(loanCoin, collateralCoin string, repayAmount float64, collateralReturn, fullRepayment BigBool) (*resty.Response, FlexibleRepayResult, *cex.RequestError) {
-	return cex.Request(u, FlexibleRepayConfig, FlexibleRepayParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, RepayAmount: repayAmount, CollateralReturn: collateralReturn, FullRepayment: fullRepayment})
+func (u *User) CryptoLoanFlexibleRepay(loanCoin, collateralCoin string, repayAmount float64, collateralReturn, fullRepayment BigBool) (*resty.Response, CryptoLoanFlexibleRepayResult, *cex.RequestError) {
+	return cex.Request(u, CryptoLoanFlexibleRepayConfig, CryptoLoanFlexibleRepayParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, RepayAmount: repayAmount, CollateralReturn: collateralReturn, FullRepayment: fullRepayment})
 }
 
-func (u *User) CryptoLoanFlexibleRepaymentHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]FlexibleRepaymentHistory], *cex.RequestError) {
-	return cex.Request(u, FlexibleRepaymentHistoriesConfig, FlexibleRepaymentHistoriesParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100})
+func (u *User) CryptoLoanFlexibleRepaymentHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleRepaymentHistory], *cex.RequestError) {
+	return cex.Request(u, CryptoLoanFlexibleRepaymentHistoriesConfig, CryptoLoanFlexibleRepaymentHistoriesParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100})
 }
 
-func (u *User) CryptoLoanFlexibleAdjustLtv(loanCoin, collateralCoin string, adjustmentAmount float64, direction LTVAdjustDirection) (*resty.Response, FlexibleLoanAdjustLtvResult, *cex.RequestError) {
-	return cex.Request(u, FlexibleLoanAdjustLtvConfig, FlexibleAdjustLtvParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, AdjustmentAmount: adjustmentAmount, Direction: direction})
+func (u *User) CryptoLoanFlexibleAdjustLtv(loanCoin, collateralCoin string, adjustmentAmount float64, direction LTVAdjustDirection) (*resty.Response, CryptoLoanFlexibleLoanAdjustLtvResult, *cex.RequestError) {
+	return cex.Request(u, CryptoLoanFlexibleLoanAdjustLtvConfig, CryptoLoanFlexibleAdjustLtvParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, AdjustmentAmount: adjustmentAmount, Direction: direction})
 }
 
-func (u *User) CryptoLoanFlexibleAdjustLtvHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]FlexibleAdjustLtvHistory], *cex.RequestError) {
-	return cex.Request(u, FlexibleAdjustLtvHistoriesConfig, FlexibleAdjustLtvHistoriesParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100})
+func (u *User) CryptoLoanFlexibleAdjustLtvHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleAdjustLtvHistory], *cex.RequestError) {
+	return cex.Request(u, CryptoLoanFlexibleAdjustLtvHistoriesConfig, CryptoLoanFlexibleAdjustLtvHistoriesParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100})
 }
 
-func (u *User) CryptoLoanFlexibleLoanAssets(loanCoin string) (*resty.Response, Page[[]FlexibleLoanAsset], *cex.RequestError) {
-	return cex.Request(u, FlexibleLoanAssetsConfig, FlexibleLoanAssetsParams{loanCoin})
+func (u *User) CryptoLoanFlexibleLoanAssets(loanCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleLoanAsset], *cex.RequestError) {
+	return cex.Request(u, CryptoLoanFlexibleLoanAssetsConfig, CryptoLoanFlexibleLoanAssetsParams{loanCoin})
 }
 
-func (u *User) CryptoLoanFlexibleCollateralAssets(collateralCoin string) (*resty.Response, Page[[]FlexibleCollateralCoin], *cex.RequestError) {
-	return cex.Request(u, FlexibleCollateralCoinsConfig, FlexibleCollateralCoinsParams{collateralCoin})
+func (u *User) CryptoLoanFlexibleCollateralAssets(collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleCollateralCoin], *cex.RequestError) {
+	return cex.Request(u, CryptoLoanFlexibleCollateralCoinsConfig, CryptoLoanFlexibleCollateralCoinsParams{collateralCoin})
 }
 
 // ------------------------------------------------------------
@@ -225,12 +225,12 @@ func (u *User) QuerySpotOrder(symbol string, orderId int64, cltOrdId string) (*r
 // Futures API
 // ------------------------------------------------------------
 
-func (u *User) CancelFuturesOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, FuOrder, *cex.RequestError) {
-	return cex.Request(u, FuCancelOrderConfig, FuQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
+func (u *User) CancelFuturesOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, FuturesOrder, *cex.RequestError) {
+	return cex.Request(u, FuturesCancelOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
 }
 
-func (u *User) QueryFuturesOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, FuOrder, *cex.RequestError) {
-	return cex.Request(u, FuQueryOrderConfig, FuQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
+func (u *User) QueryFuturesOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, FuturesOrder, *cex.RequestError) {
+	return cex.Request(u, FuturesQueryOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
 }
 
 // ------------------------------------------------------------
@@ -288,7 +288,7 @@ func (u *User) newFuOrd(asset, quote string, orderType cex.OrderType, orderSide 
 	if orderType == cex.OrderTypeLimit {
 		tif = TimeInForceGtc
 	}
-	resp, rawOrd, err := cex.Request(u, FuNewOrderConfig, FuNewOrderParams{
+	resp, rawOrd, err := cex.Request(u, FuturesNewOrderConfig, FuturesNewOrderParams{
 		Symbol:       symbol,
 		PositionSide: u.cfg.fuPosSide,
 		Type:         mapStrStr(orderType, ordTypByCexOrdTyp),
@@ -488,7 +488,7 @@ func UpdateOrderWithRawSpotOrder(ord *cex.Order, rawOrd SpotOrder) {
 	ord.RawOrder = rawOrd
 }
 
-func SwitchFutureOrderToCexOrder(rawOrd FuOrder) cex.Order {
+func SwitchFutureOrderToCexOrder(rawOrd FuturesOrder) cex.Order {
 	return cex.Order{
 		OriQty:         rawOrd.OrigQty,
 		OriPrice:       rawOrd.Price,
@@ -509,7 +509,7 @@ func SwitchFutureOrderToCexOrder(rawOrd FuOrder) cex.Order {
 	}
 }
 
-func UpdateOrderWithRawFuturesOrder(ord *cex.Order, rawOrd FuOrder) {
+func UpdateOrderWithRawFuturesOrder(ord *cex.Order, rawOrd FuturesOrder) {
 	if ord == nil {
 		return
 	}
