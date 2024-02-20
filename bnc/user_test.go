@@ -168,8 +168,9 @@ func TestUser_WaitOrder(t *testing.T) {
 		cancel()
 	}()
 	fmt.Println("wait order")
-	err = newTestUser().WaitOrder(ctx, ord)
+	chErr := newTestUser().WaitOrder(ctx, ord)
 	props.PrintlnIndent(ord)
+	err = <-chErr
 	if err.IsNotNil() && err.Is(context.Canceled) {
 		fmt.Println("ctx canceled")
 		fmt.Println("cancel order")

@@ -173,7 +173,7 @@ func (u *User) CancelOrder(order *cex.Order, opts ...cex.ReqOpt) (*resty.Respons
 	return u.cancelOrd(order, opts...)
 }
 
-func (u *User) WaitOrder(ctx context.Context, order *cex.Order, opts ...cex.ReqOpt) cex.RequestError {
+func (u *User) WaitOrder(ctx context.Context, order *cex.Order, opts ...cex.ReqOpt) chan cex.RequestError {
 	return u.waitOrd(ctx, order, opts...)
 }
 
@@ -369,24 +369,32 @@ func (u *User) queryOrd(ord *cex.Order, opts ...cex.ReqOpt) (*resty.Response, ce
 	}
 }
 
-func (u *User) waitOrd(ctx context.Context, ord *cex.Order, opts ...cex.ReqOpt) cex.RequestError {
+func (u *User) waitOrd(ctx context.Context, ord *cex.Order, opts ...cex.ReqOpt) chan cex.RequestError {
+	ch := make(chan cex.RequestError, 1)
 	if ord == nil {
-		return cex.RequestError{Err: errors.New("nil order")}
+		ch <- cex.RequestError{Err: errors.New("nil order")}
+		return ch
 	}
 	if ord.IsFinished() {
-		return cex.RequestError{}
+		ch <- cex.RequestError{}
+		return ch
 	}
-	for {
-		_, err := u.queryOrd(ord, opts...)
-		if err.IsNil() && ord.IsFinished() {
-			return cex.RequestError{}
+	go func() {
+		for {
+			_, err := u.queryOrd(ord, opts...)
+			if err.IsNil() && ord.IsFinished() {
+				ch <- cex.RequestError{}
+				return
+			}
+			select {
+			case <-ctx.Done():
+				ch <- cex.RequestError{Err: fmt.Errorf("ctxerr: %w, requesterr: %w", ctx.Err(), err.Err)}
+				return
+			case <-time.After(time.Second):
+			}
 		}
-		select {
-		case <-ctx.Done():
-			return cex.RequestError{Err: fmt.Errorf("ctxerr: %w, requesterr: %w", ctx.Err(), err.Err)}
-		case <-time.After(time.Second):
-		}
-	}
+	}()
+	return ch
 }
 
 func strOrdIdToInt64(id string) int64 {
