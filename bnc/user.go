@@ -98,11 +98,11 @@ func (u *User) FuturesPositions(symbol string) (*resty.Response, []FuturesPositi
 // ------------------------------------------------------------
 
 func (u *User) SimpleEarnFlexibleProducts(asset string) (*resty.Response, Page[[]SimpleEarnFlexibleProduct], cex.RequestError) {
-	return cex.Request(u, SimpleEarnFlexibleProductConfig, SimpleEarnFlexibleProductListParams{Asset: asset})
+	return cex.Request(u, SimpleEarnFlexibleProductConfig, SimpleEarnFlexibleProductListParams{Asset: asset, Size: 100})
 }
 
 func (u *User) SimpleEarnFlexiblePositions(asset, productId string) (*resty.Response, Page[[]SimpleEarnFlexiblePosition], cex.RequestError) {
-	return cex.Request(u, SimpleEarnFlexiblePositionsConfig, SimpleEarnFlexiblePositionsParams{Asset: asset, ProductId: productId})
+	return cex.Request(u, SimpleEarnFlexiblePositionsConfig, SimpleEarnFlexiblePositionsParams{Asset: asset, ProductId: productId, Size: 100})
 }
 
 func (u *User) SimpleEarnFlexibleRedeem(productId string, redeemAll bool, amount float64, destAccount SimpleEarnFlexibleRedeemDestination) (*resty.Response, SimpleEarnFlexibleRedeemResponse, cex.RequestError) {
@@ -118,11 +118,11 @@ func (u *User) SimpleEarnFlexibleRedeem(productId string, redeemAll bool, amount
 // ------------------------------------------------------------
 
 func (u *User) CryptoLoanFlexibleOngoingOrders(loanCoin, collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleOngoingOrder], cex.RequestError) {
-	return cex.Request(u, CryptoLoanFlexibleOngoingOrdersConfig, CryptoLoanFlexibleOngoingOrdersParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin})
+	return cex.Request(u, CryptoLoanFlexibleOngoingOrdersConfig, CryptoLoanFlexibleOngoingOrdersParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100})
 }
 
 func (u *User) CryptoLoanIncomeHistories(asset string, incomeType CryptoLoanIncomeType) (*resty.Response, []CryptoLoanIncomeHistory, cex.RequestError) {
-	return cex.Request(u, CryptoLoansIncomeHistoriesConfig, CryptoLoansIncomeHistoriesParams{Asset: asset, Type: incomeType})
+	return cex.Request(u, CryptoLoansIncomeHistoriesConfig, CryptoLoansIncomeHistoriesParams{Asset: asset, Type: incomeType, Limit: 100})
 }
 
 func (u *User) CryptoLoanFlexibleBorrow(loanCoin string, collateralCoin string, loanAmount, collateralAmount float64) (*resty.Response, CryptoLoanFlexibleBorrowResult, cex.RequestError) {

@@ -129,7 +129,7 @@ var UniversalTransferConfig = cex.ReqConfig[UniversalTransferParams, UniversalTr
 type SimpleEarnFlexibleProductListParams struct {
 	Asset   string `s2m:"asset,omitempty"`
 	Current int64  `s2m:"current,omitempty"`
-	Size    int64  `s2m:"size,omitempty"`
+	Size    int64  `s2m:"size,omitempty"` // default:10, max: 100
 }
 
 type SimpleEarnFlexibleProduct struct {
@@ -235,7 +235,7 @@ type CryptoLoansIncomeHistoriesParams struct {
 	Type      CryptoLoanIncomeType `s2m:"type,omitempty"`
 	StartTime int64                `s2m:"startTime,omitempty"`
 	EndTime   int64                `s2m:"endTime,omitempty"`
-	Limit     int                  `s2m:"limit,omitempty"`
+	Limit     int                  `s2m:"limit,omitempty"` // default:20, max:100
 }
 
 type CryptoLoanIncomeHistory struct {
