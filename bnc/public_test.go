@@ -28,7 +28,7 @@ func TestQueryFuturesExchangeInfo(t *testing.T) {
 }
 
 func TestQueryFundingRateHistories(t *testing.T) {
-	publicTestChecker(QueryFundingRateHistories("ETHUSDT", 0, 0, 0))
+	publicTestChecker(QueryFundingRateHistories("RNDRUSDT", 0, 0, 0))
 }
 
 func TestQueryFundingRateInfos(t *testing.T) {
