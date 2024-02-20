@@ -1,6 +1,7 @@
 package bnc
 
 import (
+	"math"
 	"net/http"
 
 	"github.com/dwdwow/cex"
@@ -496,11 +497,15 @@ type FuturesAccountPosition struct {
 	BidNotional            float64             `json:"bidNotional,string"`
 	AskNotional            float64             `json:"askNotional,string"`
 	PositionSide           FuturesPositionSide `json:"positionSide"`
-	PositionAmt            float64             `json:"positionAmt,string"` // long: > 0, short: < 0
+	SignPositionAmt        float64             `json:"positionAmt,string"` // long: > 0, short: < 0
 	UpdateTime             int64               `json:"updateTime"`
 
 	// multi asset mode
 	BreakEvenPrice string `json:"breakEvenPrice"`
+}
+
+func (p FuturesAccountPosition) AbsPositionAmt() float64 {
+	return math.Abs(p.SignPositionAmt)
 }
 
 type FuturesAccount struct {
@@ -655,11 +660,15 @@ type FuturesPosition struct {
 	LiquidationPrice float64                    `json:"liquidationPrice,string"`
 	MarkPrice        float64                    `json:"markPrice,string"`
 	MaxNotionalValue float64                    `json:"maxNotionalValue,string"`
-	PositionAmt      float64                    `json:"positionAmt,string"` // long: > 0, short: < 0
+	SignPositionAmt  float64                    `json:"positionAmt,string"` // long: > 0, short: < 0
 	Notional         float64                    `json:"notional,string"`
 	IsolatedWallet   float64                    `json:"isolatedWallet,string"`
 	UnRealizedProfit float64                    `json:"unRealizedProfit,string"`
 	UpdateTime       int                        `json:"updateTime"`
+}
+
+func (p FuturesPosition) AbsPositionAmt() float64 {
+	return math.Abs(p.SignPositionAmt)
 }
 
 var FuturesPositionsConfig = cex.ReqConfig[FuturesPositionsParams, []FuturesPosition]{
