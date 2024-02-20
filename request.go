@@ -233,11 +233,11 @@ type ReqMaker interface {
 // RespBodyUnmarshalerError contains cex own diy error code and msg.
 // Why should specific this struct? See RespBodyUnmarshaler.
 type RespBodyUnmarshalerError struct {
-	CexErrCode int
-	CexErrMsg  string
+	CexErrCode int    `json:"cexErrCode,omitempty"`
+	CexErrMsg  string `json:"cexErrMsg,omitempty"`
 
 	// Err is unmarshal error or cex err.
-	Err error
+	Err error `json:"err,omitempty"`
 }
 
 func (e *RespBodyUnmarshalerError) Error() string {
@@ -255,9 +255,9 @@ func (e *RespBodyUnmarshalerError) SetErr(err error) *RespBodyUnmarshalerError {
 
 // HTTPError contains raw info and cex package custom http error.
 type HTTPError struct {
-	StatusCode int
-	Status     string
-	Err        error
+	StatusCode int    `json:"statusCode"`
+	Status     string `json:"status"`
+	Err        error  `json:"err"`
 }
 
 func (e *HTTPError) Error() string {
@@ -274,10 +274,10 @@ func (e *HTTPError) Is(target error) bool {
 // RequestError
 // Structured error info is better.
 type RequestError struct {
-	ReqBaseConfig            ReqBaseConfig
-	HTTPError                *HTTPError
-	RespBodyUnmarshalerError *RespBodyUnmarshalerError
-	Err                      error
+	ReqBaseConfig            ReqBaseConfig             `json:"reqBaseConfig"`
+	HTTPError                *HTTPError                `json:"HTTPError"`
+	RespBodyUnmarshalerError *RespBodyUnmarshalerError `json:"respBodyUnmarshalerError"`
+	Err                      error                     `json:"err"`
 }
 
 func (e *RequestError) Error() string {
