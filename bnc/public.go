@@ -23,11 +23,11 @@ func QueryFuturesOrderBook(symbol string, limit int) (OrderBook, error) {
 }
 
 func queryExchangeInfo(config cex.ReqConfig[cex.NilReqData, ExchangeInfo]) (ExchangeInfo, error) {
-	_, ob, err := cex.Request(emptyUser, config, nil)
+	_, info, err := cex.Request(emptyUser, config, nil)
 	if err.IsNotNil() {
 		return ExchangeInfo{}, errors.New(err.Error())
 	}
-	return ob, nil
+	return info, nil
 }
 
 func QuerySpotExchangeInfo() (ExchangeInfo, error) {
@@ -36,6 +36,30 @@ func QuerySpotExchangeInfo() (ExchangeInfo, error) {
 
 func QueryFuturesExchangeInfo() (ExchangeInfo, error) {
 	return queryExchangeInfo(FuturesExchangeInfosConfig)
+}
+
+func queryPairs(exInfoQuerier func() (ExchangeInfo, error)) (pairs []cex.Pair, info ExchangeInfo, err error) {
+	info, err = exInfoQuerier()
+	if err != nil {
+		return
+	}
+	for _, syb := range info.Symbols {
+		var pair cex.Pair
+		pair, err = ExchangeInfoToPair(syb)
+		if err != nil {
+			return
+		}
+		pairs = append(pairs, pair)
+	}
+	return
+}
+
+func QuerySpotPairs() ([]cex.Pair, ExchangeInfo, error) {
+	return queryPairs(QuerySpotExchangeInfo)
+}
+
+func QueryFuturesPairs() ([]cex.Pair, ExchangeInfo, error) {
+	return queryPairs(QueryFuturesExchangeInfo)
 }
 
 func queryInfoAboutFundingRate[Req any, Resp any](config cex.ReqConfig[Req, Resp], params Req) (Resp, error) {

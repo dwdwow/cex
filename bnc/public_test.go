@@ -23,6 +23,18 @@ func TestQuerySpotExchangeInfo(t *testing.T) {
 	publicTestChecker(QuerySpotExchangeInfo())
 }
 
+func TestQuerySpotPairs(t *testing.T) {
+	pairs, _, err := QuerySpotPairs()
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(pairs)
+}
+
+func TestQueryFuturesPairs(t *testing.T) {
+	pairs, _, err := QueryFuturesPairs()
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(pairs)
+}
+
 func TestQueryFuturesExchangeInfo(t *testing.T) {
 	publicTestChecker(QueryFuturesExchangeInfo())
 }
