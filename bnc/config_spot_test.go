@@ -25,7 +25,7 @@ func testConfig[ReqDataType, RespDataType any](
 	apiKey := readApiKey()
 	user := NewUser(apiKey.ApiKey, apiKey.SecretKey, UserOptPositionSide(FuturesPositionSideBoth))
 	_, respData, err := cex.Request(user, config, reqData, opts...)
-	props.PanicIfNotNil(err)
+	props.PanicIfNotNil(err.Err)
 	props.PrintlnIndent(respData)
 }
 
@@ -208,7 +208,7 @@ func TestSpotReplaceOrder(t *testing.T) {
 		SelfTradePreventionMode: "",
 		CancelRestrictions:      "",
 	})
-	if err != nil {
+	if err.IsNotNil() {
 		fmt.Println(err)
 	}
 	props.PrintlnIndent(respData)

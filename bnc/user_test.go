@@ -2,7 +2,6 @@ package bnc
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"testing"
 	"time"
@@ -17,8 +16,8 @@ func newTestUser() *User {
 	return NewUser(apiKey.ApiKey, apiKey.SecretKey, UserOptPositionSide(FuturesPositionSideBoth))
 }
 
-func userTestChecker[RespData any](resp *resty.Response, respData RespData, err *cex.RequestError) {
-	props.PanicIfNotNil(err)
+func userTestChecker[RespData any](resp *resty.Response, respData RespData, err cex.RequestError) {
+	props.PanicIfNotNil(err.Err)
 	props.PrintlnIndent(respData)
 }
 
@@ -148,20 +147,20 @@ func TestUser_NewFuturesMarketSellOrder(t *testing.T) {
 
 func TestUser_QueryOrder(t *testing.T) {
 	_, ord, err := newTestUser().NewSpotLimitBuyOrder("ETH", "USDT", 0.01, 1900)
-	props.PanicIfNotNil(err)
+	props.PanicIfNotNil(err.Err)
 	props.PrintlnIndent(ord)
 	_, err = newTestUser().QueryOrder(ord)
-	props.PanicIfNotNil(err)
+	props.PanicIfNotNil(err.Err)
 	props.PrintlnIndent(ord)
 	_, err = newTestUser().CancelOrder(ord)
-	props.PanicIfNotNil(err)
+	props.PanicIfNotNil(err.Err)
 	props.PrintlnIndent(ord)
 }
 
 func TestUser_WaitOrder(t *testing.T) {
 	fmt.Println("new order")
 	_, ord, err := newTestUser().NewSpotLimitBuyOrder("ETH", "USDT", 0.01, 1900)
-	props.PanicIfNotNil(err)
+	props.PanicIfNotNil(err.Err)
 	props.PrintlnIndent(ord)
 	ctx, cancel := context.WithCancel(context.Background())
 	go func() {
@@ -171,17 +170,17 @@ func TestUser_WaitOrder(t *testing.T) {
 	fmt.Println("wait order")
 	err = newTestUser().WaitOrder(ctx, ord)
 	props.PrintlnIndent(ord)
-	if err != nil && errors.Is(err, context.Canceled) {
+	if err.IsNotNil() && err.Is(context.Canceled) {
 		fmt.Println("ctx canceled")
 		fmt.Println("cancel order")
 		_, err = newTestUser().CancelOrder(ord)
-		if err != nil && !errors.Is(err, cex.ErrUnknownOrder) {
+		if err.Is(cex.ErrUnknownOrder) {
 			panic(err)
 		}
 		props.PrintlnIndent(ord)
 	}
 	fmt.Println("query order")
 	_, err = newTestUser().queryOrd(ord)
-	props.PanicIfNotNil(err)
+	props.PanicIfNotNil(err.Err)
 	props.PrintlnIndent(ord)
 }

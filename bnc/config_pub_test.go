@@ -14,7 +14,7 @@ func testPubConfig[ReqDataType, RespDataType any](
 ) {
 	resp, ob, err := cex.Request(EmptyUser(), config, reqData, opts...)
 	_ = resp
-	props.PanicIfNotNil(err)
+	props.PanicIfNotNil(err.Err)
 	props.PrintlnIndent(ob)
 }
 

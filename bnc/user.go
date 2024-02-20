@@ -69,23 +69,23 @@ func (u *User) Config() UserConfig {
 // Account API
 // ------------------------------------------------------------
 
-func (u *User) Coins() (*resty.Response, []Coin, *cex.RequestError) {
+func (u *User) Coins() (*resty.Response, []Coin, cex.RequestError) {
 	return cex.Request(u, CoinInfoConfig, nil)
 }
 
-func (u *User) SpotAccount() (*resty.Response, SpotAccount, *cex.RequestError) {
+func (u *User) SpotAccount() (*resty.Response, SpotAccount, cex.RequestError) {
 	return cex.Request(u, SpotAccountConfig, nil)
 }
 
-func (u *User) Transfer(tranType TransferType, asset string, amount float64) (*resty.Response, UniversalTransferResp, *cex.RequestError) {
+func (u *User) Transfer(tranType TransferType, asset string, amount float64) (*resty.Response, UniversalTransferResp, cex.RequestError) {
 	return cex.Request(u, UniversalTransferConfig, UniversalTransferParams{Type: tranType, Asset: asset, Amount: amount})
 }
 
-func (u *User) FuturesAccount() (*resty.Response, FuturesAccount, *cex.RequestError) {
+func (u *User) FuturesAccount() (*resty.Response, FuturesAccount, cex.RequestError) {
 	return cex.Request(u, FuturesAccountConfig, nil)
 }
 
-func (u *User) FuturesPositions(symbol string) (*resty.Response, []FuturesPosition, *cex.RequestError) {
+func (u *User) FuturesPositions(symbol string) (*resty.Response, []FuturesPosition, cex.RequestError) {
 	return cex.Request(u, FuturesPositionsConfig, FuturesPositionsParams{Symbol: symbol})
 }
 
@@ -97,15 +97,15 @@ func (u *User) FuturesPositions(symbol string) (*resty.Response, []FuturesPositi
 // Flexible Simple Earn API
 // ------------------------------------------------------------
 
-func (u *User) SimpleEarnFlexibleProducts(asset string) (*resty.Response, Page[[]SimpleEarnFlexibleProduct], *cex.RequestError) {
+func (u *User) SimpleEarnFlexibleProducts(asset string) (*resty.Response, Page[[]SimpleEarnFlexibleProduct], cex.RequestError) {
 	return cex.Request(u, SimpleEarnFlexibleProductConfig, SimpleEarnFlexibleProductListParams{Asset: asset})
 }
 
-func (u *User) SimpleEarnFlexiblePositions(asset, productId string) (*resty.Response, Page[[]SimpleEarnFlexiblePosition], *cex.RequestError) {
+func (u *User) SimpleEarnFlexiblePositions(asset, productId string) (*resty.Response, Page[[]SimpleEarnFlexiblePosition], cex.RequestError) {
 	return cex.Request(u, SimpleEarnFlexiblePositionsConfig, SimpleEarnFlexiblePositionsParams{Asset: asset, ProductId: productId})
 }
 
-func (u *User) SimpleEarnFlexibleRedeem(productId string, redeemAll bool, amount float64, destAccount SimpleEarnFlexibleRedeemDestination) (*resty.Response, SimpleEarnFlexibleRedeemResponse, *cex.RequestError) {
+func (u *User) SimpleEarnFlexibleRedeem(productId string, redeemAll bool, amount float64, destAccount SimpleEarnFlexibleRedeemDestination) (*resty.Response, SimpleEarnFlexibleRedeemResponse, cex.RequestError) {
 	return cex.Request(u, SimpleEarnFlexibleRedeemConfig, SimpleEarnFlexibleRedeemParams{ProductId: productId, RedeemAll: redeemAll, Amount: amount, DestAccount: destAccount})
 }
 
@@ -117,43 +117,43 @@ func (u *User) SimpleEarnFlexibleRedeem(productId string, redeemAll bool, amount
 // Flexible Loan API
 // ------------------------------------------------------------
 
-func (u *User) CryptoLoanFlexibleOngoingOrders(loanCoin, collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleOngoingOrder], *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleOngoingOrders(loanCoin, collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleOngoingOrder], cex.RequestError) {
 	return cex.Request(u, CryptoLoanFlexibleOngoingOrdersConfig, CryptoLoanFlexibleOngoingOrdersParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin})
 }
 
-func (u *User) CryptoLoanIncomeHistories(asset string, incomeType CryptoLoanIncomeType) (*resty.Response, []CryptoLoanIncomeHistory, *cex.RequestError) {
+func (u *User) CryptoLoanIncomeHistories(asset string, incomeType CryptoLoanIncomeType) (*resty.Response, []CryptoLoanIncomeHistory, cex.RequestError) {
 	return cex.Request(u, CryptoLoansIncomeHistoriesConfig, CryptoLoansIncomeHistoriesParams{Asset: asset, Type: incomeType})
 }
 
-func (u *User) CryptoLoanFlexibleBorrow(loanCoin string, collateralCoin string, loanAmount, collateralAmount float64) (*resty.Response, CryptoLoanFlexibleBorrowResult, *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleBorrow(loanCoin string, collateralCoin string, loanAmount, collateralAmount float64) (*resty.Response, CryptoLoanFlexibleBorrowResult, cex.RequestError) {
 	return cex.Request(u, CryptoLoanFlexibleBorrowConfig, CryptoLoanFlexibleBorrowParams{LoanCoin: loanCoin, LoanAmount: loanAmount, CollateralCoin: collateralCoin, CollateralAmount: collateralAmount})
 }
 
-func (u *User) CryptoLoanFlexibleBorrowHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleBorrowHistory], *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleBorrowHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleBorrowHistory], cex.RequestError) {
 	return cex.Request(u, CryptoLoanFlexibleBorrowHistoriesConfig, CryptoLoanFlexibleBorrowHistoriesParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100})
 }
 
-func (u *User) CryptoLoanFlexibleRepay(loanCoin, collateralCoin string, repayAmount float64, collateralReturn, fullRepayment BigBool) (*resty.Response, CryptoLoanFlexibleRepayResult, *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleRepay(loanCoin, collateralCoin string, repayAmount float64, collateralReturn, fullRepayment BigBool) (*resty.Response, CryptoLoanFlexibleRepayResult, cex.RequestError) {
 	return cex.Request(u, CryptoLoanFlexibleRepayConfig, CryptoLoanFlexibleRepayParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, RepayAmount: repayAmount, CollateralReturn: collateralReturn, FullRepayment: fullRepayment})
 }
 
-func (u *User) CryptoLoanFlexibleRepaymentHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleRepaymentHistory], *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleRepaymentHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleRepaymentHistory], cex.RequestError) {
 	return cex.Request(u, CryptoLoanFlexibleRepaymentHistoriesConfig, CryptoLoanFlexibleRepaymentHistoriesParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100})
 }
 
-func (u *User) CryptoLoanFlexibleAdjustLtv(loanCoin, collateralCoin string, adjustmentAmount float64, direction LTVAdjustDirection) (*resty.Response, CryptoLoanFlexibleLoanAdjustLtvResult, *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleAdjustLtv(loanCoin, collateralCoin string, adjustmentAmount float64, direction LTVAdjustDirection) (*resty.Response, CryptoLoanFlexibleLoanAdjustLtvResult, cex.RequestError) {
 	return cex.Request(u, CryptoLoanFlexibleLoanAdjustLtvConfig, CryptoLoanFlexibleAdjustLtvParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, AdjustmentAmount: adjustmentAmount, Direction: direction})
 }
 
-func (u *User) CryptoLoanFlexibleAdjustLtvHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleAdjustLtvHistory], *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleAdjustLtvHistories(loanCoin, collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleAdjustLtvHistory], cex.RequestError) {
 	return cex.Request(u, CryptoLoanFlexibleAdjustLtvHistoriesConfig, CryptoLoanFlexibleAdjustLtvHistoriesParams{LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100})
 }
 
-func (u *User) CryptoLoanFlexibleLoanAssets(loanCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleLoanAsset], *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleLoanAssets(loanCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleLoanAsset], cex.RequestError) {
 	return cex.Request(u, CryptoLoanFlexibleLoanAssetsConfig, CryptoLoanFlexibleLoanAssetsParams{loanCoin})
 }
 
-func (u *User) CryptoLoanFlexibleCollateralAssets(collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleCollateralCoin], *cex.RequestError) {
+func (u *User) CryptoLoanFlexibleCollateralAssets(collateralCoin string) (*resty.Response, Page[[]CryptoLoanFlexibleCollateralCoin], cex.RequestError) {
 	return cex.Request(u, CryptoLoanFlexibleCollateralCoinsConfig, CryptoLoanFlexibleCollateralCoinsParams{collateralCoin})
 }
 
@@ -165,55 +165,55 @@ func (u *User) CryptoLoanFlexibleCollateralAssets(collateralCoin string) (*resty
 // cex.Trader Interface Implementations
 // ------------------------------------------------------------
 
-func (u *User) QueryOrder(order *cex.Order) (*resty.Response, *cex.RequestError) {
+func (u *User) QueryOrder(order *cex.Order) (*resty.Response, cex.RequestError) {
 	return u.queryOrd(order)
 }
 
-func (u *User) CancelOrder(order *cex.Order) (*resty.Response, *cex.RequestError) {
+func (u *User) CancelOrder(order *cex.Order) (*resty.Response, cex.RequestError) {
 	return u.cancelOrd(order)
 }
 
-func (u *User) WaitOrder(ctx context.Context, order *cex.Order) *cex.RequestError {
+func (u *User) WaitOrder(ctx context.Context, order *cex.Order) cex.RequestError {
 	return u.waitOrd(ctx, order)
 }
 
-func (u *User) NewSpotOrder(asset, quote string, tradeType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+func (u *User) NewSpotOrder(asset, quote string, tradeType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, cex.RequestError) {
 	return u.newSpotOrd(asset, quote, tradeType, orderSide, qty, price)
 }
 
-func (u *User) NewSpotLimitBuyOrder(asset, quote string, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+func (u *User) NewSpotLimitBuyOrder(asset, quote string, qty, price float64) (*resty.Response, *cex.Order, cex.RequestError) {
 	return u.NewSpotOrder(asset, quote, cex.OrderTypeLimit, cex.OrderSideBuy, qty, price)
 }
 
-func (u *User) NewSpotLimitSellOrder(asset, quote string, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+func (u *User) NewSpotLimitSellOrder(asset, quote string, qty, price float64) (*resty.Response, *cex.Order, cex.RequestError) {
 	return u.NewSpotOrder(asset, quote, cex.OrderTypeLimit, cex.OrderSideSell, qty, price)
 }
 
-func (u *User) NewSpotMarketBuyOrder(asset, quote string, qty float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+func (u *User) NewSpotMarketBuyOrder(asset, quote string, qty float64) (*resty.Response, *cex.Order, cex.RequestError) {
 	return u.NewSpotOrder(asset, quote, cex.OrderTypeMarket, cex.OrderSideBuy, qty, 0)
 }
 
-func (u *User) NewSpotMarketSellOrder(asset, quote string, qty float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+func (u *User) NewSpotMarketSellOrder(asset, quote string, qty float64) (*resty.Response, *cex.Order, cex.RequestError) {
 	return u.NewSpotOrder(asset, quote, cex.OrderTypeMarket, cex.OrderSideSell, qty, 0)
 }
 
-func (u *User) NewFuturesOrder(asset, quote string, tradeType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+func (u *User) NewFuturesOrder(asset, quote string, tradeType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, cex.RequestError) {
 	return u.newFuOrd(asset, quote, tradeType, orderSide, qty, price)
 }
 
-func (u *User) NewFuturesLimitBuyOrder(asset, quote string, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+func (u *User) NewFuturesLimitBuyOrder(asset, quote string, qty, price float64) (*resty.Response, *cex.Order, cex.RequestError) {
 	return u.NewFuturesOrder(asset, quote, cex.OrderTypeLimit, cex.OrderSideBuy, qty, price)
 }
 
-func (u *User) NewFuturesLimitSellOrder(asset, quote string, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+func (u *User) NewFuturesLimitSellOrder(asset, quote string, qty, price float64) (*resty.Response, *cex.Order, cex.RequestError) {
 	return u.NewFuturesOrder(asset, quote, cex.OrderTypeLimit, cex.OrderSideSell, qty, price)
 }
 
-func (u *User) NewFuturesMarketBuyOrder(asset, quote string, qty float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+func (u *User) NewFuturesMarketBuyOrder(asset, quote string, qty float64) (*resty.Response, *cex.Order, cex.RequestError) {
 	return u.NewFuturesOrder(asset, quote, cex.OrderTypeMarket, cex.OrderSideBuy, qty, 0)
 }
 
-func (u *User) NewFuturesMarketSellOrder(asset, quote string, qty float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+func (u *User) NewFuturesMarketSellOrder(asset, quote string, qty float64) (*resty.Response, *cex.Order, cex.RequestError) {
 	return u.NewFuturesOrder(asset, quote, cex.OrderTypeMarket, cex.OrderSideSell, qty, 0)
 }
 
@@ -225,11 +225,11 @@ func (u *User) NewFuturesMarketSellOrder(asset, quote string, qty float64) (*res
 // Spot API
 // ------------------------------------------------------------
 
-func (u *User) CancelSpotOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, SpotOrder, *cex.RequestError) {
+func (u *User) CancelSpotOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, SpotOrder, cex.RequestError) {
 	return cex.Request(u, SpotCancelOrderConfig, SpotCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
 }
 
-func (u *User) QuerySpotOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, SpotOrder, *cex.RequestError) {
+func (u *User) QuerySpotOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, SpotOrder, cex.RequestError) {
 	return cex.Request(u, SpotQueryOrderConfig, SpotQueryOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
 }
 
@@ -241,11 +241,11 @@ func (u *User) QuerySpotOrder(symbol string, orderId int64, cltOrdId string) (*r
 // Futures API
 // ------------------------------------------------------------
 
-func (u *User) CancelFuturesOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, FuturesOrder, *cex.RequestError) {
+func (u *User) CancelFuturesOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, FuturesOrder, cex.RequestError) {
 	return cex.Request(u, FuturesCancelOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
 }
 
-func (u *User) QueryFuturesOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, FuturesOrder, *cex.RequestError) {
+func (u *User) QueryFuturesOrder(symbol string, orderId int64, cltOrdId string) (*resty.Response, FuturesOrder, cex.RequestError) {
 	return cex.Request(u, FuturesQueryOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId})
 }
 
@@ -257,7 +257,7 @@ func (u *User) QueryFuturesOrder(symbol string, orderId int64, cltOrdId string) 
 // Private Trade Functions
 // ------------------------------------------------------------
 
-func (u *User) newSpotOrd(asset, quote string, orderType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+func (u *User) newSpotOrd(asset, quote string, orderType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, cex.RequestError) {
 	symbol := asset + quote
 	var tif TimeInForce
 	if orderType == cex.OrderTypeLimit {
@@ -276,29 +276,29 @@ func (u *User) newSpotOrd(asset, quote string, orderType cex.OrderType, orderSid
 	return resp, &ord, err
 }
 
-func (u *User) cancelSpotOrd(ord *cex.Order) (*resty.Response, *cex.RequestError) {
+func (u *User) cancelSpotOrd(ord *cex.Order) (*resty.Response, cex.RequestError) {
 	if ord == nil {
-		return nil, &cex.RequestError{Err: errors.New("nil order")}
+		return nil, cex.RequestError{Err: errors.New("nil order")}
 	}
 	resp, rawOrd, err := u.CancelSpotOrder(ord.Symbol, strOrdIdToInt64(ord.OrderId), ord.ClientOrderId)
-	if err == nil {
+	if err.IsNil() {
 		UpdateOrderWithRawSpotOrder(ord, rawOrd)
 	}
 	return resp, err
 }
 
-func (u *User) querySpotOrd(ord *cex.Order) (*resty.Response, *cex.RequestError) {
+func (u *User) querySpotOrd(ord *cex.Order) (*resty.Response, cex.RequestError) {
 	if ord == nil {
-		return nil, &cex.RequestError{Err: errors.New("nil order")}
+		return nil, cex.RequestError{Err: errors.New("nil order")}
 	}
 	resp, rawOrd, err := u.QuerySpotOrder(ord.Symbol, strOrdIdToInt64(ord.OrderId), ord.ClientOrderId)
-	if err == nil {
+	if err.IsNil() {
 		UpdateOrderWithRawSpotOrder(ord, rawOrd)
 	}
 	return resp, err
 }
 
-func (u *User) newFuOrd(asset, quote string, orderType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, *cex.RequestError) {
+func (u *User) newFuOrd(asset, quote string, orderType cex.OrderType, orderSide cex.OrderSide, qty, price float64) (*resty.Response, *cex.Order, cex.RequestError) {
 	symbol := asset + quote
 	var tif TimeInForce
 	if orderType == cex.OrderTypeLimit {
@@ -319,31 +319,31 @@ func (u *User) newFuOrd(asset, quote string, orderType cex.OrderType, orderSide 
 	return resp, &ord, err
 }
 
-func (u *User) cancelFuturesOrd(ord *cex.Order) (*resty.Response, *cex.RequestError) {
+func (u *User) cancelFuturesOrd(ord *cex.Order) (*resty.Response, cex.RequestError) {
 	if ord == nil {
-		return nil, &cex.RequestError{Err: errors.New("nil order")}
+		return nil, cex.RequestError{Err: errors.New("nil order")}
 	}
 	resp, rawOrd, err := u.CancelFuturesOrder(ord.Symbol, strOrdIdToInt64(ord.OrderId), ord.ClientOrderId)
-	if err == nil {
+	if err.IsNil() {
 		UpdateOrderWithRawFuturesOrder(ord, rawOrd)
 	}
 	return resp, err
 }
 
-func (u *User) queryFuturesOrd(ord *cex.Order) (*resty.Response, *cex.RequestError) {
+func (u *User) queryFuturesOrd(ord *cex.Order) (*resty.Response, cex.RequestError) {
 	if ord == nil {
-		return nil, &cex.RequestError{Err: errors.New("nil order")}
+		return nil, cex.RequestError{Err: errors.New("nil order")}
 	}
 	resp, rawOrd, err := u.QueryFuturesOrder(ord.Symbol, strOrdIdToInt64(ord.OrderId), ord.ClientOrderId)
-	if err == nil {
+	if err.IsNil() {
 		UpdateOrderWithRawFuturesOrder(ord, rawOrd)
 	}
 	return resp, err
 }
 
-func (u *User) cancelOrd(ord *cex.Order) (*resty.Response, *cex.RequestError) {
+func (u *User) cancelOrd(ord *cex.Order) (*resty.Response, cex.RequestError) {
 	if ord == nil {
-		return nil, &cex.RequestError{Err: errors.New("nil order")}
+		return nil, cex.RequestError{Err: errors.New("nil order")}
 	}
 	switch ord.PairType {
 	case cex.PairTypeSpot:
@@ -351,13 +351,13 @@ func (u *User) cancelOrd(ord *cex.Order) (*resty.Response, *cex.RequestError) {
 	case cex.PairTypeFutures:
 		return u.cancelFuturesOrd(ord)
 	default:
-		return nil, &cex.RequestError{Err: fmt.Errorf("unknown order pair type %v", ord.PairType)}
+		return nil, cex.RequestError{Err: fmt.Errorf("unknown order pair type %v", ord.PairType)}
 	}
 }
 
-func (u *User) queryOrd(ord *cex.Order) (*resty.Response, *cex.RequestError) {
+func (u *User) queryOrd(ord *cex.Order) (*resty.Response, cex.RequestError) {
 	if ord == nil {
-		return nil, &cex.RequestError{Err: errors.New("nil order")}
+		return nil, cex.RequestError{Err: errors.New("nil order")}
 	}
 	switch ord.PairType {
 	case cex.PairTypeSpot:
@@ -365,25 +365,25 @@ func (u *User) queryOrd(ord *cex.Order) (*resty.Response, *cex.RequestError) {
 	case cex.PairTypeFutures:
 		return u.queryFuturesOrd(ord)
 	default:
-		return nil, &cex.RequestError{Err: fmt.Errorf("unknown order pair type %v", ord.PairType)}
+		return nil, cex.RequestError{Err: fmt.Errorf("unknown order pair type %v", ord.PairType)}
 	}
 }
 
-func (u *User) waitOrd(ctx context.Context, ord *cex.Order) *cex.RequestError {
+func (u *User) waitOrd(ctx context.Context, ord *cex.Order) cex.RequestError {
 	if ord == nil {
-		return &cex.RequestError{Err: errors.New("nil order")}
+		return cex.RequestError{Err: errors.New("nil order")}
 	}
 	if ord.IsFinished() {
-		return nil
+		return cex.RequestError{}
 	}
 	for {
 		_, err := u.queryOrd(ord)
-		if err == nil && ord.IsFinished() {
-			return nil
+		if err.IsNil() && ord.IsFinished() {
+			return cex.RequestError{}
 		}
 		select {
 		case <-ctx.Done():
-			return &cex.RequestError{Err: fmt.Errorf("ctxerr: %w, requesterr: %w", ctx.Err(), err)}
+			return cex.RequestError{Err: fmt.Errorf("ctxerr: %w, requesterr: %w", ctx.Err(), err)}
 		case <-time.After(time.Second):
 		}
 	}

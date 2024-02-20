@@ -42,13 +42,13 @@ func Request[ReqDataType, RespDataType any](
 	config ReqConfig[ReqDataType, RespDataType],
 	reqData ReqDataType,
 	opts ...ReqOpt,
-) (*resty.Response, RespDataType, *RequestError) {
+) (*resty.Response, RespDataType, RequestError) {
 	var resp *resty.Response
 	var data RespDataType
-	var err *RequestError
+	var err RequestError
 	for i := 0; i < 3; i++ {
 		resp, data, err = request(reqMaker, config, reqData, opts...)
-		if err != nil && err.Is(ErrInvalidTimestamp) {
+		if err.Err != nil && err.Is(ErrInvalidTimestamp) {
 			continue
 		}
 		break
@@ -61,13 +61,13 @@ func request[ReqDataType, RespDataType any](
 	config ReqConfig[ReqDataType, RespDataType],
 	reqData ReqDataType,
 	opts ...ReqOpt,
-) (*resty.Response, RespDataType, *RequestError) {
-	reqErr := &RequestError{ReqBaseConfig: config.ReqBaseConfig}
+) (*resty.Response, RespDataType, RequestError) {
+	reqErr := RequestError{ReqBaseConfig: config.ReqBaseConfig}
 	respData := *new(RespDataType)
 
 	req, err := reqMaker.Make(config.ReqBaseConfig, reqData, opts...)
 	if err != nil {
-		return nil, respData, reqErr.SetErr(fmt.Errorf("cex: make request, %w", err))
+		return nil, respData, *reqErr.SetErr(fmt.Errorf("cex: make request, %w", err))
 	}
 
 	// here sets empty url
@@ -83,7 +83,7 @@ func request[ReqDataType, RespDataType any](
 	case http.MethodDelete:
 		resp, err = req.Delete("")
 	default:
-		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: http method %v is not supported", config.Method))
+		return resp, respData, *reqErr.SetErr(fmt.Errorf("cex: http method %v is not supported", config.Method))
 	}
 
 	// Ignore resty error, if response is not nil.
@@ -97,14 +97,14 @@ func request[ReqDataType, RespDataType any](
 	// If resp is nil, return directly.
 	// Otherwise, go on.
 	if err != nil && resp == nil {
-		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: request err: %w", err))
+		return resp, respData, *reqErr.SetErr(fmt.Errorf("cex: request err: %w", err))
 	}
 
 	if resp == nil {
 		// Should not get here.
 		// If getting here, err and resp are all nil.
 		// Resty may have bugs.
-		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: resp and err are all nil, resty may have bugs"))
+		return resp, respData, *reqErr.SetErr(fmt.Errorf("cex: resp and err are all nil, resty may have bugs"))
 	}
 
 	var errResty error
@@ -113,11 +113,11 @@ func request[ReqDataType, RespDataType any](
 	}
 
 	if config.HTTPStatusCodeChecker == nil {
-		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: config http status code checker is nil"))
+		return resp, respData, *reqErr.SetErr(fmt.Errorf("cex: config http status code checker is nil"))
 	}
 
 	if config.RespBodyUnmarshaler == nil {
-		return resp, respData, reqErr.SetErr(fmt.Errorf("cex: config resp body unmarshaler is nil"))
+		return resp, respData, *reqErr.SetErr(fmt.Errorf("cex: config resp body unmarshaler is nil"))
 	}
 
 	errHttp := config.HTTPStatusCodeChecker(resp.StatusCode())
@@ -125,7 +125,7 @@ func request[ReqDataType, RespDataType any](
 	respData, errBodyUnmarshal := config.RespBodyUnmarshaler(resp.Body())
 
 	if errHttp == nil && errBodyUnmarshal == nil {
-		return resp, respData, nil
+		return resp, respData, reqErr
 	}
 
 	// some cex may set detailed error msg in body, while request failed
@@ -281,6 +281,10 @@ type RequestError struct {
 }
 
 func (e *RequestError) Error() string {
+	return e.String()
+}
+
+func (e *RequestError) String() string {
 	return fmt.Sprintf(
 		"%v %v%v, %v",
 		e.ReqBaseConfig.Method,
@@ -297,6 +301,14 @@ func (e *RequestError) Is(target error) bool {
 func (e *RequestError) SetErr(err error) *RequestError {
 	e.Err = err
 	return e
+}
+
+func (e *RequestError) IsNotNil() bool {
+	return e.Err != nil
+}
+
+func (e *RequestError) IsNil() bool {
+	return e.Err == nil
 }
 
 // -----------------------------------------------------------

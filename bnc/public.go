@@ -8,7 +8,7 @@ import (
 
 func queryOrderBook(config cex.ReqConfig[OrderBookParams, OrderBook], symbol string, limit int) (OrderBook, error) {
 	_, ob, err := cex.Request(emptyUser, config, OrderBookParams{symbol, limit})
-	if err != nil {
+	if err.IsNotNil() {
 		return OrderBook{}, errors.New(err.Error())
 	}
 	return ob, nil
@@ -24,7 +24,7 @@ func QueryFuturesOrderBook(symbol string, limit int) (OrderBook, error) {
 
 func queryExchangeInfo(config cex.ReqConfig[cex.NilReqData, ExchangeInfo]) (ExchangeInfo, error) {
 	_, ob, err := cex.Request(emptyUser, config, nil)
-	if err != nil {
+	if err.IsNotNil() {
 		return ExchangeInfo{}, errors.New(err.Error())
 	}
 	return ob, nil
@@ -40,7 +40,7 @@ func QueryFuturesExchangeInfo() (ExchangeInfo, error) {
 
 func queryInfoAboutFundingRate[Req any, Resp any](config cex.ReqConfig[Req, Resp], params Req) (Resp, error) {
 	_, resp, err := cex.Request(emptyUser, config, params)
-	if err != nil {
+	if err.IsNotNil() {
 		return resp, errors.New(err.Error())
 	}
 	return resp, nil
