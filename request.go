@@ -41,7 +41,7 @@ func Request[ReqDataType, RespDataType any](
 	reqMaker ReqMaker,
 	config ReqConfig[ReqDataType, RespDataType],
 	reqData ReqDataType,
-	opts ...ReqOpt,
+	opts ...CltOpt,
 ) (*resty.Response, RespDataType, RequestError) {
 	var resp *resty.Response
 	var data RespDataType
@@ -60,7 +60,7 @@ func request[ReqDataType, RespDataType any](
 	reqMaker ReqMaker,
 	config ReqConfig[ReqDataType, RespDataType],
 	reqData ReqDataType,
-	opts ...ReqOpt,
+	opts ...CltOpt,
 ) (*resty.Response, RespDataType, RequestError) {
 	reqErr := RequestError{ReqBaseConfig: config.ReqBaseConfig}
 	respData := *new(RespDataType)
@@ -213,12 +213,12 @@ type ReqConfig[ReqDataType, RespDataType any] struct {
 	RespBodyUnmarshaler   RespBodyUnmarshaler[RespDataType]
 }
 
-// ReqOpt is function option that can custom request.
-type ReqOpt func(*resty.Client, *resty.Request)
+// CltOpt is function option that can custom request.
+type CltOpt func(*resty.Client)
 
 // ReqMaker should be implemented in all cex package
 type ReqMaker interface {
-	Make(config ReqBaseConfig, reqData any, opts ...ReqOpt) (*resty.Request, error)
+	Make(config ReqBaseConfig, reqData any, opts ...CltOpt) (*resty.Request, error)
 	//HandleResp(*resty.Response, *resty.Request) error
 }
 

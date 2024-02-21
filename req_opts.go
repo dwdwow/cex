@@ -6,8 +6,8 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-func ReqOptRetryCount(count int, waitTime time.Duration) ReqOpt {
-	return func(client *resty.Client, r *resty.Request) {
+func CltOptRetryCount(count int, waitTime time.Duration) CltOpt {
+	return func(client *resty.Client) {
 		if client == nil {
 			return
 		}

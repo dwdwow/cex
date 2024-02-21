@@ -20,7 +20,7 @@ func readApiKey() cex.Api {
 func testConfig[ReqDataType, RespDataType any](
 	config cex.ReqConfig[ReqDataType, RespDataType],
 	reqData ReqDataType,
-	opts ...cex.ReqOpt,
+	opts ...cex.CltOpt,
 ) {
 	apiKey := readApiKey()
 	user := NewUser(apiKey.ApiKey, apiKey.SecretKey, UserOptPositionSide(FuturesPositionSideBoth))

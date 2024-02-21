@@ -10,7 +10,7 @@ import (
 func testPubConfig[ReqDataType, RespDataType any](
 	config cex.ReqConfig[ReqDataType, RespDataType],
 	reqData ReqDataType,
-	opts ...cex.ReqOpt,
+	opts ...cex.CltOpt,
 ) {
 	resp, ob, err := cex.Request(EmptyUser(), config, reqData, opts...)
 	_ = resp
