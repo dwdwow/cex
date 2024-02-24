@@ -25,7 +25,7 @@ var FuturesChangePositionModeConfig = cex.ReqConfig[FuturesChangePositionModPara
 }
 
 type FuturesCurrentPositionModeResponse struct {
-	DualSidePosition bool `json:"dualSidePosition"`
+	DualSidePosition bool `json:"dualSidePosition" bson:"dualSidePosition"`
 }
 
 var FuturesPositionModeConfig = cex.ReqConfig[cex.NilReqData, FuturesCurrentPositionModeResponse]{
@@ -59,7 +59,7 @@ var FuturesChangeMultiAssetsModeConfig = cex.ReqConfig[FuturesChangeMultiAssetsM
 }
 
 type FuCurrentMultiAssetsModeResponse struct {
-	MultiAssetsMargin bool `json:"multiAssetsMargin"`
+	MultiAssetsMargin bool `json:"multiAssetsMargin" bson:"multiAssetsMargin"`
 }
 
 var FuturesCurrentMultiAssetsModeConfig = cex.ReqConfig[cex.NilReqData, FuCurrentMultiAssetsModeResponse]{
@@ -99,47 +99,47 @@ type FuturesNewOrderParams struct {
 
 type FuturesOrder struct {
 	// common
-	Symbol                  string                  `json:"symbol"`
-	OrderId                 int64                   `json:"orderId"`
-	ClientOrderId           string                  `json:"clientOrderId"`
-	Type                    OrderType               `json:"type"`
-	PositionSide            FuturesPositionSide     `json:"positionSide"`
-	Side                    OrderSide               `json:"side"`
-	OrigQty                 float64                 `json:"origQty,string"`
-	Price                   float64                 `json:"price,string"` // orig price
-	ExecutedQty             float64                 `json:"executedQty,string"`
-	AvgPrice                float64                 `json:"avgPrice,string"`
-	ReduceOnly              bool                    `json:"reduceOnly"`
-	Status                  OrderStatus             `json:"status"`
-	StopPrice               float64                 `json:"stopPrice,string"`
-	ClosePosition           bool                    `json:"closePosition"`
-	TimeInForce             TimeInForce             `json:"timeInForce"`
-	OrigType                OrderType               `json:"origType"`
-	UpdateTime              int64                   `json:"updateTime"`
-	WorkingType             FuturesWorkingType      `json:"workingType"`
-	PriceProtect            bool                    `json:"priceProtect"`
-	PriceMatch              string                  `json:"priceMatch"`
-	SelfTradePreventionMode SelfTradePreventionMode `json:"selfTradePreventionMode"`
-	GoodTillDate            int64                   `json:"goodTillDate"`
+	Symbol                  string                  `json:"symbol" bson:"symbol"`
+	OrderId                 int64                   `json:"orderId" bson:"orderId"`
+	ClientOrderId           string                  `json:"clientOrderId" bson:"clientOrderId"`
+	Type                    OrderType               `json:"type" bson:"type"`
+	PositionSide            FuturesPositionSide     `json:"positionSide" bson:"positionSide"`
+	Side                    OrderSide               `json:"side" bson:"side"`
+	OrigQty                 float64                 `json:"origQty,string" bson:"origQty,string"`
+	Price                   float64                 `json:"price,string" bson:"price,string"` // orig price
+	ExecutedQty             float64                 `json:"executedQty,string" bson:"executedQty,string"`
+	AvgPrice                float64                 `json:"avgPrice,string" bson:"avgPrice,string"`
+	ReduceOnly              bool                    `json:"reduceOnly" bson:"reduceOnly"`
+	Status                  OrderStatus             `json:"status" bson:"status"`
+	StopPrice               float64                 `json:"stopPrice,string" bson:"stopPrice,string"`
+	ClosePosition           bool                    `json:"closePosition" bson:"closePosition"`
+	TimeInForce             TimeInForce             `json:"timeInForce" bson:"timeInForce"`
+	OrigType                OrderType               `json:"origType" bson:"origType"`
+	UpdateTime              int64                   `json:"updateTime" bson:"updateTime"`
+	WorkingType             FuturesWorkingType      `json:"workingType" bson:"workingType"`
+	PriceProtect            bool                    `json:"priceProtect" bson:"priceProtect"`
+	PriceMatch              string                  `json:"priceMatch" bson:"priceMatch"`
+	SelfTradePreventionMode SelfTradePreventionMode `json:"selfTradePreventionMode" bson:"selfTradePreventionMode"`
+	GoodTillDate            int64                   `json:"goodTillDate" bson:"goodTillDate"`
 
 	// new order
-	CumQuote      float64 `json:"cumQuote,string"`
-	ActivatePrice float64 `json:"activatePrice,string"`
-	PriceRate     float64 `json:"priceRate,string"`
+	CumQuote      float64 `json:"cumQuote,string" bson:"cumQuote,string"`
+	ActivatePrice float64 `json:"activatePrice,string" bson:"activatePrice,string"`
+	PriceRate     float64 `json:"priceRate,string" bson:"priceRate,string"`
 
 	// new, modify order
-	CumQty float64 `json:"cumQty,string"`
+	CumQty float64 `json:"cumQty,string" bson:"cumQty,string"`
 
 	// modify order
-	Pair    string `json:"pair"`    // same as symbol
-	CumBase string `json:"cumBase"` // same as CumQuote? should verify
+	Pair    string `json:"pair" bson:"pair"`       // same as symbol
+	CumBase string `json:"cumBase" bson:"cumBase"` // same as CumQuote? should verify
 
 	// query order
-	Time int64 `json:"time"`
+	Time int64 `json:"time" bson:"time"`
 
 	// place, modify multi orders
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
+	Code int    `json:"code" bson:"code"`
+	Msg  string `json:"msg" bson:"msg"`
 }
 
 var FuturesNewOrderConfig = cex.ReqConfig[FuturesNewOrderParams, FuturesOrder]{
@@ -261,24 +261,24 @@ type FuturesOrderModifyHistoriesParams struct {
 }
 
 type FuturesOrderModifyHistory struct {
-	AmendmentId   int    `json:"amendmentId"`
-	Symbol        string `json:"symbol"`
-	Pair          string `json:"pair"`
-	OrderId       int64  `json:"orderId"`
-	ClientOrderId string `json:"clientOrderId"`
-	Time          int64  `json:"time"` // Order modification time
+	AmendmentId   int    `json:"amendmentId" bson:"amendmentId"`
+	Symbol        string `json:"symbol" bson:"symbol"`
+	Pair          string `json:"pair" bson:"pair"`
+	OrderId       int64  `json:"orderId" bson:"orderId"`
+	ClientOrderId string `json:"clientOrderId" bson:"clientOrderId"`
+	Time          int64  `json:"time" bson:"time"` // Order modification time
 	Amendment     struct {
 		Price struct {
-			Before float64 `json:"before,string"`
-			After  float64 `json:"after,string"`
-		} `json:"price"`
+			Before float64 `json:"before,string" bson:"before,string"`
+			After  float64 `json:"after,string" bson:"after,string"`
+		} `json:"price" bson:"price"`
 		OrigQty struct {
-			Before float64 `json:"before,string"`
-			After  float64 `json:"after,string"`
-		} `json:"origQty"`
-		Count int `json:"count"` // Order modification count, representing the number of times the order has been modified
-	} `json:"amendment"`
-	PriceMatch string `json:"priceMatch"`
+			Before float64 `json:"before,string" bson:"before,string"`
+			After  float64 `json:"after,string" bson:"after,string"`
+		} `json:"origQty" bson:"origQty"`
+		Count int `json:"count" bson:"count"` // Order modification count, representing the number of times the order has been modified
+	} `json:"amendment" bson:"amendment"`
+	PriceMatch string `json:"priceMatch" bson:"priceMatch"`
 }
 
 var FuturesOrderModifyHistoriesConfig = cex.ReqConfig[FuturesOrderModifyHistoriesParams, []FuturesOrderModifyHistory]{
@@ -370,8 +370,8 @@ type FuturesAutoCancelAllOpenOrdersParams struct {
 }
 
 type FuturesAutoCancelAllOpenOrdersResponse struct {
-	Symbol        string `json:"symbol"`
-	CountdownTime int64  `json:"countdownTime,string"`
+	Symbol        string `json:"symbol" bson:"symbol"`
+	CountdownTime int64  `json:"countdownTime,string" bson:"countdownTime,string"`
 }
 
 var FuturesAutoCancelAllOpenOrdersConfig = cex.ReqConfig[FuturesAutoCancelAllOpenOrdersParams, FuturesAutoCancelAllOpenOrdersResponse]{
@@ -442,15 +442,15 @@ var FuturesAllOrdersConfig = cex.ReqConfig[FuturesAllOrdersParams, []FuturesOrde
 }
 
 type FuturesAccountBalance struct {
-	AccountAlias       string  `json:"accountAlias"`
-	Asset              string  `json:"asset"`
-	Balance            float64 `json:"balance,string"`
-	CrossWalletBalance float64 `json:"crossWalletBalance,string"`
-	CrossUnPnl         float64 `json:"crossUnPnl,string"`
-	AvailableBalance   float64 `json:"availableBalance,string"`
-	MaxWithdrawAmount  float64 `json:"maxWithdrawAmount,string"`
-	MarginAvailable    bool    `json:"marginAvailable"`
-	UpdateTime         int64   `json:"updateTime"`
+	AccountAlias       string  `json:"accountAlias" bson:"accountAlias"`
+	Asset              string  `json:"asset" bson:"asset"`
+	Balance            float64 `json:"balance,string" bson:"balance,string"`
+	CrossWalletBalance float64 `json:"crossWalletBalance,string" bson:"crossWalletBalance,string"`
+	CrossUnPnl         float64 `json:"crossUnPnl,string" bson:"crossUnPnl,string"`
+	AvailableBalance   float64 `json:"availableBalance,string" bson:"availableBalance,string"`
+	MaxWithdrawAmount  float64 `json:"maxWithdrawAmount,string" bson:"maxWithdrawAmount,string"`
+	MarginAvailable    bool    `json:"marginAvailable" bson:"marginAvailable"`
+	UpdateTime         int64   `json:"updateTime" bson:"updateTime"`
 }
 
 var FuturesAccountBalancesConfig = cex.ReqConfig[cex.NilReqData, []FuturesAccountBalance]{
@@ -467,41 +467,41 @@ var FuturesAccountBalancesConfig = cex.ReqConfig[cex.NilReqData, []FuturesAccoun
 }
 
 type FuturesAccountAsset struct {
-	Asset                  string  `json:"asset"`
-	WalletBalance          float64 `json:"walletBalance,string"`
-	UnrealizedProfit       float64 `json:"unrealizedProfit,string"`
-	MarginBalance          float64 `json:"marginBalance,string"`
-	MaintMargin            float64 `json:"maintMargin,string"`
-	InitialMargin          float64 `json:"initialMargin,string"`
-	PositionInitialMargin  float64 `json:"positionInitialMargin,string"`
-	OpenOrderInitialMargin float64 `json:"openOrderInitialMargin,string"`
-	CrossWalletBalance     float64 `json:"crossWalletBalance,string"`
-	CrossUnPnl             float64 `json:"crossUnPnl,string"`
-	AvailableBalance       float64 `json:"availableBalance,string"`
-	MaxWithdrawAmount      float64 `json:"maxWithdrawAmount,string"`
-	MarginAvailable        bool    `json:"marginAvailable"`
-	UpdateTime             int64   `json:"updateTime"`
+	Asset                  string  `json:"asset" bson:"asset"`
+	WalletBalance          float64 `json:"walletBalance,string" bson:"walletBalance,string"`
+	UnrealizedProfit       float64 `json:"unrealizedProfit,string" bson:"unrealizedProfit,string"`
+	MarginBalance          float64 `json:"marginBalance,string" bson:"marginBalance,string"`
+	MaintMargin            float64 `json:"maintMargin,string" bson:"maintMargin,string"`
+	InitialMargin          float64 `json:"initialMargin,string" bson:"initialMargin,string"`
+	PositionInitialMargin  float64 `json:"positionInitialMargin,string" bson:"positionInitialMargin,string"`
+	OpenOrderInitialMargin float64 `json:"openOrderInitialMargin,string" bson:"openOrderInitialMargin,string"`
+	CrossWalletBalance     float64 `json:"crossWalletBalance,string" bson:"crossWalletBalance,string"`
+	CrossUnPnl             float64 `json:"crossUnPnl,string" bson:"crossUnPnl,string"`
+	AvailableBalance       float64 `json:"availableBalance,string" bson:"availableBalance,string"`
+	MaxWithdrawAmount      float64 `json:"maxWithdrawAmount,string" bson:"maxWithdrawAmount,string"`
+	MarginAvailable        bool    `json:"marginAvailable" bson:"marginAvailable"`
+	UpdateTime             int64   `json:"updateTime" bson:"updateTime"`
 }
 
 type FuturesAccountPosition struct {
-	Symbol                 string              `json:"symbol"`
-	InitialMargin          float64             `json:"initialMargin,string"`
-	MaintMargin            float64             `json:"maintMargin,string"`
-	UnrealizedProfit       float64             `json:"unrealizedProfit,string"`
-	PositionInitialMargin  float64             `json:"positionInitialMargin,string"`
-	OpenOrderInitialMargin float64             `json:"openOrderInitialMargin,string"`
-	Leverage               float64             `json:"leverage,string"`
-	Isolated               bool                `json:"isolated"`
-	EntryPrice             float64             `json:"entryPrice,string"`
-	MaxNotional            float64             `json:"maxNotional,string"`
-	BidNotional            float64             `json:"bidNotional,string"`
-	AskNotional            float64             `json:"askNotional,string"`
-	PositionSide           FuturesPositionSide `json:"positionSide"`
-	SignPositionAmt        float64             `json:"positionAmt,string"` // long: > 0, short: < 0
-	UpdateTime             int64               `json:"updateTime"`
+	Symbol                 string              `json:"symbol" bson:"symbol"`
+	InitialMargin          float64             `json:"initialMargin,string" bson:"initialMargin,string"`
+	MaintMargin            float64             `json:"maintMargin,string" bson:"maintMargin,string"`
+	UnrealizedProfit       float64             `json:"unrealizedProfit,string" bson:"unrealizedProfit,string"`
+	PositionInitialMargin  float64             `json:"positionInitialMargin,string" bson:"positionInitialMargin,string"`
+	OpenOrderInitialMargin float64             `json:"openOrderInitialMargin,string" bson:"openOrderInitialMargin,string"`
+	Leverage               float64             `json:"leverage,string" bson:"leverage,string"`
+	Isolated               bool                `json:"isolated" bson:"isolated"`
+	EntryPrice             float64             `json:"entryPrice,string" bson:"entryPrice,string"`
+	MaxNotional            float64             `json:"maxNotional,string" bson:"maxNotional,string"`
+	BidNotional            float64             `json:"bidNotional,string" bson:"bidNotional,string"`
+	AskNotional            float64             `json:"askNotional,string" bson:"askNotional,string"`
+	PositionSide           FuturesPositionSide `json:"positionSide" bson:"positionSide"`
+	SignPositionAmt        float64             `json:"positionAmt,string" bson:"positionAmt,string"` // long: > 0, short: < 0
+	UpdateTime             int64               `json:"updateTime" bson:"updateTime"`
 
 	// multi asset mode
-	BreakEvenPrice string `json:"breakEvenPrice"`
+	BreakEvenPrice string `json:"breakEvenPrice" bson:"breakEvenPrice"`
 }
 
 func (p FuturesAccountPosition) AbsPositionAmt() float64 {
@@ -509,26 +509,26 @@ func (p FuturesAccountPosition) AbsPositionAmt() float64 {
 }
 
 type FuturesAccount struct {
-	FeeTier                     float64                  `json:"feeTier"`
-	CanTrade                    bool                     `json:"canTrade"`
-	CanDeposit                  bool                     `json:"canDeposit"`
-	CanWithdraw                 bool                     `json:"canWithdraw"`
-	UpdateTime                  int64                    `json:"updateTime"`
-	MultiAssetsMargin           bool                     `json:"multiAssetsMargin"`
-	TradeGroupId                int64                    `json:"tradeGroupId"`
-	TotalInitialMargin          float64                  `json:"totalInitialMargin,string"`
-	TotalMaintMargin            float64                  `json:"totalMaintMargin,string"`
-	TotalWalletBalance          float64                  `json:"totalWalletBalance,string"`
-	TotalUnrealizedProfit       float64                  `json:"totalUnrealizedProfit,string"`
-	TotalMarginBalance          float64                  `json:"totalMarginBalance,string"`
-	TotalPositionInitialMargin  float64                  `json:"totalPositionInitialMargin,string"`
-	TotalOpenOrderInitialMargin float64                  `json:"totalOpenOrderInitialMargin,string"`
-	TotalCrossWalletBalance     float64                  `json:"totalCrossWalletBalance,string"`
-	TotalCrossUnPnl             float64                  `json:"totalCrossUnPnl,string"`
-	AvailableBalance            float64                  `json:"availableBalance,string"`
-	MaxWithdrawAmount           float64                  `json:"maxWithdrawAmount,string"`
-	Assets                      []FuturesAccountAsset    `json:"assets"`
-	Positions                   []FuturesAccountPosition `json:"positions"`
+	FeeTier                     float64                  `json:"feeTier" bson:"feeTier"`
+	CanTrade                    bool                     `json:"canTrade" bson:"canTrade"`
+	CanDeposit                  bool                     `json:"canDeposit" bson:"canDeposit"`
+	CanWithdraw                 bool                     `json:"canWithdraw" bson:"canWithdraw"`
+	UpdateTime                  int64                    `json:"updateTime" bson:"updateTime"`
+	MultiAssetsMargin           bool                     `json:"multiAssetsMargin" bson:"multiAssetsMargin"`
+	TradeGroupId                int64                    `json:"tradeGroupId" bson:"tradeGroupId"`
+	TotalInitialMargin          float64                  `json:"totalInitialMargin,string" bson:"totalInitialMargin,string"`
+	TotalMaintMargin            float64                  `json:"totalMaintMargin,string" bson:"totalMaintMargin,string"`
+	TotalWalletBalance          float64                  `json:"totalWalletBalance,string" bson:"totalWalletBalance,string"`
+	TotalUnrealizedProfit       float64                  `json:"totalUnrealizedProfit,string" bson:"totalUnrealizedProfit,string"`
+	TotalMarginBalance          float64                  `json:"totalMarginBalance,string" bson:"totalMarginBalance,string"`
+	TotalPositionInitialMargin  float64                  `json:"totalPositionInitialMargin,string" bson:"totalPositionInitialMargin,string"`
+	TotalOpenOrderInitialMargin float64                  `json:"totalOpenOrderInitialMargin,string" bson:"totalOpenOrderInitialMargin,string"`
+	TotalCrossWalletBalance     float64                  `json:"totalCrossWalletBalance,string" bson:"totalCrossWalletBalance,string"`
+	TotalCrossUnPnl             float64                  `json:"totalCrossUnPnl,string" bson:"totalCrossUnPnl,string"`
+	AvailableBalance            float64                  `json:"availableBalance,string" bson:"availableBalance,string"`
+	MaxWithdrawAmount           float64                  `json:"maxWithdrawAmount,string" bson:"maxWithdrawAmount,string"`
+	Assets                      []FuturesAccountAsset    `json:"assets" bson:"assets"`
+	Positions                   []FuturesAccountPosition `json:"positions" bson:"positions"`
 }
 
 var FuturesAccountConfig = cex.ReqConfig[cex.NilReqData, FuturesAccount]{
@@ -550,9 +550,9 @@ type FuturesChangeInitialLeverageParams struct {
 }
 
 type FuturesChangeInitialLeverageResponse struct {
-	Symbol           string  `json:"symbol"`
-	Leverage         int     `json:"leverage"`
-	MaxNotionalValue float64 `json:"maxNotionalValue,string"`
+	Symbol           string  `json:"symbol" bson:"symbol"`
+	Leverage         int     `json:"leverage" bson:"leverage"`
+	MaxNotionalValue float64 `json:"maxNotionalValue,string" bson:"maxNotionalValue,string"`
 }
 
 var FuturesChangeInitialLeverageConfig = cex.ReqConfig[FuturesChangeInitialLeverageParams, FuturesChangeInitialLeverageResponse]{
@@ -594,10 +594,10 @@ type FuturesModifyIsolatedPositionMarginParams struct {
 }
 
 type FuturesModifyIsolatedPositionMarginResponse struct {
-	Amount float64                 `json:"amount"`
-	Code   int                     `json:"code"`
-	Msg    string                  `json:"msg"`
-	Type   FuturesModifyMarginType `json:"type"`
+	Amount float64                 `json:"amount" bson:"amount"`
+	Code   int                     `json:"code" bson:"code"`
+	Msg    string                  `json:"msg" bson:"msg"`
+	Type   FuturesModifyMarginType `json:"type" bson:"type"`
 }
 
 var FuturesModifyIsolatedPositionMarginConfig = cex.ReqConfig[FuturesModifyIsolatedPositionMarginParams, FuturesModifyIsolatedPositionMarginResponse]{
@@ -622,13 +622,13 @@ type FuturesPositionMarginChangeHistoriesParams struct {
 }
 
 type FuturesPositionMarginChangeHistory struct {
-	Symbol       string                  `json:"symbol"`
-	Type         FuturesModifyMarginType `json:"type"`
-	DeltaType    FuturesMarginDeltaType  `json:"deltaType"`
-	Amount       float64                 `json:"amount,string"`
-	Asset        string                  `json:"asset"`
-	Time         int64                   `json:"time"`
-	PositionSide FuturesPositionSide     `json:"positionSide"`
+	Symbol       string                  `json:"symbol" bson:"symbol"`
+	Type         FuturesModifyMarginType `json:"type" bson:"type"`
+	DeltaType    FuturesMarginDeltaType  `json:"deltaType" bson:"deltaType"`
+	Amount       float64                 `json:"amount,string" bson:"amount,string"`
+	Asset        string                  `json:"asset" bson:"asset"`
+	Time         int64                   `json:"time" bson:"time"`
+	PositionSide FuturesPositionSide     `json:"positionSide" bson:"positionSide"`
 }
 
 var FuturesPositionMarginChangeHistoriesConfig = cex.ReqConfig[FuturesPositionMarginChangeHistoriesParams, []FuturesPositionMarginChangeHistory]{
@@ -649,22 +649,22 @@ type FuturesPositionsParams struct {
 }
 
 type FuturesPosition struct {
-	Symbol           string                     `json:"symbol"`
-	PositionSide     string                     `json:"positionSide"`
-	EntryPrice       float64                    `json:"entryPrice,string"`
-	BreakEvenPrice   float64                    `json:"breakEvenPrice,string"`
-	MarginType       FuturesMarginLowerCaseType `json:"marginType"`
-	IsAutoAddMargin  SmallBool                  `json:"isAutoAddMargin"`
-	IsolatedMargin   float64                    `json:"isolatedMargin,string"`
-	Leverage         float64                    `json:"leverage,string"`
-	LiquidationPrice float64                    `json:"liquidationPrice,string"`
-	MarkPrice        float64                    `json:"markPrice,string"`
-	MaxNotionalValue float64                    `json:"maxNotionalValue,string"`
-	SignPositionAmt  float64                    `json:"positionAmt,string"` // long: > 0, short: < 0
-	Notional         float64                    `json:"notional,string"`
-	IsolatedWallet   float64                    `json:"isolatedWallet,string"`
-	UnRealizedProfit float64                    `json:"unRealizedProfit,string"`
-	UpdateTime       int                        `json:"updateTime"`
+	Symbol           string                     `json:"symbol" bson:"symbol"`
+	PositionSide     string                     `json:"positionSide" bson:"positionSide"`
+	EntryPrice       float64                    `json:"entryPrice,string" bson:"entryPrice,string"`
+	BreakEvenPrice   float64                    `json:"breakEvenPrice,string" bson:"breakEvenPrice,string"`
+	MarginType       FuturesMarginLowerCaseType `json:"marginType" bson:"marginType"`
+	IsAutoAddMargin  SmallBool                  `json:"isAutoAddMargin" bson:"isAutoAddMargin"`
+	IsolatedMargin   float64                    `json:"isolatedMargin,string" bson:"isolatedMargin,string"`
+	Leverage         float64                    `json:"leverage,string" bson:"leverage,string"`
+	LiquidationPrice float64                    `json:"liquidationPrice,string" bson:"liquidationPrice,string"`
+	MarkPrice        float64                    `json:"markPrice,string" bson:"markPrice,string"`
+	MaxNotionalValue float64                    `json:"maxNotionalValue,string" bson:"maxNotionalValue,string"`
+	SignPositionAmt  float64                    `json:"positionAmt,string" bson:"positionAmt,string"` // long: > 0, short: < 0
+	Notional         float64                    `json:"notional,string" bson:"notional,string"`
+	IsolatedWallet   float64                    `json:"isolatedWallet,string" bson:"isolatedWallet,string"`
+	UnRealizedProfit float64                    `json:"unRealizedProfit,string" bson:"unRealizedProfit,string"`
+	UpdateTime       int                        `json:"updateTime" bson:"updateTime"`
 }
 
 func (p FuturesPosition) AbsPositionAmt() float64 {
@@ -694,20 +694,20 @@ type FuturesAccountTradeListParams struct {
 }
 
 type FuturesTradeHistory struct {
-	Id              int64               `json:"id"`
-	OrderId         int64               `json:"orderId"`
-	Symbol          string              `json:"symbol"`
-	Buyer           bool                `json:"buyer"`
-	Maker           bool                `json:"maker"`
-	PositionSide    FuturesPositionSide `json:"positionSide"`
-	Side            OrderSide           `json:"side"`
-	Qty             float64             `json:"qty,string"`
-	Price           float64             `json:"price,string"`
-	QuoteQty        float64             `json:"quoteQty,string"`
-	RealizedPnl     float64             `json:"realizedPnl,string"`
-	Commission      float64             `json:"commission,string"`
-	CommissionAsset string              `json:"commissionAsset"`
-	Time            int64               `json:"time"`
+	Id              int64               `json:"id" bson:"id"`
+	OrderId         int64               `json:"orderId" bson:"orderId"`
+	Symbol          string              `json:"symbol" bson:"symbol"`
+	Buyer           bool                `json:"buyer" bson:"buyer"`
+	Maker           bool                `json:"maker" bson:"maker"`
+	PositionSide    FuturesPositionSide `json:"positionSide" bson:"positionSide"`
+	Side            OrderSide           `json:"side" bson:"side"`
+	Qty             float64             `json:"qty,string" bson:"qty,string"`
+	Price           float64             `json:"price,string" bson:"price,string"`
+	QuoteQty        float64             `json:"quoteQty,string" bson:"quoteQty,string"`
+	RealizedPnl     float64             `json:"realizedPnl,string" bson:"realizedPnl,string"`
+	Commission      float64             `json:"commission,string" bson:"commission,string"`
+	CommissionAsset string              `json:"commissionAsset" bson:"commissionAsset"`
+	Time            int64               `json:"time" bson:"time"`
 }
 
 var FuturesAccountTradeListConfig = cex.ReqConfig[FuturesAccountTradeListParams, []FuturesTradeHistory]{
@@ -733,14 +733,14 @@ type FuturesIncomeHistoriesParams struct {
 }
 
 type FuturesIncome struct {
-	Symbol     string            `json:"symbol"`
-	IncomeType FuturesIncomeType `json:"incomeType"`
-	Income     float64           `json:"income,string"`
-	Asset      string            `json:"asset"`
-	Info       string            `json:"info"`
-	Time       int64             `json:"time"`
-	TranId     int64             `json:"tranId"`
-	TradeId    string            `json:"tradeId"`
+	Symbol     string            `json:"symbol" bson:"symbol"`
+	IncomeType FuturesIncomeType `json:"incomeType" bson:"incomeType"`
+	Income     float64           `json:"income,string" bson:"income,string"`
+	Asset      string            `json:"asset" bson:"asset"`
+	Info       string            `json:"info" bson:"info"`
+	Time       int64             `json:"time" bson:"time"`
+	TranId     int64             `json:"tranId" bson:"tranId"`
+	TradeId    string            `json:"tradeId" bson:"tradeId"`
 }
 
 var FuturesIncomeHistoriesConfig = cex.ReqConfig[FuturesIncomeHistoriesParams, []FuturesIncome]{
@@ -761,9 +761,9 @@ type FuturesCommissionRateParams struct {
 }
 
 type FuturesCommissionRate struct {
-	Symbol              string  `json:"symbol"`
-	MakerCommissionRate float64 `json:"makerCommissionRate,string"`
-	TakerCommissionRate float64 `json:"takerCommissionRate,string"`
+	Symbol              string  `json:"symbol" bson:"symbol"`
+	MakerCommissionRate float64 `json:"makerCommissionRate,string" bson:"makerCommissionRate,string"`
+	TakerCommissionRate float64 `json:"takerCommissionRate,string" bson:"takerCommissionRate,string"`
 }
 
 var FuturesCommissionRateConfig = cex.ReqConfig[FuturesCommissionRateParams, FuturesCommissionRate]{

@@ -12,16 +12,16 @@ type OrderBookParams struct {
 }
 
 type RawOrderBook struct {
-	LastUpdateId int64      `json:"lastUpdateId"`
-	Asks         [][]string `json:"asks"`
-	Bids         [][]string `json:"bids"`
+	LastUpdateId int64      `json:"lastUpdateId" bson:"lastUpdateId"`
+	Asks         [][]string `json:"asks" bson:"asks"`
+	Bids         [][]string `json:"bids" bson:"bids"`
 
 	// futures order book fields
-	E int64 `json:"e"` // Message output time
-	T int64 `json:"t"` // Transaction time
+	E int64 `json:"e" bson:"e"` // Message output time
+	T int64 `json:"t" bson:"t"` // Transaction time
 
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
+	Code int    `json:"code" bson:"code"`
+	Msg  string `json:"msg" bson:"msg"`
 }
 
 type OrderBook struct {
@@ -30,8 +30,8 @@ type OrderBook struct {
 	Bids         [][]float64
 
 	// futures order book fields
-	E int64 `json:"e"` // Message output time
-	T int64 `json:"t"` // Transaction time
+	E int64 `json:"e" bson:"e"` // Message output time
+	T int64 `json:"t" bson:"t"` // Transaction time
 }
 
 var SpotOrderBookConfig = cex.ReqConfig[OrderBookParams, OrderBook]{
@@ -61,62 +61,62 @@ var FuturesOrderBookConfig = cex.ReqConfig[OrderBookParams, OrderBook]{
 }
 
 type ExchangeRateLimit struct {
-	RateLimitType string `json:"rateLimitType"` // ORDERS REQUEST_WEIGHT
-	Interval      string `json:"interval"`      // SECOND MINUTE
-	IntervalNum   int    `json:"intervalNum"`
-	Limit         int    `json:"limit"`
+	RateLimitType string `json:"rateLimitType" bson:"rateLimitType"` // ORDERS REQUEST_WEIGHT
+	Interval      string `json:"interval" bson:"interval"`           // SECOND MINUTE
+	IntervalNum   int    `json:"intervalNum" bson:"intervalNum"`
+	Limit         int    `json:"limit" bson:"limit"`
 	// just for spot
-	Count int `json:"count"`
+	Count int `json:"count" bson:"count"`
 }
 
 type Exchange struct {
-	Symbol                          string           `json:"symbol"`
-	Status                          ExchangeStatus   `json:"status"`
-	BaseAsset                       string           `json:"baseAsset"`
-	BaseAssetPrecision              int64            `json:"baseAssetPrecision"`
-	QuoteAsset                      string           `json:"quoteAsset"`
-	QuotePrecision                  int64            `json:"quotePrecision"`
-	QuoteAssetPrecision             int64            `json:"quoteAssetPrecision"`
-	OrderTypes                      []OrderType      `json:"orderTypes"`
-	IcebergAllowed                  bool             `json:"icebergAllowed"`
-	OcoAllowed                      bool             `json:"ocoAllowed"`
-	QuoteOrderQtyMarketAllowed      bool             `json:"quoteOrderQtyMarketAllowed"`
-	AllowTrailingStop               bool             `json:"allowTrailingStop"`
-	CancelReplaceAllowed            bool             `json:"cancelReplaceAllowed"`
-	IsSpotTradingAllowed            bool             `json:"isSpotTradingAllowed"`
-	IsMarginTradingAllowed          bool             `json:"isMarginTradingAllowed"`
-	Filters                         []map[string]any `json:"filters"`
-	Permissions                     []PairType       `json:"permissions"`
-	DefaultSelfTradePreventionMode  string           `json:"defaultSelfTradePreventionMode"`
-	AllowedSelfTradePreventionModes []string         `json:"allowedSelfTradePreventionModes"`
+	Symbol                          string           `json:"symbol" bson:"symbol"`
+	Status                          ExchangeStatus   `json:"status" bson:"status"`
+	BaseAsset                       string           `json:"baseAsset" bson:"baseAsset"`
+	BaseAssetPrecision              int64            `json:"baseAssetPrecision" bson:"baseAssetPrecision"`
+	QuoteAsset                      string           `json:"quoteAsset" bson:"quoteAsset"`
+	QuotePrecision                  int64            `json:"quotePrecision" bson:"quotePrecision"`
+	QuoteAssetPrecision             int64            `json:"quoteAssetPrecision" bson:"quoteAssetPrecision"`
+	OrderTypes                      []OrderType      `json:"orderTypes" bson:"orderTypes"`
+	IcebergAllowed                  bool             `json:"icebergAllowed" bson:"icebergAllowed"`
+	OcoAllowed                      bool             `json:"ocoAllowed" bson:"ocoAllowed"`
+	QuoteOrderQtyMarketAllowed      bool             `json:"quoteOrderQtyMarketAllowed" bson:"quoteOrderQtyMarketAllowed"`
+	AllowTrailingStop               bool             `json:"allowTrailingStop" bson:"allowTrailingStop"`
+	CancelReplaceAllowed            bool             `json:"cancelReplaceAllowed" bson:"cancelReplaceAllowed"`
+	IsSpotTradingAllowed            bool             `json:"isSpotTradingAllowed" bson:"isSpotTradingAllowed"`
+	IsMarginTradingAllowed          bool             `json:"isMarginTradingAllowed" bson:"isMarginTradingAllowed"`
+	Filters                         []map[string]any `json:"filters" bson:"filters"`
+	Permissions                     []PairType       `json:"permissions" bson:"permissions"`
+	DefaultSelfTradePreventionMode  string           `json:"defaultSelfTradePreventionMode" bson:"defaultSelfTradePreventionMode"`
+	AllowedSelfTradePreventionModes []string         `json:"allowedSelfTradePreventionModes" bson:"allowedSelfTradePreventionModes"`
 
 	// just for future pair
-	Pair              string   `json:"pair"`
-	ContractType      string   `json:"contractType"`
-	DeliveryData      int64    `json:"deliveryData"`
-	OnboardDate       int64    `json:"onboardDate"`
-	MarginAsset       string   `json:"marginAsset"`
-	UnderlyingType    string   `json:"underlyingType"`
-	UnderlyingSubType []string `json:"underlyingSubType"`
-	SettlePlan        int      `json:"settlePlan"`
+	Pair              string   `json:"pair" bson:"pair"`
+	ContractType      string   `json:"contractType" bson:"contractType"`
+	DeliveryData      int64    `json:"deliveryData" bson:"deliveryData"`
+	OnboardDate       int64    `json:"onboardDate" bson:"onboardDate"`
+	MarginAsset       string   `json:"marginAsset" bson:"marginAsset"`
+	UnderlyingType    string   `json:"underlyingType" bson:"underlyingType"`
+	UnderlyingSubType []string `json:"underlyingSubType" bson:"underlyingSubType"`
+	SettlePlan        int      `json:"settlePlan" bson:"settlePlan"`
 }
 
 type FuturesExchangeInfoAsset struct {
-	Asset           string `json:"asset"`
-	MarginAvailable bool   `json:"marginAvailable"` // whether the asset can be used as margin in Multi-Assets mode
+	Asset           string `json:"asset" bson:"asset"`
+	MarginAvailable bool   `json:"marginAvailable" bson:"marginAvailable"` // whether the asset can be used as margin in Multi-Assets mode
 	// binance doc show that AutoAssetExchange can be int or null...
-	AutoAssetExchange any `json:"autoAssetExchange"` // auto-exchange threshold in Multi-Assets margin mode
+	AutoAssetExchange any `json:"autoAssetExchange" bson:"autoAssetExchange"` // auto-exchange threshold in Multi-Assets margin mode
 }
 
 type ExchangeInfo struct {
-	Timezone        string              `json:"timezone"`
-	ServerTime      int64               `json:"serverTime"`
-	RateLimits      []ExchangeRateLimit `json:"rateLimits"`
-	ExchangeFilters []map[string]string `json:"exchangeFilters"`
-	Symbols         []Exchange          `json:"symbols"`
+	Timezone        string              `json:"timezone" bson:"timezone"`
+	ServerTime      int64               `json:"serverTime" bson:"serverTime"`
+	RateLimits      []ExchangeRateLimit `json:"rateLimits" bson:"rateLimits"`
+	ExchangeFilters []map[string]string `json:"exchangeFilters" bson:"exchangeFilters"`
+	Symbols         []Exchange          `json:"symbols" bson:"symbols"`
 
 	// just for futures
-	Assets []FuturesExchangeInfoAsset `json:"assets"`
+	Assets []FuturesExchangeInfoAsset `json:"assets" bson:"assets"`
 }
 
 var SpotExchangeInfosConfig = cex.ReqConfig[cex.NilReqData, ExchangeInfo]{
@@ -155,10 +155,10 @@ type FuturesFundingRateHistoriesParams struct {
 }
 
 type FuturesFundingRateHistory struct {
-	Symbol      string  `json:"symbol"`
-	FundingTime int64   `json:"fundingTime"`
-	FundingRate float64 `json:"fundingRate,string"`
-	MarkPrice   string  `json:"markPrice"` // mark price maybe empty string
+	Symbol      string  `json:"symbol" bson:"symbol"`
+	FundingTime int64   `json:"fundingTime" bson:"fundingTime"`
+	FundingRate float64 `json:"fundingRate,string" bson:"fundingRate,string"`
+	MarkPrice   string  `json:"markPrice" bson:"markPrice"` // mark price maybe empty string
 }
 
 var FuturesFundingRateHistoriesConfig = cex.ReqConfig[FuturesFundingRateHistoriesParams, []FuturesFundingRateHistory]{
@@ -175,11 +175,11 @@ var FuturesFundingRateHistoriesConfig = cex.ReqConfig[FuturesFundingRateHistorie
 }
 
 type FuturesFundingRateInfo struct {
-	Symbol                   string  `json:"symbol"`
-	AdjustedFundingRateCap   float64 `json:"adjustedFundingRateCap,string"`
-	AdjustedFundingRateFloor float64 `json:"adjustedFundingRateFloor,string"`
-	FundingIntervalHours     float64 `json:"fundingIntervalHours"`
-	Disclaimer               bool    `json:"disclaimer"` // ignore
+	Symbol                   string  `json:"symbol" bson:"symbol"`
+	AdjustedFundingRateCap   float64 `json:"adjustedFundingRateCap,string" bson:"adjustedFundingRateCap,string"`
+	AdjustedFundingRateFloor float64 `json:"adjustedFundingRateFloor,string" bson:"adjustedFundingRateFloor,string"`
+	FundingIntervalHours     float64 `json:"fundingIntervalHours" bson:"fundingIntervalHours"`
+	Disclaimer               bool    `json:"disclaimer" bson:"disclaimer"` // ignore
 }
 
 // FuturesFundingRateInfosConfig
@@ -203,14 +203,14 @@ type FuturesFundingRatesParams struct {
 }
 
 type FuturesFundingRate struct {
-	Symbol               string  `json:"symbol"`
-	MarkPrice            float64 `json:"markPrice,string"`
-	IndexPrice           float64 `json:"indexPrice,string"`
-	EstimatedSettlePrice float64 `json:"estimatedSettlePrice,string"`
-	LastFundingRate      float64 `json:"lastFundingRate,string"` // This is the Latest funding rate
-	NextFundingTime      int64   `json:"nextFundingTime"`
-	InterestRate         float64 `json:"interestRate,string"`
-	Time                 int64   `json:"time"`
+	Symbol               string  `json:"symbol" bson:"symbol"`
+	MarkPrice            float64 `json:"markPrice,string" bson:"markPrice,string"`
+	IndexPrice           float64 `json:"indexPrice,string" bson:"indexPrice,string"`
+	EstimatedSettlePrice float64 `json:"estimatedSettlePrice,string" bson:"estimatedSettlePrice,string"`
+	LastFundingRate      float64 `json:"lastFundingRate,string" bson:"lastFundingRate,string"` // This is the Latest funding rate
+	NextFundingTime      int64   `json:"nextFundingTime" bson:"nextFundingTime"`
+	InterestRate         float64 `json:"interestRate,string" bson:"interestRate,string"`
+	Time                 int64   `json:"time" bson:"time"`
 }
 
 var FuturesFundingRatesConfig = cex.ReqConfig[FuturesFundingRatesParams, []FuturesFundingRate]{

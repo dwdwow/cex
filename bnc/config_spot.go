@@ -7,40 +7,40 @@ import (
 )
 
 type CoinNetworkInfo struct {
-	AddressRegex            string `json:"addressRegex"`
-	Coin                    string `json:"coin"`
-	DepositDesc             string `json:"depositDesc"`
-	DepositEnable           bool   `json:"depositEnable"`
-	IsDefault               bool   `json:"isDefault"`
-	MemoRegex               string `json:"memoRegex"`
-	MinConfirm              int    `json:"minConfirm"`
-	Name                    string `json:"name"`
-	Network                 string `json:"network"`
-	ResetAddressStatus      bool   `json:"resetAddressStatus"`
-	SpecialTips             string `json:"specialTips"`
-	UnLockConfirm           int    `json:"unLockConfirm"`
-	WithdrawDesc            string `json:"withdrawDesc"`
-	WithdrawEnable          bool   `json:"withdrawEnable"`
-	WithdrawFee             string `json:"withdrawFee"`
-	WithdrawIntegerMultiple string `json:"withdrawIntegerMultiple"`
-	WithdrawMax             string `json:"withdrawMax"`
-	WithdrawMin             string `json:"withdrawMin"`
-	SameAddress             bool   `json:"sameAddress"`
-	EstimatedArrivalTime    int    `json:"estimatedArrivalTime"`
-	Busy                    bool   `json:"busy"`
+	AddressRegex            string `json:"addressRegex" bson:"addressRegex"`
+	Coin                    string `json:"coin" bson:"coin"`
+	DepositDesc             string `json:"depositDesc" bson:"depositDesc"`
+	DepositEnable           bool   `json:"depositEnable" bson:"depositEnable"`
+	IsDefault               bool   `json:"isDefault" bson:"isDefault"`
+	MemoRegex               string `json:"memoRegex" bson:"memoRegex"`
+	MinConfirm              int    `json:"minConfirm" bson:"minConfirm"`
+	Name                    string `json:"name" bson:"name"`
+	Network                 string `json:"network" bson:"network"`
+	ResetAddressStatus      bool   `json:"resetAddressStatus" bson:"resetAddressStatus"`
+	SpecialTips             string `json:"specialTips" bson:"specialTips"`
+	UnLockConfirm           int    `json:"unLockConfirm" bson:"unLockConfirm"`
+	WithdrawDesc            string `json:"withdrawDesc" bson:"withdrawDesc"`
+	WithdrawEnable          bool   `json:"withdrawEnable" bson:"withdrawEnable"`
+	WithdrawFee             string `json:"withdrawFee" bson:"withdrawFee"`
+	WithdrawIntegerMultiple string `json:"withdrawIntegerMultiple" bson:"withdrawIntegerMultiple"`
+	WithdrawMax             string `json:"withdrawMax" bson:"withdrawMax"`
+	WithdrawMin             string `json:"withdrawMin" bson:"withdrawMin"`
+	SameAddress             bool   `json:"sameAddress" bson:"sameAddress"`
+	EstimatedArrivalTime    int    `json:"estimatedArrivalTime" bson:"estimatedArrivalTime"`
+	Busy                    bool   `json:"busy" bson:"busy"`
 }
 
 type Coin struct {
-	Coin             string            `json:"coin"`
-	DepositAllEnable bool              `json:"depositAllEnable"`
-	Free             float64           `json:"free,string"`
-	Freeze           float64           `json:"freeze,string"`
-	Ipoable          float64           `json:"ipoable,string"`
-	Ipoing           float64           `json:"ipoing,string"`
-	IsLegalMoney     bool              `json:"isLegalMoney"`
-	Locked           float64           `json:"locked,string"`
-	Name             string            `json:"name"`
-	NetworkList      []CoinNetworkInfo `json:"networkList"`
+	Coin             string            `json:"coin" bson:"coin"`
+	DepositAllEnable bool              `json:"depositAllEnable" bson:"depositAllEnable"`
+	Free             float64           `json:"free,string" bson:"free,string"`
+	Freeze           float64           `json:"freeze,string" bson:"freeze,string"`
+	Ipoable          float64           `json:"ipoable,string" bson:"ipoable,string"`
+	Ipoing           float64           `json:"ipoing,string" bson:"ipoing,string"`
+	IsLegalMoney     bool              `json:"isLegalMoney" bson:"isLegalMoney"`
+	Locked           float64           `json:"locked,string" bson:"locked,string"`
+	Name             string            `json:"name" bson:"name"`
+	NetworkList      []CoinNetworkInfo `json:"networkList" bson:"networkList"`
 }
 
 var CoinInfoConfig = cex.ReqConfig[cex.NilReqData, []Coin]{
@@ -57,9 +57,9 @@ var CoinInfoConfig = cex.ReqConfig[cex.NilReqData, []Coin]{
 }
 
 type SpotBalance struct {
-	Asset  string  `json:"asset"`
-	Free   float64 `json:"free,string"`
-	Locked float64 `json:"locked,string"`
+	Asset  string  `json:"asset" bson:"asset"`
+	Free   float64 `json:"free,string" bson:"free,string"`
+	Locked float64 `json:"locked,string" bson:"locked,string"`
 }
 
 type SpotAccount struct {
@@ -68,11 +68,11 @@ type SpotAccount struct {
 	BuyerCommission  float64 `json:"buyerCommission" bson:"buyerCommission"`
 	SellerCommission float64 `json:"sellerCommission" bson:"sellerCommission"`
 	CommissionRates  struct {
-		Maker  float64 `json:"maker,string" bson:"maker"`
-		Taker  float64 `json:"taker,string" bson:"taker"`
-		Buyer  float64 `json:"buyer,string" bson:"buyer"`
-		Seller float64 `json:"seller,string" bson:"seller"`
-	} `json:"commissionRates" bson:"commissionRates"`
+		Maker  float64 `json:"maker,string" bson:"maker,string"`
+		Taker  float64 `json:"taker,string" bson:"taker,string"`
+		Buyer  float64 `json:"buyer,string" bson:"buyer,string"`
+		Seller float64 `json:"seller,string" bson:"seller,string"`
+	} `json:"commissionRates" bson:"commissionRates" bson:"commissionRates"`
 	CanTrade                   bool          `json:"canTrade" bson:"canTrade"`
 	CanWithdraw                bool          `json:"canWithdraw" bson:"canWithdraw"`
 	CanDeposit                 bool          `json:"canDeposit" bson:"canDeposit"`
@@ -106,7 +106,7 @@ type UniversalTransferParams struct {
 }
 
 type UniversalTransferResp struct {
-	TranId int64 `json:"tranId,omitempty"`
+	TranId int64 `json:"tranId,omitempty" bson:"tranId,omitempty"`
 }
 
 var UniversalTransferConfig = cex.ReqConfig[UniversalTransferParams, UniversalTransferResp]{
@@ -133,18 +133,18 @@ type SimpleEarnFlexibleProductListParams struct {
 }
 
 type SimpleEarnFlexibleProduct struct {
-	Asset                      string            `json:"asset"`
-	LatestAnnualPercentageRate float64           `json:"latestAnnualPercentageRate,string"`
-	TierAnnualPercentageRate   map[string]string `json:"tierAnnualPercentageRate"`
-	AirDropPercentageRate      float64           `json:"airDropPercentageRate,string"`
-	CanPurchase                bool              `json:"canPurchase"`
-	CanRedeem                  bool              `json:"canRedeem"`
-	IsSoldOut                  bool              `json:"isSoldOut"`
-	Hot                        bool              `json:"hot"`
-	MinPurchaseAmount          float64           `json:"minPurchaseAmount,string"`
-	ProductId                  string            `json:"productId"`
-	SubscriptionStartTime      int64             `json:"subscriptionStartTime"`
-	Status                     string            `json:"status"`
+	Asset                      string            `json:"asset" bson:"asset"`
+	LatestAnnualPercentageRate float64           `json:"latestAnnualPercentageRate,string" bson:"latestAnnualPercentageRate,string"`
+	TierAnnualPercentageRate   map[string]string `json:"tierAnnualPercentageRate" bson:"tierAnnualPercentageRate"`
+	AirDropPercentageRate      float64           `json:"airDropPercentageRate,string" bson:"airDropPercentageRate,string"`
+	CanPurchase                bool              `json:"canPurchase" bson:"canPurchase"`
+	CanRedeem                  bool              `json:"canRedeem" bson:"canRedeem"`
+	IsSoldOut                  bool              `json:"isSoldOut" bson:"isSoldOut"`
+	Hot                        bool              `json:"hot" bson:"hot"`
+	MinPurchaseAmount          float64           `json:"minPurchaseAmount,string" bson:"minPurchaseAmount,string"`
+	ProductId                  string            `json:"productId" bson:"productId"`
+	SubscriptionStartTime      int64             `json:"subscriptionStartTime" bson:"subscriptionStartTime"`
+	Status                     string            `json:"status" bson:"status"`
 }
 
 var SimpleEarnFlexibleProductConfig = cex.ReqConfig[SimpleEarnFlexibleProductListParams, Page[[]SimpleEarnFlexibleProduct]]{
@@ -168,8 +168,8 @@ type SimpleEarnFlexibleRedeemParams struct {
 }
 
 type SimpleEarnFlexibleRedeemResponse struct {
-	RedeemId int64 `json:"redeemId,omitempty"`
-	Success  bool  `json:"success,omitempty"`
+	RedeemId int64 `json:"redeemId,omitempty" bson:"redeemId,omitempty"`
+	Success  bool  `json:"success,omitempty" bson:"success,omitempty"`
 }
 
 var SimpleEarnFlexibleRedeemConfig = cex.ReqConfig[SimpleEarnFlexibleRedeemParams, SimpleEarnFlexibleRedeemResponse]{
@@ -193,20 +193,20 @@ type SimpleEarnFlexiblePositionsParams struct {
 }
 
 type SimpleEarnFlexiblePosition struct {
-	TotalAmount                    float64           `json:"totalAmount,string"`
-	TierAnnualPercentageRate       map[string]string `json:"tierAnnualPercentageRate"`
-	LatestAnnualPercentageRate     float64           `json:"latestAnnualPercentageRate,string"`
-	YesterdayAirdropPercentageRate float64           `json:"yesterdayAirdropPercentageRate,string"`
-	Asset                          string            `json:"asset"`        // raw symbol, is not with prefix, LD
-	AirDropAsset                   string            `json:"airDropAsset"` // do not know meanings of this
-	CanRedeem                      bool              `json:"canRedeem"`
-	CollateralAmount               float64           `json:"collateralAmount,string"` // is the amount of crypto loans
-	ProductId                      string            `json:"productId"`
-	YesterdayRealTimeRewards       float64           `json:"yesterdayRealTimeRewards,string"`
-	CumulativeBonusRewards         float64           `json:"cumulativeBonusRewards,string"`
-	CumulativeRealTimeRewards      float64           `json:"cumulativeRealTimeRewards,string"`
-	CumulativeTotalRewards         float64           `json:"cumulativeTotalRewards,string"`
-	AutoSubscribe                  bool              `json:"autoSubscribe"`
+	TotalAmount                    float64           `json:"totalAmount,string" bson:"totalAmount,string"`
+	TierAnnualPercentageRate       map[string]string `json:"tierAnnualPercentageRate" bson:"tierAnnualPercentageRate"`
+	LatestAnnualPercentageRate     float64           `json:"latestAnnualPercentageRate,string" bson:"latestAnnualPercentageRate,string"`
+	YesterdayAirdropPercentageRate float64           `json:"yesterdayAirdropPercentageRate,string" bson:"yesterdayAirdropPercentageRate,string"`
+	Asset                          string            `json:"asset" bson:"asset"`               // raw symbol, is not with prefix, LD
+	AirDropAsset                   string            `json:"airDropAsset" bson:"airDropAsset"` // do not know meanings of this
+	CanRedeem                      bool              `json:"canRedeem" bson:"canRedeem"`
+	CollateralAmount               float64           `json:"collateralAmount,string" bson:"collateralAmount,string"` // is the amount of crypto loans
+	ProductId                      string            `json:"productId" bson:"productId"`
+	YesterdayRealTimeRewards       float64           `json:"yesterdayRealTimeRewards,string" bson:"yesterdayRealTimeRewards,string"`
+	CumulativeBonusRewards         float64           `json:"cumulativeBonusRewards,string" bson:"cumulativeBonusRewards,string"`
+	CumulativeRealTimeRewards      float64           `json:"cumulativeRealTimeRewards,string" bson:"cumulativeRealTimeRewards,string"`
+	CumulativeTotalRewards         float64           `json:"cumulativeTotalRewards,string" bson:"cumulativeTotalRewards,string"`
+	AutoSubscribe                  bool              `json:"autoSubscribe" bson:"autoSubscribe"`
 }
 
 var SimpleEarnFlexiblePositionsConfig = cex.ReqConfig[SimpleEarnFlexiblePositionsParams, Page[[]SimpleEarnFlexiblePosition]]{
@@ -239,11 +239,11 @@ type CryptoLoansIncomeHistoriesParams struct {
 }
 
 type CryptoLoanIncomeHistory struct {
-	Asset     string               `json:"asset"`
-	Type      CryptoLoanIncomeType `json:"type"`
-	Amount    float64              `json:"amount,string"`
-	Timestamp int64                `json:"timestamp"`
-	TranId    string               `json:"tranId"`
+	Asset     string               `json:"asset" bson:"asset"`
+	Type      CryptoLoanIncomeType `json:"type" bson:"type"`
+	Amount    float64              `json:"amount,string" bson:"amount,string"`
+	Timestamp int64                `json:"timestamp" bson:"timestamp"`
+	TranId    string               `json:"tranId" bson:"tranId"`
 }
 
 var CryptoLoansIncomeHistoriesConfig = cex.ReqConfig[CryptoLoansIncomeHistoriesParams, []CryptoLoanIncomeHistory]{
@@ -267,11 +267,11 @@ type CryptoLoanFlexibleBorrowParams struct {
 }
 
 type CryptoLoanFlexibleBorrowResult struct {
-	LoanCoin         string                         `json:"loanCoin"`
-	LoanAmount       float64                        `json:"loanAmount,string"`
-	CollateralCoin   string                         `json:"collateralCoin"`
-	CollateralAmount float64                        `json:"collateralAmount,string"`
-	Status           CryptoLoanFlexibleBorrowStatus `json:"status"`
+	LoanCoin         string                         `json:"loanCoin" bson:"loanCoin"`
+	LoanAmount       float64                        `json:"loanAmount,string" bson:"loanAmount,string"`
+	CollateralCoin   string                         `json:"collateralCoin" bson:"collateralCoin"`
+	CollateralAmount float64                        `json:"collateralAmount,string" bson:"collateralAmount,string"`
+	Status           CryptoLoanFlexibleBorrowStatus `json:"status" bson:"status"`
 }
 
 var CryptoLoanFlexibleBorrowConfig = cex.ReqConfig[CryptoLoanFlexibleBorrowParams, CryptoLoanFlexibleBorrowResult]{
@@ -296,10 +296,10 @@ type CryptoLoanFlexibleOngoingOrdersParams struct {
 
 type CryptoLoanFlexibleOngoingOrder struct {
 	LoanCoin         string  `json:"loanCoin" bson:"loanCoin"`
-	TotalDebt        float64 `json:"totalDebt,string" bson:"totalDebt"`
+	TotalDebt        float64 `json:"totalDebt,string" bson:"totalDebt,string"`
 	CollateralCoin   string  `json:"collateralCoin" bson:"collateralCoin"`
-	CollateralAmount float64 `json:"collateralAmount,string" bson:"collateralAmount"`
-	CurrentLTV       float64 `json:"currentLTV,string" bson:"currentLTV"`
+	CollateralAmount float64 `json:"collateralAmount,string" bson:"collateralAmount,string"`
+	CurrentLTV       float64 `json:"currentLTV,string" bson:"currentLTV,string"`
 }
 
 var CryptoLoanFlexibleOngoingOrdersConfig = cex.ReqConfig[CryptoLoanFlexibleOngoingOrdersParams, Page[[]CryptoLoanFlexibleOngoingOrder]]{
@@ -325,12 +325,12 @@ type CryptoLoanFlexibleBorrowHistoriesParams struct {
 }
 
 type CryptoLoanFlexibleBorrowHistory struct {
-	LoanCoin                string                         `json:"loanCoin"`
-	InitialLoanAmount       string                         `json:"initialLoanAmount"`
-	CollateralCoin          string                         `json:"collateralCoin"`
-	InitialCollateralAmount string                         `json:"initialCollateralAmount"`
-	BorrowTime              int64                          `json:"borrowTime,string"`
-	Status                  CryptoLoanFlexibleBorrowStatus `json:"status"`
+	LoanCoin                string                         `json:"loanCoin" bson:"loanCoin"`
+	InitialLoanAmount       string                         `json:"initialLoanAmount" bson:"initialLoanAmount"`
+	CollateralCoin          string                         `json:"collateralCoin" bson:"collateralCoin"`
+	InitialCollateralAmount string                         `json:"initialCollateralAmount" bson:"initialCollateralAmount"`
+	BorrowTime              int64                          `json:"borrowTime,string" bson:"borrowTime,string"`
+	Status                  CryptoLoanFlexibleBorrowStatus `json:"status" bson:"status"`
 }
 
 var CryptoLoanFlexibleBorrowHistoriesConfig = cex.ReqConfig[CryptoLoanFlexibleBorrowHistoriesParams, Page[[]CryptoLoanFlexibleBorrowHistory]]{
@@ -355,13 +355,13 @@ type CryptoLoanFlexibleRepayParams struct {
 }
 
 type CryptoLoanFlexibleRepayResult struct {
-	LoanCoin            string                    `json:"loanCoin"`
-	CollateralCoin      string                    `json:"collateralCoin"`
-	RemainingDebt       string                    `json:"remainingDebt"`
-	RemainingCollateral string                    `json:"remainingCollateral"`
-	FullRepayment       bool                      `json:"fullRepayment"`
-	CurrentLTV          string                    `json:"currentLTV"`
-	RepayStatus         CryptoFlexibleRepayStatus `json:"repayStatus"`
+	LoanCoin            string                    `json:"loanCoin" bson:"loanCoin"`
+	CollateralCoin      string                    `json:"collateralCoin" bson:"collateralCoin"`
+	RemainingDebt       string                    `json:"remainingDebt" bson:"remainingDebt"`
+	RemainingCollateral string                    `json:"remainingCollateral" bson:"remainingCollateral"`
+	FullRepayment       bool                      `json:"fullRepayment" bson:"fullRepayment"`
+	CurrentLTV          string                    `json:"currentLTV" bson:"currentLTV"`
+	RepayStatus         CryptoFlexibleRepayStatus `json:"repayStatus" bson:"repayStatus"`
 }
 
 var CryptoLoanFlexibleRepayConfig = cex.ReqConfig[CryptoLoanFlexibleRepayParams, CryptoLoanFlexibleRepayResult]{
@@ -387,12 +387,12 @@ type CryptoLoanFlexibleRepaymentHistoriesParams struct {
 }
 
 type CryptoLoanFlexibleRepaymentHistory struct {
-	LoanCoin         string                    `json:"loanCoin"`
-	RepayAmount      float64                   `json:"repayAmount,string"`
-	CollateralCoin   string                    `json:"collateralCoin"`
-	CollateralReturn float64                   `json:"collateralReturn,string"`
-	RepayStatus      CryptoFlexibleRepayStatus `json:"repayStatus"`
-	RepayTime        int64                     `json:"repayTime,string"`
+	LoanCoin         string                    `json:"loanCoin" bson:"loanCoin"`
+	RepayAmount      float64                   `json:"repayAmount,string" bson:"repayAmount,string"`
+	CollateralCoin   string                    `json:"collateralCoin" bson:"collateralCoin"`
+	CollateralReturn float64                   `json:"collateralReturn,string" bson:"collateralReturn,string"`
+	RepayStatus      CryptoFlexibleRepayStatus `json:"repayStatus" bson:"repayStatus"`
+	RepayTime        int64                     `json:"repayTime,string" bson:"repayTime,string"`
 }
 
 var CryptoLoanFlexibleRepaymentHistoriesConfig = cex.ReqConfig[CryptoLoanFlexibleRepaymentHistoriesParams, Page[[]CryptoLoanFlexibleRepaymentHistory]]{
@@ -416,11 +416,11 @@ type CryptoLoanFlexibleAdjustLtvParams struct {
 }
 
 type CryptoLoanFlexibleLoanAdjustLtvResult struct {
-	LoanCoin         string             `json:"loanCoin"`
-	CollateralCoin   string             `json:"collateralCoin"`
-	Direction        LTVAdjustDirection `json:"direction"`
-	AdjustmentAmount float64            `json:"adjustmentAmount,string"`
-	CurrentLTV       float64            `json:"currentLTV,string"`
+	LoanCoin         string             `json:"loanCoin" bson:"loanCoin"`
+	CollateralCoin   string             `json:"collateralCoin" bson:"collateralCoin"`
+	Direction        LTVAdjustDirection `json:"direction" bson:"direction"`
+	AdjustmentAmount float64            `json:"adjustmentAmount,string" bson:"adjustmentAmount,string"`
+	CurrentLTV       float64            `json:"currentLTV,string" bson:"currentLTV,string"`
 }
 
 var CryptoLoanFlexibleLoanAdjustLtvConfig = cex.ReqConfig[CryptoLoanFlexibleAdjustLtvParams, CryptoLoanFlexibleLoanAdjustLtvResult]{
@@ -446,13 +446,13 @@ type CryptoLoanFlexibleAdjustLtvHistoriesParams struct {
 }
 
 type CryptoLoanFlexibleAdjustLtvHistory struct {
-	LoanCoin         string `json:"loanCoin"`
-	CollateralCoin   string `json:"collateralCoin"`
-	Direction        string `json:"direction"`
-	CollateralAmount string `json:"collateralAmount"`
-	PreLTV           string `json:"preLTV"`
-	AfterLTV         string `json:"afterLTV"`
-	AdjustTime       int64  `json:"adjustTime,string"`
+	LoanCoin         string `json:"loanCoin" bson:"loanCoin"`
+	CollateralCoin   string `json:"collateralCoin" bson:"collateralCoin"`
+	Direction        string `json:"direction" bson:"direction"`
+	CollateralAmount string `json:"collateralAmount" bson:"collateralAmount"`
+	PreLTV           string `json:"preLTV" bson:"preLTV"`
+	AfterLTV         string `json:"afterLTV" bson:"afterLTV"`
+	AdjustTime       int64  `json:"adjustTime,string" bson:"adjustTime,string"`
 }
 
 var CryptoLoanFlexibleAdjustLtvHistoriesConfig = cex.ReqConfig[CryptoLoanFlexibleAdjustLtvHistoriesParams, Page[[]CryptoLoanFlexibleAdjustLtvHistory]]{
@@ -473,10 +473,10 @@ type CryptoLoanFlexibleLoanAssetsParams struct {
 }
 
 type CryptoLoanFlexibleLoanAsset struct {
-	LoanCoin             string  `json:"loanCoin"`
-	FlexibleInterestRate float64 `json:"flexibleInterestRate,string"`
-	FlexibleMinLimit     float64 `json:"flexibleMinLimit,string"`
-	FlexibleMaxLimit     float64 `json:"flexibleMaxLimit,string"`
+	LoanCoin             string  `json:"loanCoin" bson:"loanCoin"`
+	FlexibleInterestRate float64 `json:"flexibleInterestRate,string" bson:"flexibleInterestRate,string"`
+	FlexibleMinLimit     float64 `json:"flexibleMinLimit,string" bson:"flexibleMinLimit,string"`
+	FlexibleMaxLimit     float64 `json:"flexibleMaxLimit,string" bson:"flexibleMaxLimit,string"`
 }
 
 var CryptoLoanFlexibleLoanAssetsConfig = cex.ReqConfig[CryptoLoanFlexibleLoanAssetsParams, Page[[]CryptoLoanFlexibleLoanAsset]]{
@@ -497,11 +497,11 @@ type CryptoLoanFlexibleCollateralCoinsParams struct {
 }
 
 type CryptoLoanFlexibleCollateralCoin struct {
-	CollateralCoin string  `json:"collateralCoin"`
-	InitialLTV     float64 `json:"initialLTV,string"`
-	MarginCallLTV  float64 `json:"marginCallLTV,string"`
-	LiquidationLTV float64 `json:"liquidationLTV,string"`
-	MaxLimit       float64 `json:"maxLimit,string"`
+	CollateralCoin string  `json:"collateralCoin" bson:"collateralCoin"`
+	InitialLTV     float64 `json:"initialLTV,string" bson:"initialLTV,string"`
+	MarginCallLTV  float64 `json:"marginCallLTV,string" bson:"marginCallLTV,string"`
+	LiquidationLTV float64 `json:"liquidationLTV,string" bson:"liquidationLTV,string"`
+	MaxLimit       float64 `json:"maxLimit,string" bson:"maxLimit,string"`
 }
 
 var CryptoLoanFlexibleCollateralCoinsConfig = cex.ReqConfig[CryptoLoanFlexibleCollateralCoinsParams, Page[[]CryptoLoanFlexibleCollateralCoin]]{
@@ -544,52 +544,52 @@ type SpotNewOrderParams struct {
 }
 
 type SpotOrderFill struct {
-	Price           float64 `json:"price,string"`
-	Qty             float64 `json:"qty,string"`
-	Commission      float64 `json:"commission,string"`
-	CommissionAsset string  `json:"commissionAsset"`
-	TradeId         int64   `json:"tradeId"`
+	Price           float64 `json:"price,string" bson:"price,string"`
+	Qty             float64 `json:"qty,string" bson:"qty,string"`
+	Commission      float64 `json:"commission,string" bson:"commission,string"`
+	CommissionAsset string  `json:"commissionAsset" bson:"commissionAsset"`
+	TradeId         int64   `json:"tradeId" bson:"tradeId"`
 }
 
 type SpotOrder struct {
 	// common
-	Symbol                  string                  `json:"symbol"`
-	OrderId                 int64                   `json:"orderId"`
-	OrderListId             int64                   `json:"orderListId"` // Unless OCO, value will be -1
-	ClientOrderId           string                  `json:"clientOrderId"`
-	Price                   float64                 `json:"price,string"` // origin price, if market order, it is 0
-	OrigQty                 float64                 `json:"origQty,string"`
-	ExecutedQty             float64                 `json:"executedQty,string"`
-	CummulativeQuoteQty     float64                 `json:"cummulativeQuoteQty,string"`
-	Status                  OrderStatus             `json:"status"`
-	TimeInForce             TimeInForce             `json:"timeInForce"`
-	Type                    OrderType               `json:"type"`
-	Side                    OrderSide               `json:"side"`
-	SelfTradePreventionMode SelfTradePreventionMode `json:"selfTradePreventionMode"`
+	Symbol                  string                  `json:"symbol" bson:"symbol"`
+	OrderId                 int64                   `json:"orderId" bson:"orderId"`
+	OrderListId             int64                   `json:"orderListId" bson:"orderListId"` // Unless OCO, value will be -1
+	ClientOrderId           string                  `json:"clientOrderId" bson:"clientOrderId"`
+	Price                   float64                 `json:"price,string" bson:"price,string"` // origin price, if market order, it is 0
+	OrigQty                 float64                 `json:"origQty,string" bson:"origQty,string"`
+	ExecutedQty             float64                 `json:"executedQty,string" bson:"executedQty,string"`
+	CummulativeQuoteQty     float64                 `json:"cummulativeQuoteQty,string" bson:"cummulativeQuoteQty,string"`
+	Status                  OrderStatus             `json:"status" bson:"status"`
+	TimeInForce             TimeInForce             `json:"timeInForce" bson:"timeInForce"`
+	Type                    OrderType               `json:"type" bson:"type"`
+	Side                    OrderSide               `json:"side" bson:"side"`
+	SelfTradePreventionMode SelfTradePreventionMode `json:"selfTradePreventionMode" bson:"selfTradePreventionMode"`
 
 	// new order result, replace order result
-	TransactTime int64 `json:"transactTime"`
+	TransactTime int64 `json:"transactTime" bson:"transactTime"`
 
 	// new order result, cancel new (replace) order
-	Fills []SpotOrderFill `json:"fills"`
+	Fills []SpotOrderFill `json:"fills" bson:"fills"`
 
 	// new order result, query order, all orders
-	WorkingTime int64 `json:"workingTime"`
+	WorkingTime int64 `json:"workingTime" bson:"workingTime"`
 
 	// cancel order result, cancel new (replace) order
-	OrigClientOrderId string `json:"origClientOrderId"`
+	OrigClientOrderId string `json:"origClientOrderId" bson:"origClientOrderId"`
 
 	// query order, all orders
-	StopPrice         float64 `json:"stopPrice,string"`
-	IcebergQty        float64 `json:"icebergQty,string"`
-	Time              int64   `json:"time"`
-	UpdateTime        int64   `json:"updateTime"`
-	IsWorking         bool    `json:"isWorking"`
-	OrigQuoteOrderQty float64 `json:"origQuoteOrderQty,string"`
+	StopPrice         float64 `json:"stopPrice,string" bson:"stopPrice,string"`
+	IcebergQty        float64 `json:"icebergQty,string" bson:"icebergQty,string"`
+	Time              int64   `json:"time" bson:"time"`
+	UpdateTime        int64   `json:"updateTime" bson:"updateTime"`
+	IsWorking         bool    `json:"isWorking" bson:"isWorking"`
+	OrigQuoteOrderQty float64 `json:"origQuoteOrderQty,string" bson:"origQuoteOrderQty,string"`
 
 	// for cancel replace order response
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
+	Code int    `json:"code" bson:"code"`
+	Msg  string `json:"msg" bson:"msg"`
 }
 
 var SpotNewOrderConfig = cex.ReqConfig[SpotNewOrderParams, SpotOrder]{
@@ -688,29 +688,29 @@ type SpotReplaceOrderParams struct {
 }
 
 type SpotReplaceOrderRawData struct {
-	CancelResult   SpotOrderCancelNewStatus `json:"cancelResult"`
-	NewOrderResult SpotOrderCancelNewStatus `json:"newOrderResult"`
+	CancelResult   SpotOrderCancelNewStatus `json:"cancelResult" bson:"cancelResult"`
+	NewOrderResult SpotOrderCancelNewStatus `json:"newOrderResult" bson:"newOrderResult"`
 	// response may be SpotOrder, CodeMsg, null
 	// if result is SpotOrderCancelNewStatus_SUCCESS, response is SpotOrder
 	// if result is SpotOrderCancelNewStatus_FAILURE, response is CodeMsg
 	// if result is SpotOrderCancelNewStatus_NOT_ATTEMPTED, response is null
-	CancelResponse   SpotOrder `json:"cancelResponse"`
-	NewOrderResponse SpotOrder `json:"newOrderResponse"`
+	CancelResponse   SpotOrder `json:"cancelResponse" bson:"cancelResponse"`
+	NewOrderResponse SpotOrder `json:"newOrderResponse" bson:"newOrderResponse"`
 }
 
 type SpotReplaceOrderRawResult struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
+	Code int    `json:"code" bson:"code"`
+	Msg  string `json:"msg" bson:"msg"`
 	// result: SUCCESS or FAILURE
-	Data SpotReplaceOrderRawData `json:"data"`
+	Data SpotReplaceOrderRawData `json:"data" bson:"data"`
 }
 
 type SpotReplaceOrderResult struct {
-	OK          bool      `json:"OK"`
-	ErrCancel   error     `json:"errCancel"`
-	ErrNew      error     `json:"errNew"`
-	OrderCancel SpotOrder `json:"orderCancel"`
-	OrderNew    SpotOrder `json:"orderNew"`
+	OK          bool      `json:"OK" bson:"OK"`
+	ErrCancel   error     `json:"errCancel" bson:"errCancel"`
+	ErrNew      error     `json:"errNew" bson:"errNew"`
+	OrderCancel SpotOrder `json:"orderCancel" bson:"orderCancel"`
+	OrderNew    SpotOrder `json:"orderNew" bson:"orderNew"`
 }
 
 var SpotReplaceOrderConfig = cex.ReqConfig[SpotReplaceOrderParams, SpotReplaceOrderResult]{
