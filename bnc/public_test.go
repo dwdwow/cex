@@ -1,6 +1,7 @@
 package bnc
 
 import (
+	"sync"
 	"testing"
 	"time"
 
@@ -70,4 +71,28 @@ func TestQueryKline(t *testing.T) {
 	res, err := QueryKline("ETHUSDT", "1s", time.Now().UnixMilli()-time.Hour.Milliseconds(), time.Now().UnixMilli())
 	props.PanicIfNotNil(err)
 	props.PrintlnIndent(res)
+}
+
+func TestQueryKlineAsync(t *testing.T) {
+	exchange, err := QuerySpotExchangeInfo()
+	props.PanicIfNotNil(err)
+	sybs := exchange.Symbols
+	wg := sync.WaitGroup{}
+	for _, syb := range sybs {
+		wg.Add(1)
+		syb := syb
+		go func() {
+			now := time.Now().UnixMilli()
+			var err error
+			for i := 0; i < 3; i++ {
+				_, err = QueryKline(syb.Symbol, "1s", now-time.Hour.Milliseconds(), now)
+				if err == nil {
+					break
+				}
+			}
+			props.PanicIfNotNil(err)
+			wg.Done()
+		}()
+	}
+	wg.Wait()
 }
