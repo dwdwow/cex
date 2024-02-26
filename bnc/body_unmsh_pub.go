@@ -40,6 +40,52 @@ func obBodyUnmsher(body []byte) (OrderBook, *cex.RespBodyUnmarshalerError) {
 	return OrderBook{Bids: bids, Asks: asks, LastUpdateId: raw.LastUpdateId, E: raw.E, T: raw.T}, nil
 }
 
+var klineMapKeys = []string{
+	"openTime",
+	"openPrice",
+	"highPrice",
+	"lowPrice",
+	"closePrice",
+	"volume",
+	"closeTime",
+	"quoteAssetVolume",
+	"tradesNumber",
+	"takerBuyBaseAssetVolume",
+	"takerBuyQuoteAssetVolume",
+	"unused",
+}
+
+var klineLastIndex = len(klineMapKeys) - 1
+
+func klineBodyUnmsher(body []byte) ([]Kline, *cex.RespBodyUnmarshalerError) {
+	var data [][]any
+	err := json.Unmarshal(body, &data)
+	if err != nil {
+		return nil, &cex.RespBodyUnmarshalerError{Err: fmt.Errorf("%w: %w", cex.ErrJsonUnmarshal, err)}
+	}
+	var klines []Kline
+	for _, kline := range data {
+		m := map[string]any{}
+		for i, v := range kline {
+			if i > klineLastIndex {
+				break
+			}
+			m[klineMapKeys[i]] = v
+		}
+		d, err := json.Marshal(&m)
+		if err != nil {
+			return nil, &cex.RespBodyUnmarshalerError{Err: fmt.Errorf("%w: %w", cex.ErrJsonMarshal, err)}
+		}
+		var k Kline
+		err = json.Unmarshal(d, &k)
+		if err != nil {
+			return nil, &cex.RespBodyUnmarshalerError{Err: fmt.Errorf("%w: %w", cex.ErrJsonUnmarshal, err)}
+		}
+		klines = append(klines, k)
+	}
+	return klines, nil
+}
+
 func convRawStrBookToFloatBook(raw [][]string) ([][]float64, error) {
 	var book [][]float64
 	for _, pq := range raw {

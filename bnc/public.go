@@ -117,3 +117,15 @@ func QueryAllFundingRateInfos() ([]FuturesFundingRateInfo, error) {
 func QueryFundingRates() ([]FuturesFundingRate, error) {
 	return queryInfoAboutFundingRate(FuturesFundingRatesConfig, FuturesFundingRatesParams{Symbol: ""})
 }
+
+func QueryKline(symbol string, interval KlineInterval, start, end int64) ([]Kline, error) {
+	_, res, err := cex.Request(emptyUser, SpotKlineConfig, KlineParams{
+		Symbol:    symbol,
+		Interval:  interval,
+		StartTime: start,
+		EndTime:   end,
+		TimeZone:  "",
+		Limit:     1000,
+	})
+	return res, err.Err
+}

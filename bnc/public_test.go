@@ -2,6 +2,7 @@ package bnc
 
 import (
 	"testing"
+	"time"
 
 	"github.com/dwdwow/props"
 )
@@ -63,4 +64,10 @@ func TestQueryAllFundingRateInfos(t *testing.T) {
 
 func TestQueryFundingRates(t *testing.T) {
 	publicTestChecker(QueryFundingRates())
+}
+
+func TestQueryKline(t *testing.T) {
+	res, err := QueryKline("ETHUSDT", "1s", time.Now().UnixMilli()-time.Hour.Milliseconds(), time.Now().UnixMilli())
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(res)
 }

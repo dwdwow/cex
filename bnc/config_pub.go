@@ -225,3 +225,52 @@ var FuturesFundingRatesConfig = cex.ReqConfig[FuturesFundingRatesParams, []Futur
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesFundingRate]),
 }
+
+type KlineInterval string
+
+const (
+	KlineInterval1s = "1s"
+	KlineInterval1m = "1m"
+	KlineInterval1h = "1h"
+)
+
+type KlineParams struct {
+	Symbol    string        `s2m:"symbol,omitempty"`
+	Interval  KlineInterval `s2m:"interval,omitempty"`
+	StartTime int64         `s2m:"startTime,omitempty"`
+	EndTime   int64         `s2m:"endTime,omitempty"`
+	// TimeZone
+	// Hours and minutes (e.g. -1:00, 05:45)
+	// Only hours (e.g. 0, 8, 4)
+	// Accepted range is strictly [-12:00 to +14:00] inclusive
+	TimeZone string `s2m:"timeZone,omitempty"`
+	Limit    int64  `s2m:"limit,omitempty"`
+}
+
+type Kline struct {
+	OpenTime                 int64   `json:"openTime" bson:"openTime"`
+	CloseTime                int64   `json:"closeTime" bson:"closeTime"`
+	TradesNumber             int64   `json:"tradesNumber" bson:"tradesNumber"`
+	OpenPrice                float64 `json:"openPrice,string" bson:"openPrice,string"`
+	HighPrice                float64 `json:"highPrice,string" bson:"highPrice,string"`
+	LowPrice                 float64 `json:"lowPrice,string" bson:"lowPrice,string"`
+	ClosePrice               float64 `json:"closePrice,string" bson:"closePrice,string"`
+	Volume                   float64 `json:"volume,string" bson:"volume,string"`
+	QuoteAssetVolume         float64 `json:"quoteAssetVolume,string" bson:"quoteAssetVolume,string"`
+	TakerBuyBaseAssetVolume  float64 `json:"takerBuyBaseAssetVolume,string" bson:"takerBuyBaseAssetVolume,string"`
+	TakerBuyQuoteAssetVolume float64 `json:"takerBuyQuoteAssetVolume,string" bson:"takerBuyQuoteAssetVolume,string"`
+	Unused                   any     `json:"unused" bson:"unused"`
+}
+
+var SpotKlineConfig = cex.ReqConfig[KlineParams, []Kline]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             ApiV3 + "/klines",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(klineBodyUnmsher),
+}
