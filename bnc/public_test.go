@@ -35,6 +35,11 @@ func TestQueryFuturesPairs(t *testing.T) {
 	pairs, _, err := QueryFuturesPairs()
 	props.PanicIfNotNil(err)
 	props.PrintlnIndent(pairs)
+	for _, pair := range pairs {
+		if !pair.IsPerpetual {
+			t.Log(pair.PairSymbol)
+		}
+	}
 }
 
 func TestQueryFuturesExchangeInfo(t *testing.T) {
@@ -71,31 +76,33 @@ func TestQueryKline(t *testing.T) {
 	now := time.Now().Unix() * 1000
 	start := now - 10*1000
 	end := now - 1000
-	res, err := QuerySpotKline("ETHUSDT", "1s", start, end)
+	res, err := QuerySpotKline("ETHUSDT", "1s", 0, end)
 	t.Log(start, end, res)
 	props.PanicIfNotNil(err)
 }
 
 func TestQueryKlineAsync(t *testing.T) {
-	exchange, err := QueryFuturesExchangeInfo()
+	exchange, err := QuerySpotExchangeInfo()
 	props.PanicIfNotNil(err)
 	sybs := exchange.Symbols
 	wg := sync.WaitGroup{}
-	for _, syb := range sybs {
-		wg.Add(1)
-		syb := syb
-		go func() {
-			now := time.Now().UnixMilli()
-			var err error
-			for i := 0; i < 3; i++ {
-				_, err = QueryFuturesKline(syb.Symbol, "1m", now-time.Hour.Milliseconds(), now)
-				if err == nil {
-					break
+	for i := 0; i < 100; i++ {
+		for _, syb := range sybs {
+			wg.Add(1)
+			syb := syb
+			go func() {
+				now := time.Now().UnixMilli()
+				var err error
+				for i := 0; i < 3; i++ {
+					_, err = QuerySpotKline(syb.Symbol, "1m", now-time.Hour.Milliseconds(), now)
+					if err == nil {
+						break
+					}
 				}
-			}
-			props.PanicIfNotNil(err)
-			wg.Done()
-		}()
+				props.PanicIfNotNil(err)
+				wg.Done()
+			}()
+		}
 	}
 	wg.Wait()
 }

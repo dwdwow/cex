@@ -27,4 +27,6 @@ type Pair struct {
 	CanMarket     bool    `json:"canMarket" bson:"canMarket"`
 	CanMargin     bool    `json:"canMargin" bson:"canMargin"`
 	IsCross       bool    `json:"isCross" bson:"isCross"`
+
+	IsPerpetual bool `json:"isPerpetual" bson:"isPerpetual"`
 }

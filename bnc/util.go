@@ -7,6 +7,8 @@ import (
 	"github.com/dwdwow/cex"
 )
 
+// ExchangeInfoToPair switch ExchangeInfo.Symbols to cex.Pair.
+// If exchange is contract, should be careful that it is delivery contract.
 func ExchangeInfoToPair(info Exchange) (cex.Pair, error) {
 	filters := info.Filters
 	var pPrec, qPrec int
@@ -49,6 +51,7 @@ func ExchangeInfoToPair(info Exchange) (cex.Pair, error) {
 	var pairType cex.PairType
 	var sybMid string
 	var makerFeeTier, takerFeeTier, minTradeQuote float64
+	var isPerpetual bool
 	if info.ContractType == "" {
 		pairType = cex.PairTypeSpot
 		sybMid = SpotSymbolMid
@@ -59,6 +62,9 @@ func ExchangeInfoToPair(info Exchange) (cex.Pair, error) {
 		pairType = cex.PairTypeFutures
 		sybMid = FuturesSymbolMid
 		minTradeQuote = 20
+		if info.ContractType == "PERPETUAL" {
+			isPerpetual = true
+		}
 		// TODO not correct
 		//makerFeeTier, takerFeeTier = FuturesMakerFeeTier, FuturesTakerFeeTier
 	}
@@ -78,6 +84,7 @@ func ExchangeInfoToPair(info Exchange) (cex.Pair, error) {
 		Tradable:      info.Status == ExchangeTrading,
 		CanMarket:     true,
 		CanMargin:     info.IsMarginTradingAllowed,
+		IsPerpetual:   isPerpetual,
 	}
 	return pair, nil
 }
