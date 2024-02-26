@@ -68,13 +68,13 @@ func TestQueryFundingRates(t *testing.T) {
 }
 
 func TestQueryKline(t *testing.T) {
-	res, err := QueryKline("ETHUSDT", "1s", time.Now().UnixMilli()-time.Hour.Milliseconds(), time.Now().UnixMilli())
+	res, err := QueryFuturesKline("ETHUSDT", "1m", time.Now().UnixMilli()-time.Hour.Milliseconds(), time.Now().UnixMilli())
 	props.PanicIfNotNil(err)
 	props.PrintlnIndent(res)
 }
 
 func TestQueryKlineAsync(t *testing.T) {
-	exchange, err := QuerySpotExchangeInfo()
+	exchange, err := QueryFuturesExchangeInfo()
 	props.PanicIfNotNil(err)
 	sybs := exchange.Symbols
 	wg := sync.WaitGroup{}
@@ -85,7 +85,7 @@ func TestQueryKlineAsync(t *testing.T) {
 			now := time.Now().UnixMilli()
 			var err error
 			for i := 0; i < 3; i++ {
-				_, err = QueryKline(syb.Symbol, "1s", now-time.Hour.Milliseconds(), now)
+				_, err = QueryFuturesKline(syb.Symbol, "1m", now-time.Hour.Milliseconds(), now)
 				if err == nil {
 					break
 				}

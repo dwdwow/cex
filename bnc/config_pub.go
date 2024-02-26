@@ -229,6 +229,7 @@ var FuturesFundingRatesConfig = cex.ReqConfig[FuturesFundingRatesParams, []Futur
 type KlineInterval string
 
 const (
+	// KlineInterval1s is only for spot
 	KlineInterval1s = "1s"
 	KlineInterval1m = "1m"
 	KlineInterval1h = "1h"
@@ -266,6 +267,19 @@ var SpotKlineConfig = cex.ReqConfig[KlineParams, []Kline]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
 		Path:             ApiV3 + "/klines",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(klineBodyUnmsher),
+}
+
+var FuturesKlineConfig = cex.ReqConfig[KlineParams, []Kline]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/klines",
 		Method:           http.MethodGet,
 		IsUserData:       false,
 		UserTimeInterval: 0,
