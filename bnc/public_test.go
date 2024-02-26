@@ -68,9 +68,12 @@ func TestQueryFundingRates(t *testing.T) {
 }
 
 func TestQueryKline(t *testing.T) {
-	res, err := QueryFuturesKline("ETHUSDT", "1m", time.Now().UnixMilli()-time.Hour.Milliseconds(), time.Now().UnixMilli())
+	now := time.Now().Unix() * 1000
+	start := now - 10*1000
+	end := now - 1000
+	res, err := QuerySpotKline("ETHUSDT", "1s", start, end)
+	t.Log(start, end, res)
 	props.PanicIfNotNil(err)
-	props.PrintlnIndent(res)
 }
 
 func TestQueryKlineAsync(t *testing.T) {
