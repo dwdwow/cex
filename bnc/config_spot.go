@@ -277,7 +277,7 @@ type CryptoLoanFlexibleBorrowResult struct {
 var CryptoLoanFlexibleBorrowConfig = cex.ReqConfig[CryptoLoanFlexibleBorrowParams, CryptoLoanFlexibleBorrowResult]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
-		Path:             SapiV1 + "/loan/flexible/borrow",
+		Path:             SapiV2 + "/loan/flexible/borrow",
 		Method:           http.MethodPost,
 		IsUserData:       true,
 		UserTimeInterval: 0,
@@ -305,7 +305,7 @@ type CryptoLoanFlexibleOngoingOrder struct {
 var CryptoLoanFlexibleOngoingOrdersConfig = cex.ReqConfig[CryptoLoanFlexibleOngoingOrdersParams, Page[[]CryptoLoanFlexibleOngoingOrder]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
-		Path:             SapiV1 + "/loan/flexible/ongoing/orders",
+		Path:             SapiV2 + "/loan/flexible/ongoing/orders",
 		Method:           http.MethodGet,
 		IsUserData:       true,
 		UserTimeInterval: 0,
@@ -336,7 +336,7 @@ type CryptoLoanFlexibleBorrowHistory struct {
 var CryptoLoanFlexibleBorrowHistoriesConfig = cex.ReqConfig[CryptoLoanFlexibleBorrowHistoriesParams, Page[[]CryptoLoanFlexibleBorrowHistory]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
-		Path:             SapiV1 + "/loan/flexible/borrow/history",
+		Path:             SapiV2 + "/loan/flexible/borrow/history",
 		Method:           http.MethodGet,
 		IsUserData:       true,
 		UserTimeInterval: 0,
@@ -367,7 +367,7 @@ type CryptoLoanFlexibleRepayResult struct {
 var CryptoLoanFlexibleRepayConfig = cex.ReqConfig[CryptoLoanFlexibleRepayParams, CryptoLoanFlexibleRepayResult]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
-		Path:             SapiV1 + "/loan/flexible/repay",
+		Path:             SapiV2 + "/loan/flexible/repay",
 		Method:           http.MethodPost,
 		IsUserData:       true,
 		UserTimeInterval: 0,
@@ -398,7 +398,7 @@ type CryptoLoanFlexibleRepaymentHistory struct {
 var CryptoLoanFlexibleRepaymentHistoriesConfig = cex.ReqConfig[CryptoLoanFlexibleRepaymentHistoriesParams, Page[[]CryptoLoanFlexibleRepaymentHistory]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
-		Path:             SapiV1 + "/loan/flexible/repay/history",
+		Path:             SapiV2 + "/loan/flexible/repay/history",
 		Method:           http.MethodGet,
 		IsUserData:       true,
 		UserTimeInterval: 0,
@@ -426,7 +426,7 @@ type CryptoLoanFlexibleLoanAdjustLtvResult struct {
 var CryptoLoanFlexibleLoanAdjustLtvConfig = cex.ReqConfig[CryptoLoanFlexibleAdjustLtvParams, CryptoLoanFlexibleLoanAdjustLtvResult]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
-		Path:             SapiV1 + "/loan/flexible/adjust/ltv",
+		Path:             SapiV2 + "/loan/flexible/adjust/ltv",
 		Method:           http.MethodPost,
 		IsUserData:       true,
 		UserTimeInterval: 0,
@@ -458,7 +458,7 @@ type CryptoLoanFlexibleAdjustLtvHistory struct {
 var CryptoLoanFlexibleAdjustLtvHistoriesConfig = cex.ReqConfig[CryptoLoanFlexibleAdjustLtvHistoriesParams, Page[[]CryptoLoanFlexibleAdjustLtvHistory]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
-		Path:             SapiV1 + "/loan/flexible/ltv/adjustment/history",
+		Path:             SapiV2 + "/loan/flexible/ltv/adjustment/history",
 		Method:           http.MethodGet,
 		IsUserData:       true,
 		UserTimeInterval: 0,
@@ -482,7 +482,7 @@ type CryptoLoanFlexibleLoanAsset struct {
 var CryptoLoanFlexibleLoanAssetsConfig = cex.ReqConfig[CryptoLoanFlexibleLoanAssetsParams, Page[[]CryptoLoanFlexibleLoanAsset]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
-		Path:             SapiV1 + "/loan/flexible/loanable/data",
+		Path:             SapiV2 + "/loan/flexible/loanable/data",
 		Method:           http.MethodGet,
 		IsUserData:       true,
 		UserTimeInterval: 0,
@@ -507,7 +507,7 @@ type CryptoLoanFlexibleCollateralCoin struct {
 var CryptoLoanFlexibleCollateralCoinsConfig = cex.ReqConfig[CryptoLoanFlexibleCollateralCoinsParams, Page[[]CryptoLoanFlexibleCollateralCoin]]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          ApiBaseUrl,
-		Path:             SapiV1 + "/loan/flexible/collateral/data",
+		Path:             SapiV2 + "/loan/flexible/collateral/data",
 		Method:           http.MethodGet,
 		IsUserData:       true,
 		UserTimeInterval: 0,

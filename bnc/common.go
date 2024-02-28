@@ -4,6 +4,7 @@ const (
 	ApiBaseUrl  = "https://api.binance.com"
 	ApiV3       = "/api/v3"
 	SapiV1      = "/sapi/v1"
+	SapiV2      = "/sapi/v2"
 	FapiBaseUrl = "https://fapi.binance.com"
 	FapiV1      = "/fapi/v1"
 	FapiV2      = "/fapi/v2"
