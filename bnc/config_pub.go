@@ -249,9 +249,9 @@ type KlineParams struct {
 }
 
 type Kline struct {
-	OpenTime                 int64   `json:"openTime" bson:"openTime"`
-	CloseTime                int64   `json:"closeTime" bson:"closeTime"`
-	TradesNumber             int64   `json:"tradesNumber" bson:"tradesNumber"`
+	OpenTime                 int64   `json:"openTime,string" bson:"openTime,string"`
+	CloseTime                int64   `json:"closeTime,string" bson:"closeTime,string"`
+	TradesNumber             int64   `json:"tradesNumber,string" bson:"tradesNumber,string"`
 	OpenPrice                float64 `json:"openPrice,string" bson:"openPrice,string"`
 	HighPrice                float64 `json:"highPrice,string" bson:"highPrice,string"`
 	LowPrice                 float64 `json:"lowPrice,string" bson:"lowPrice,string"`
