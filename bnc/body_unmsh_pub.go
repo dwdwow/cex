@@ -65,7 +65,18 @@ func UnmarshalRawKline(kline []any) (Kline, error) {
 		if i > klineLastIndex {
 			break
 		}
-		m[klineMapKeys[i]] = v
+		var s string
+		switch v := v.(type) {
+		case int64:
+			s = strconv.FormatInt(v, 10)
+		case float64:
+			s = strconv.FormatFloat(v, 'f', -1, 64)
+		case string:
+			s = v
+		default:
+			return Kline{}, fmt.Errorf("bnc: unknown raw kline element type %v", v)
+		}
+		m[klineMapKeys[i]] = s
 	}
 	var k Kline
 	d, err := json.Marshal(&m)

@@ -74,34 +74,34 @@ func KlineTradesNumber(kline []any) int64 {
 	return kline[8].(int64)
 }
 
-func OpenPrice(kline []any) float64 {
+func KlineOpenPrice(kline []any) float64 {
 	return kline[1].(float64)
 }
 
-func HighPrice(kline []any) float64 {
+func KlineHighPrice(kline []any) float64 {
 	return kline[2].(float64)
 }
 
-func LowPrice(kline []any) float64 {
+func KlineLowPrice(kline []any) float64 {
 	return kline[3].(float64)
 }
 
-func ClosePrice(kline []any) float64 {
+func KlineClosePrice(kline []any) float64 {
 	return kline[4].(float64)
 }
 
-func Volume(kline []any) float64 {
+func KlineVolume(kline []any) float64 {
 	return kline[5].(float64)
 }
 
-func QuoteAssetVolume(kline []any) float64 {
+func KlineQuoteAssetVolume(kline []any) float64 {
 	return kline[7].(float64)
 }
 
-func TakerBuyBaseAssetVolume(kline []any) float64 {
+func KlineTakerBuyBaseAssetVolume(kline []any) float64 {
 	return kline[9].(float64)
 }
 
-func TakerBuyQuoteAssetVolume(kline []any) float64 {
+func KlineTakerBuyQuoteAssetVolume(kline []any) float64 {
 	return kline[10].(float64)
 }
