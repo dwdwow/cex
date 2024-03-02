@@ -20,12 +20,14 @@ var klineMapKeys = []string{
 	"unused",
 }
 
-func KlineStringToAny(k []string) ([]any, error) {
+type FastKline []any
+
+func KlineStringToAny(k []string) (FastKline, error) {
 	if len(k) != 12 {
 		return nil, fmt.Errorf("bnc: string kline to any kline, length %v != 12", len(k))
 	}
 	var err error
-	kline := make([]any, 11)
+	kline := make(FastKline, 11)
 	if kline[0], err = strconv.ParseInt(k[0], 10, 64); err != nil {
 		return nil, err
 	}
@@ -62,46 +64,46 @@ func KlineStringToAny(k []string) ([]any, error) {
 	return kline, nil
 }
 
-func KlineOpenTime(kline []any) int64 {
-	return kline[0].(int64)
+func (k FastKline) OpenTime() int64 {
+	return k[0].(int64)
 }
 
-func KlineCloseTime(kline []any) int64 {
-	return kline[6].(int64)
+func (k FastKline) CloseTime() int64 {
+	return k[6].(int64)
 }
 
-func KlineTradesNumber(kline []any) int64 {
-	return kline[8].(int64)
+func (k FastKline) TradesNumber() int64 {
+	return k[8].(int64)
 }
 
-func KlineOpenPrice(kline []any) float64 {
-	return kline[1].(float64)
+func (k FastKline) OpenPrice() float64 {
+	return k[1].(float64)
 }
 
-func KlineHighPrice(kline []any) float64 {
-	return kline[2].(float64)
+func (k FastKline) HighPrice() float64 {
+	return k[2].(float64)
 }
 
-func KlineLowPrice(kline []any) float64 {
-	return kline[3].(float64)
+func (k FastKline) LowPrice() float64 {
+	return k[3].(float64)
 }
 
-func KlineClosePrice(kline []any) float64 {
-	return kline[4].(float64)
+func (k FastKline) ClosePrice() float64 {
+	return k[4].(float64)
 }
 
-func KlineVolume(kline []any) float64 {
-	return kline[5].(float64)
+func (k FastKline) Volume() float64 {
+	return k[5].(float64)
 }
 
-func KlineQuoteAssetVolume(kline []any) float64 {
-	return kline[7].(float64)
+func (k FastKline) QuoteAssetVolume() float64 {
+	return k[7].(float64)
 }
 
-func KlineTakerBuyBaseAssetVolume(kline []any) float64 {
-	return kline[9].(float64)
+func (k FastKline) TakerBuyBaseAssetVolume() float64 {
+	return k[9].(float64)
 }
 
-func KlineTakerBuyQuoteAssetVolume(kline []any) float64 {
-	return kline[10].(float64)
+func (k FastKline) TakerBuyQuoteAssetVolume() float64 {
+	return k[10].(float64)
 }

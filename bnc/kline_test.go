@@ -42,47 +42,47 @@ func TestKlineStringToAny(t *testing.T) {
 
 	props.PanicIfNotNil(err)
 
-	if KlineOpenTime(kline) != structKline.OpenTime {
+	if kline.OpenTime() != structKline.OpenTime {
 		panic("open time")
 	}
 
-	if KlineCloseTime(kline) != structKline.CloseTime {
+	if kline.CloseTime() != structKline.CloseTime {
 		panic("close time")
 	}
 
-	if KlineTradesNumber(kline) != structKline.TradesNumber {
+	if kline.TradesNumber() != structKline.TradesNumber {
 		panic("trades number")
 	}
 
-	if KlineOpenPrice(kline) != structKline.OpenPrice {
+	if kline.OpenPrice() != structKline.OpenPrice {
 		panic("open price")
 	}
 
-	if KlineHighPrice(kline) != structKline.HighPrice {
+	if kline.HighPrice() != structKline.HighPrice {
 		panic("high price")
 	}
 
-	if KlineLowPrice(kline) != structKline.LowPrice {
+	if kline.LowPrice() != structKline.LowPrice {
 		panic("low price")
 	}
 
-	if KlineClosePrice(kline) != structKline.ClosePrice {
+	if kline.ClosePrice() != structKline.ClosePrice {
 		panic("close price")
 	}
 
-	if KlineVolume(kline) != structKline.Volume {
+	if kline.Volume() != structKline.Volume {
 		panic("volume")
 	}
 
-	if KlineQuoteAssetVolume(kline) != structKline.QuoteAssetVolume {
+	if kline.QuoteAssetVolume() != structKline.QuoteAssetVolume {
 		panic("quote asset volume")
 	}
 
-	if KlineTakerBuyBaseAssetVolume(kline) != structKline.TakerBuyBaseAssetVolume {
+	if kline.TakerBuyBaseAssetVolume() != structKline.TakerBuyBaseAssetVolume {
 		panic("taker buy base asset volume")
 	}
 
-	if KlineTakerBuyQuoteAssetVolume(kline) != structKline.TakerBuyQuoteAssetVolume {
+	if kline.TakerBuyQuoteAssetVolume() != structKline.TakerBuyQuoteAssetVolume {
 		panic("taker buy quote asset volume")
 	}
 
