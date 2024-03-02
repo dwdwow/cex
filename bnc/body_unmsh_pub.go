@@ -40,21 +40,6 @@ func obBodyUnmsher(body []byte) (OrderBook, *cex.RespBodyUnmarshalerError) {
 	return OrderBook{Bids: bids, Asks: asks, LastUpdateId: raw.LastUpdateId, E: raw.E, T: raw.T}, nil
 }
 
-var klineMapKeys = []string{
-	"openTime",
-	"openPrice",
-	"highPrice",
-	"lowPrice",
-	"closePrice",
-	"volume",
-	"closeTime",
-	"quoteAssetVolume",
-	"tradesNumber",
-	"takerBuyBaseAssetVolume",
-	"takerBuyQuoteAssetVolume",
-	"unused",
-}
-
 var klineLastIndex = len(klineMapKeys) - 1
 
 func klineBodyUnmsher(body []byte) ([]Kline, *cex.RespBodyUnmarshalerError) {
