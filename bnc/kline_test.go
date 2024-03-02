@@ -95,3 +95,14 @@ func TestNewSimpleKline(t *testing.T) {
 	}
 
 }
+
+func TestSimpleKline_NotExist(t *testing.T) {
+	kline := SimpleKline{1}
+	if kline.NotExist() {
+		t.FailNow()
+	}
+	kline[0] = 0
+	if !kline.NotExist() {
+		t.FailNow()
+	}
+}

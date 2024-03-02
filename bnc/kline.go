@@ -55,6 +55,10 @@ func NewSimpleKlineFromRaw(k RawKline) (kline SimpleKline, err error) {
 	return kline, nil
 }
 
+func (k SimpleKline) NotExist() bool {
+	return k[0] == 0
+}
+
 func (k SimpleKline) OpenTime() int64 {
 	return int64(k[0])
 }
