@@ -20,70 +20,81 @@ var klineMapKeys = []string{
 	"unused",
 }
 
-// SimpleKline is convenient to save in file
-type SimpleKline []any
+// RawKline is binance raw kline data, floats are all string, and time is int64
+type RawKline [12]any
 
-func KlineStringToAny(k []string) (SimpleKline, error) {
-	if len(k) != 12 {
-		return nil, fmt.Errorf("bnc: string kline to any kline, length %v != 12", len(k))
-	}
-	var err error
-	kline := make(SimpleKline, 11)
+// StrKline is data read from csv file
+type StrKline [12]string
+
+// SimpleKline is convenient to save in file
+type SimpleKline [11]float64
+
+func NewSimpleKlineFromStr(k StrKline) (kline SimpleKline, err error) {
 	for i, v := range k[:11] {
-		switch i {
-		case 0, 6, 8:
-			if kline[i], err = strconv.ParseInt(v, 10, 64); err != nil {
-				return nil, err
-			}
-		default:
+		if kline[i], err = strconv.ParseFloat(v, 64); err != nil {
+			return
+		}
+	}
+	return kline, nil
+}
+
+func NewSimpleKlineFromRaw(k RawKline) (kline SimpleKline, err error) {
+	for i, v := range k[:11] {
+		switch v := v.(type) {
+		case string:
 			if kline[i], err = strconv.ParseFloat(v, 64); err != nil {
-				return nil, err
+				return
 			}
+		case int64:
+			kline[i] = float64(v)
+		default:
+			err = fmt.Errorf("bnc: unknown raw kline data type, %v: %v", i, v)
+			return
 		}
 	}
 	return kline, nil
 }
 
 func (k SimpleKline) OpenTime() int64 {
-	return k[0].(int64)
+	return int64(k[0])
 }
 
 func (k SimpleKline) CloseTime() int64 {
-	return k[6].(int64)
+	return int64(k[6])
 }
 
 func (k SimpleKline) TradesNumber() int64 {
-	return k[8].(int64)
+	return int64(k[8])
 }
 
 func (k SimpleKline) OpenPrice() float64 {
-	return k[1].(float64)
+	return k[1]
 }
 
 func (k SimpleKline) HighPrice() float64 {
-	return k[2].(float64)
+	return k[2]
 }
 
 func (k SimpleKline) LowPrice() float64 {
-	return k[3].(float64)
+	return k[3]
 }
 
 func (k SimpleKline) ClosePrice() float64 {
-	return k[4].(float64)
+	return k[4]
 }
 
 func (k SimpleKline) Volume() float64 {
-	return k[5].(float64)
+	return k[5]
 }
 
 func (k SimpleKline) QuoteAssetVolume() float64 {
-	return k[7].(float64)
+	return k[7]
 }
 
 func (k SimpleKline) TakerBuyBaseAssetVolume() float64 {
-	return k[9].(float64)
+	return k[9]
 }
 
 func (k SimpleKline) TakerBuyQuoteAssetVolume() float64 {
-	return k[10].(float64)
+	return k[10]
 }

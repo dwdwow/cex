@@ -43,7 +43,7 @@ func obBodyUnmsher(body []byte) (OrderBook, *cex.RespBodyUnmarshalerError) {
 var klineLastIndex = len(klineMapKeys) - 1
 
 func klineBodyUnmsher(body []byte) ([]Kline, *cex.RespBodyUnmarshalerError) {
-	var data [][]any
+	var data []RawKline
 	err := json.Unmarshal(body, &data)
 	if err != nil {
 		return nil, &cex.RespBodyUnmarshalerError{Err: fmt.Errorf("%w: %w", cex.ErrJsonUnmarshal, err)}
@@ -59,7 +59,7 @@ func klineBodyUnmsher(body []byte) ([]Kline, *cex.RespBodyUnmarshalerError) {
 	return klines, nil
 }
 
-func UnmarshalRawKline(kline []any) (Kline, error) {
+func UnmarshalRawKline(kline RawKline) (Kline, error) {
 	m := map[string]any{}
 	for i, v := range kline {
 		if i > klineLastIndex {
