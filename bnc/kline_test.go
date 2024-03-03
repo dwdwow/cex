@@ -44,9 +44,15 @@ func TestNewSimpleKline(t *testing.T) {
 	klineFromRaw, err := NewSimpleKlineFromRaw(rawKline)
 	props.PanicIfNotNil(err)
 
+	klineFromStruct, err := NewSimpleKlineFromStruct(structKline)
+	props.PanicIfNotNil(err)
+
 	for i, v := range klineFromStr {
 		if klineFromRaw[i] != v {
 			panic("from str != from raw")
+		}
+		if klineFromStruct[i] != v {
+			panic("from struct != from raw")
 		}
 	}
 
