@@ -55,7 +55,7 @@ func NewSimpleKlineFromRaw(k RawKline) (kline SimpleKline, err error) {
 	return kline, nil
 }
 
-func NewSimpleKlineFromStruct(k Kline) (kline SimpleKline, err error) {
+func NewSimpleKlineFromStruct(k Kline) (kline SimpleKline) {
 	kline[0] = float64(k.OpenTime)
 	kline[1] = k.OpenPrice
 	kline[2] = k.HighPrice
