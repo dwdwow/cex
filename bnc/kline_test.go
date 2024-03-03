@@ -1,6 +1,9 @@
 package bnc
 
 import (
+	"encoding/json"
+	"fmt"
+	"reflect"
 	"strconv"
 	"testing"
 
@@ -44,8 +47,7 @@ func TestNewSimpleKline(t *testing.T) {
 	klineFromRaw, err := NewSimpleKlineFromRaw(rawKline)
 	props.PanicIfNotNil(err)
 
-	klineFromStruct, err := NewSimpleKlineFromStruct(structKline)
-	props.PanicIfNotNil(err)
+	klineFromStruct := NewSimpleKlineFromStruct(structKline)
 
 	for i, v := range klineFromStr {
 		if klineFromRaw[i] != v {
@@ -109,6 +111,23 @@ func TestSimpleKline_NotExist(t *testing.T) {
 	}
 	kline[0] = 0
 	if !kline.NotExist() {
+		t.FailNow()
+	}
+}
+
+func TestSimpleKlineJson(t *testing.T) {
+	kline := SimpleKline{1111, 222, 333.1235, 12351351.1346, 0, -1, -1235.2345}
+	data, err := json.Marshal(kline)
+	props.PanicIfNotNil(err)
+	if string(data) != `[1111,222,333.1235,12351351.1346,0,-1,-1235.2345,0,0,0,0]` {
+		fmt.Println(string(data))
+		t.FailNow()
+	}
+	kline2 := SimpleKline{}
+	err = json.Unmarshal(data, &kline2)
+	props.PanicIfNotNil(err)
+	if reflect.DeepEqual(kline2, kline) {
+		fmt.Println(kline2)
 		t.FailNow()
 	}
 }
