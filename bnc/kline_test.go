@@ -104,14 +104,36 @@ func TestNewSimpleKline(t *testing.T) {
 
 }
 
+// TestNotExist tests the NotExist method of the SimpleKline type
 func TestSimpleKline_NotExist(t *testing.T) {
-	kline := SimpleKline{1}
-	if kline.NotExist() {
-		t.FailNow()
+	tests := []struct {
+		name string
+		k    SimpleKline
+		want bool
+	}{
+		{
+			name: "not_exist",
+			k:    SimpleKline{1, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			want: true,
+		},
+		{
+			name: "exist",
+			k:    SimpleKline{1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			want: false,
+		},
+		{
+			name: "empty_kline",
+			k:    SimpleKline{},
+			want: true,
+		},
 	}
-	kline[0] = 0
-	if !kline.NotExist() {
-		t.FailNow()
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.k.NotExist(); got != tt.want {
+				t.Errorf("NotExist() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
