@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/dwdwow/cex"
+	"github.com/dwdwow/cex/ob"
 )
 
 type OrderBookParams struct {
@@ -26,8 +27,8 @@ type RawOrderBook struct {
 
 type OrderBook struct {
 	LastUpdateId int64
-	Asks         [][]float64
-	Bids         [][]float64
+	Asks         ob.Book
+	Bids         ob.Book
 
 	// futures order book fields
 	E int64 `json:"e" bson:"e"` // Message output time

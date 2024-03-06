@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/dwdwow/cex"
+	"github.com/dwdwow/cex/ob"
 )
 
 func obBodyUnmsher(body []byte) (OrderBook, *cex.RespBodyUnmarshalerError) {
@@ -90,8 +91,8 @@ func UnmarshalRawKline(kline RawKline) (Kline, error) {
 	return k, nil
 }
 
-func convRawStrBookToFloatBook(raw [][]string) ([][]float64, error) {
-	var book [][]float64
+func convRawStrBookToFloatBook(raw [][]string) (ob.Book, error) {
+	var book ob.Book
 	for _, pq := range raw {
 		if len(pq) != 2 {
 			return nil, fmt.Errorf("price and qty in book %v len != 2", pq)

@@ -34,7 +34,7 @@ type Producer struct {
 func NewProducer(c CexWsMsgHandler, producerService spub.ProducerService[Data], logger *slog.Logger) *Producer {
 	msgCh := make(chan wsclt.MergedClientMsg, 1000)
 	mgClt := c.Client().SetMsgCh(msgCh)
-	if logger != nil {
+	if logger == nil {
 		logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
 	}
 	return &Producer{
