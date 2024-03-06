@@ -7,6 +7,14 @@ const (
 	PairTypeFutures PairType = "FUTURES"
 )
 
+func NotPairType(t PairType) bool {
+	switch t {
+	case PairTypeSpot, PairTypeFutures:
+		return false
+	}
+	return true
+}
+
 type Pair struct {
 	// must be contained
 	Cex        Name     `json:"cex" bson:"cex"`

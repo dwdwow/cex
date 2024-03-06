@@ -1,72 +1,65 @@
-package cex
+package ob
 
 import (
 	"errors"
 	"fmt"
 	"time"
 
+	"github.com/dwdwow/cex"
 	"github.com/mohae/deepcopy"
 )
 
-func NotPairType(t PairType) bool {
-	switch t {
-	case PairTypeSpot, PairTypeFutures:
-		return false
-	}
-	return true
-}
-
 type PQ []float64
 
-func (pq PQ) Price() (float64, error) {
+func (pq PQ) P() (float64, error) {
 	if len(pq) != 2 {
-		return 0, errors.New("book pq: len != 2")
+		return 0, errors.New("cex: PQ len != 2")
 	}
 	return pq[0], nil
 }
 
-func (pq PQ) Qty() (float64, error) {
+func (pq PQ) Q() (float64, error) {
 	if len(pq) != 2 {
-		return 0, errors.New("book pq: len != 2")
+		return 0, errors.New("cex: PQ len != 2")
 	}
 	return pq[1], nil
 }
 
-// ObBook
+// Book
 // one side book
-type ObBook []PQ
+type Book []PQ
 
-func (b ObBook) Copy() ObBook {
+func (b Book) Copy() Book {
 	nb := deepcopy.Copy(b)
-	return nb.(ObBook)
+	return nb.(Book)
 }
 
-type ObData struct {
-	Cex         Name     `json:"cex" bson:"cex"`
-	Type        PairType `json:"type" bson:"type"`
-	Symbol      string   `json:"symbol" bson:"symbol"`
-	Version     string   `json:"version" bson:"version"`
-	Time        int64    `json:"time" bson:"time"`
-	Asks        ObBook   `json:"asks" bson:"asks"`
-	Bids        ObBook   `json:"bids" bson:"bids"`
-	Empty       bool     `json:"empty" bson:"empty"`
-	EmptyReason string   `json:"emptyReason" bson:"emptyReason"`
+type Data struct {
+	Cex         cex.Name     `json:"cex" bson:"cex"`
+	Type        cex.PairType `json:"type" bson:"type"`
+	Symbol      string       `json:"symbol" bson:"symbol"`
+	Version     string       `json:"version" bson:"version"`
+	Time        int64        `json:"time" bson:"time"`
+	Asks        Book         `json:"asks" bson:"asks"`
+	Bids        Book         `json:"bids" bson:"bids"`
+	Empty       bool         `json:"empty" bson:"empty"`
+	EmptyReason string       `json:"emptyReason" bson:"emptyReason"`
 }
 
-func (o *ObData) Copy() *ObData {
+func (o *Data) Copy() *Data {
 	no := deepcopy.Copy(o)
-	return no.(*ObData)
+	return no.(*Data)
 }
 
-func (o *ObData) SetEmpty(reason string) {
-	o.Asks = ObBook{}
-	o.Bids = ObBook{}
+func (o *Data) SetEmpty(reason string) {
+	o.Asks = Book{}
+	o.Bids = Book{}
 	o.Empty = true
 	o.EmptyReason = reason
 	o.Time = time.Now().UnixMilli()
 }
 
-func (o *ObData) SetBook(ask bool, book ObBook, version string) {
+func (o *Data) SetBook(ask bool, book Book, version string) {
 	if ask {
 		o.SetAskBook(book, version)
 	} else {
@@ -74,19 +67,19 @@ func (o *ObData) SetBook(ask bool, book ObBook, version string) {
 	}
 }
 
-func (o *ObData) SetAskBook(askBook ObBook, version string) {
+func (o *Data) SetAskBook(askBook Book, version string) {
 	o.Asks = askBook
 	o.Version = version
 	o.Time = time.Now().UnixMilli()
 }
 
-func (o *ObData) SetBidBook(bidBook ObBook, version string) {
+func (o *Data) SetBidBook(bidBook Book, version string) {
 	o.Bids = bidBook
 	o.Version = version
 	o.Time = time.Now().UnixMilli()
 }
 
-func (o *ObData) UpdateDeltas(ask bool, delta ObBook, version string) error {
+func (o *Data) UpdateDeltas(ask bool, delta Book, version string) error {
 	if ask {
 		return o.UpdateAskDeltas(delta, version)
 	} else {
@@ -94,27 +87,27 @@ func (o *ObData) UpdateDeltas(ask bool, delta ObBook, version string) error {
 	}
 }
 
-func (o *ObData) UpdateAskDeltas(deltaData ObBook, version string) error {
+func (o *Data) UpdateAskDeltas(deltaData Book, version string) error {
 	return o.updateDeltas(deltaData, true, version)
 }
 
-func (o *ObData) UpdateBidDeltas(deltaData ObBook, version string) error {
+func (o *Data) UpdateBidDeltas(deltaData Book, version string) error {
 	return o.updateDeltas(deltaData, false, version)
 }
 
-func (o *ObData) updateDeltas(newData ObBook, isAsk bool, version string) error {
+func (o *Data) updateDeltas(newData Book, isAsk bool, version string) error {
 	for _, v := range newData {
 		price, qty := v[0], v[1]
 		if price == 0 {
 			continue
 		}
 		if price < 0 {
-			return fmt.Errorf("ob: price %v < 0", price)
+			return fmt.Errorf("cex: ob price %v < 0", price)
 		}
 		if qty < 0 {
-			return fmt.Errorf("ob: qty %v < 0", qty)
+			return fmt.Errorf("cex: ob qty %v < 0", qty)
 		}
-		var book ObBook
+		var book Book
 		if isAsk {
 			book = o.Asks
 		} else {
@@ -132,11 +125,11 @@ func (o *ObData) updateDeltas(newData ObBook, isAsk bool, version string) error 
 	return nil
 }
 
-func (o *ObData) String() string {
+func (o *Data) String() string {
 	return fmt.Sprintf("ob-%v-%v-%v", o.Cex, o.Type, o.Symbol)
 }
 
-func UpdateOneBookDelta(price, qty float64, oldBook ObBook, isAsk bool) ObBook {
+func UpdateOneBookDelta(price, qty float64, oldBook Book, isAsk bool) Book {
 	updated := false
 	for i, v := range oldBook {
 		oldPrice := v[0]
