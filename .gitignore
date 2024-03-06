@@ -1,4 +1,3 @@
 .idea/
 .vscode/
-/test/just_test.go
-/test/main/
+/test
