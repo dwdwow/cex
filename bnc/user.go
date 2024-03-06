@@ -249,8 +249,8 @@ func (u *User) QueryFuturesOrder(symbol string, orderId int64, cltOrdId string, 
 	return cex.Request(u, FuturesQueryOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId}, opts...)
 }
 
-func (u *User) CloseFuturesOrder(symbol string, opts ...cex.CltOpt) (*resty.Response, FuturesOrder, cex.RequestError) {
-	return cex.Request(u, FuturesNewOrderConfig, FuturesNewOrderParams{Symbol: symbol, PositionSide: u.cfg.fuPosSide, ReduceOnly: SmallTrue}, opts...)
+func (u *User) CloseFuturesOrder(symbol string, side OrderSide, opts ...cex.CltOpt) (*resty.Response, FuturesOrder, cex.RequestError) {
+	return cex.Request(u, FuturesNewOrderConfig, FuturesNewOrderParams{Symbol: symbol, PositionSide: u.cfg.fuPosSide, Side: side, ReduceOnly: SmallTrue}, opts...)
 }
 
 // ------------------------------------------------------------
