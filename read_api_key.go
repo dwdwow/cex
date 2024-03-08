@@ -14,7 +14,7 @@ const (
 JUST FOR TEST
 */
 
-func ReadApiKey() (map[Name]Api, error) {
+func ReadApiKey() (map[string]Api, error) {
 	dirname, err := os.UserHomeDir()
 	if err != nil {
 		return nil, err
@@ -24,12 +24,12 @@ func ReadApiKey() (map[Name]Api, error) {
 	if err != nil {
 		return nil, err
 	}
-	data := map[Name]Api{}
+	data := map[string]Api{}
 	err = yaml.Unmarshal(fileByte, &data)
 	return data, err
 }
 
-func MustReadApiKey() map[Name]Api {
+func MustReadApiKey() map[string]Api {
 	apiKey, err := ReadApiKey()
 	if err != nil {
 		panic(err)

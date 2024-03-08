@@ -223,11 +223,11 @@ var SimpleEarnFlexiblePositionsConfig = cex.ReqConfig[SimpleEarnFlexiblePosition
 }
 
 type SimpleEarnFlexibleRateHistoryParams struct {
-	ProductId string `s2m:"productId"`
-	StartTime int64  `s2m:"startTime"`
-	EndTime   int64  `s2m:"endTime"`
-	Current   int    `s2m:"current"` // Currently querying page. Start from 1. Default:1
-	Size      int    `s2m:"size"`    // Default:10, Max:100
+	ProductId string `s2m:"productId,omitempty"`
+	StartTime int64  `s2m:"startTime,omitempty"`
+	EndTime   int64  `s2m:"endTime,omitempty"`
+	Current   int    `s2m:"current,omitempty"` // Currently querying page. Start from 1. Default:1
+	Size      int    `s2m:"size,omitempty"`    // Default:10, Max:100
 }
 
 type SimpleEarnFlexibleRateHistory struct {
