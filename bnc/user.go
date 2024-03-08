@@ -109,6 +109,10 @@ func (u *User) SimpleEarnFlexibleRedeem(productId string, redeemAll bool, amount
 	return cex.Request(u, SimpleEarnFlexibleRedeemConfig, SimpleEarnFlexibleRedeemParams{ProductId: productId, RedeemAll: redeemAll, Amount: amount, DestAccount: destAccount}, opts...)
 }
 
+func (u *User) SimpleEarnFlexibleRateHistories(productId string, startTime, endTime int64, opts ...cex.CltOpt) (*resty.Response, Page[[]SimpleEarnFlexibleRateHistory], cex.RequestError) {
+	return cex.Request(u, SimpleEarnFlexibleRateHistoryConfig, SimpleEarnFlexibleRateHistoryParams{ProductId: productId, StartTime: startTime, EndTime: endTime, Size: 100}, opts...)
+}
+
 // ------------------------------------------------------------
 // Flexible Simple Earn API
 // ============================================================

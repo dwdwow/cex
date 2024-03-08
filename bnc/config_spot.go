@@ -222,6 +222,34 @@ var SimpleEarnFlexiblePositionsConfig = cex.ReqConfig[SimpleEarnFlexiblePosition
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]SimpleEarnFlexiblePosition]]),
 }
 
+type SimpleEarnFlexibleRateHistoryParams struct {
+	ProductId string `s2m:"productId"`
+	StartTime int64  `s2m:"startTime"`
+	EndTime   int64  `s2m:"endTime"`
+	Current   int    `s2m:"current"` // Currently querying page. Start from 1. Default:1
+	Size      int    `s2m:"size"`    // Default:10, Max:100
+}
+
+type SimpleEarnFlexibleRateHistory struct {
+	ProductId            string  `json:"productId"`
+	Asset                string  `json:"asset"`
+	AnnualPercentageRate float64 `json:"annualPercentageRate,string"`
+	Time                 int64   `json:"time"`
+}
+
+var SimpleEarnFlexibleRateHistoryConfig = cex.ReqConfig[SimpleEarnFlexibleRateHistoryParams, Page[[]SimpleEarnFlexibleRateHistory]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/simple-earn/flexible/history/rateHistory",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]SimpleEarnFlexibleRateHistory]]),
+}
+
 // ---------------------------------------------
 // Flexible Simple Earn
 // =============================================

@@ -49,6 +49,10 @@ func TestUser_SimpleEarnFlexibleRedeem(t *testing.T) {
 	userTestChecker(newTestUser().SimpleEarnFlexibleRedeem("ETH001", false, 0.02, SimpleEarnFlexibleRedeemDestinationSpot))
 }
 
+func TestUser_SimpleEarnFlexibleRateHistories(t *testing.T) {
+	userTestChecker(newTestUser().SimpleEarnFlexibleRateHistories("USDT001", time.Now().UnixMilli()-time.Hour.Milliseconds()*100, 0))
+}
+
 func TestUser_CryptoLoanFlexibleOngoingOrders(t *testing.T) {
 	userTestChecker(newTestUser().CryptoLoanFlexibleOngoingOrders("USDT", "ETH"))
 }
