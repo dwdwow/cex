@@ -17,34 +17,34 @@ type suber struct {
 	obPuber       spub.Publisher[ob.Data]
 }
 
-func (s *suber) subOb(pairType cex.PairType, symbol string) (sub spub.Subscription[ob.Data], err error) {
+func (s *suber) subOb(ctx context.Context, pairType cex.PairType, symbol string) (sub spub.Subscription[ob.Data], err error) {
 	s.obMux.Lock()
 	defer s.obMux.Unlock()
 	if s.obProducer == nil {
-		ctx, cancel := context.WithCancel(context.Background())
+		obCtx, cancel := context.WithCancel(context.Background())
 		defer func() {
 			if err != nil {
 				cancel()
 			}
 		}()
 		publisher := spub.NewSimplePublisher(ob.NewSimplePublisherChannelUtil(), spub.SimpleRcvCapOption[ob.Data](100))
-		if err = publisher.Start(ctx); err != nil {
+		if err = publisher.Start(obCtx); err != nil {
 			return
 		}
 		producer := ob.NewProducer(NewWsFuObMsgHandler(nil), publisher, nil)
-		if err = producer.Start(ctx); err != nil {
+		if err = producer.Start(obCtx); err != nil {
 			return
 		}
 		s.obPuber = publisher
 		s.obProducer = producer
-		s.obCtx = ctx
+		s.obCtx = obCtx
 		s.obCtxCanceler = cancel
 	}
 	id, err := ob.ID(cex.BINANCE, pairType, symbol)
 	if err != nil {
 		return
 	}
-	return s.obPuber.Subscribe(s.obCtx, id)
+	return s.obPuber.Subscribe(ctx, id)
 }
 
 func (s *suber) closeOb() {
@@ -61,6 +61,18 @@ func (s *suber) closeOb() {
 
 var defaultSuber = &suber{}
 
-func SubOb(pairType cex.PairType, symbol string) (spub.Subscription[ob.Data], error) {
-	return defaultSuber.subOb(pairType, symbol)
+func SubOb(ctx context.Context, pairType cex.PairType, symbol string) (spub.Subscription[ob.Data], error) {
+	return defaultSuber.subOb(ctx, pairType, symbol)
+}
+
+func SubObWithSubsription(ctx context.Context, sub spub.Subscription[ob.Data], pairType cex.PairType, symbol string) error {
+	id, err := ob.ID(cex.BINANCE, pairType, symbol)
+	if err != nil {
+		return err
+	}
+	return sub.Subscribe(ctx, id)
+}
+
+func CloseObSuber() {
+	defaultSuber.closeOb()
 }
