@@ -2,6 +2,7 @@ package bnc
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/dwdwow/cex"
@@ -17,7 +18,7 @@ type suber struct {
 	fuObPuber       spub.Publisher[ob.Data]
 }
 
-func (s *suber) subOb(ctx context.Context, pairType cex.PairType, symbol string) (sub spub.Subscription[ob.Data], err error) {
+func (s *suber) subFuOb(ctx context.Context, symbol string) (sub spub.Subscription[ob.Data], err error) {
 	s.fuObMux.Lock()
 	defer s.fuObMux.Unlock()
 	if s.fuObProducer == nil {
@@ -40,14 +41,14 @@ func (s *suber) subOb(ctx context.Context, pairType cex.PairType, symbol string)
 		s.fuObCtx = obCtx
 		s.fuObCtxCanceler = cancel
 	}
-	id, err := ob.ID(cex.BINANCE, pairType, symbol)
+	id, err := ob.ID(cex.BINANCE, cex.PairTypeFutures, symbol)
 	if err != nil {
 		return
 	}
 	return s.fuObPuber.Subscribe(ctx, id)
 }
 
-func (s *suber) closeOb() {
+func (s *suber) closeFuOb() {
 	s.fuObMux.Lock()
 	defer s.fuObMux.Unlock()
 	if s.fuObCtxCanceler != nil {
@@ -59,10 +60,20 @@ func (s *suber) closeOb() {
 	}
 }
 
+func (s *suber) subSpOb(ctx context.Context, symbol string) (sub spub.Subscription[ob.Data], err error) {
+	return
+}
+
 var defaultSuber = &suber{}
 
 func SubOb(ctx context.Context, pairType cex.PairType, symbol string) (spub.Subscription[ob.Data], error) {
-	return defaultSuber.subOb(ctx, pairType, symbol)
+	switch pairType {
+	case cex.PairTypeFutures:
+		return defaultSuber.subFuOb(ctx, symbol)
+	case cex.PairTypeSpot:
+		return defaultSuber.subSpOb(ctx, symbol)
+	}
+	return nil, fmt.Errorf("bnc: unknown pair type %v", pairType)
 }
 
 func SubObWithSubsription(ctx context.Context, sub spub.Subscription[ob.Data], pairType cex.PairType, symbol string) error {
@@ -73,6 +84,6 @@ func SubObWithSubsription(ctx context.Context, sub spub.Subscription[ob.Data], p
 	return sub.Subscribe(ctx, id)
 }
 
-func CloseObSuber() {
-	defaultSuber.closeOb()
+func CloseFuObSuber() {
+	defaultSuber.closeFuOb()
 }
