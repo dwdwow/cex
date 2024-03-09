@@ -10,17 +10,17 @@ import (
 )
 
 type suber struct {
-	obMux         sync.Mutex
-	obCtx         context.Context
-	obCtxCanceler context.CancelFunc
-	obProducer    *ob.Producer
-	obPuber       spub.Publisher[ob.Data]
+	fuObMux         sync.Mutex
+	fuObCtx         context.Context
+	fuObCtxCanceler context.CancelFunc
+	fuObProducer    *ob.Producer
+	fuObPuber       spub.Publisher[ob.Data]
 }
 
 func (s *suber) subOb(ctx context.Context, pairType cex.PairType, symbol string) (sub spub.Subscription[ob.Data], err error) {
-	s.obMux.Lock()
-	defer s.obMux.Unlock()
-	if s.obProducer == nil {
+	s.fuObMux.Lock()
+	defer s.fuObMux.Unlock()
+	if s.fuObProducer == nil {
 		obCtx, cancel := context.WithCancel(context.Background())
 		defer func() {
 			if err != nil {
@@ -35,27 +35,27 @@ func (s *suber) subOb(ctx context.Context, pairType cex.PairType, symbol string)
 		if err = producer.Start(obCtx); err != nil {
 			return
 		}
-		s.obPuber = publisher
-		s.obProducer = producer
-		s.obCtx = obCtx
-		s.obCtxCanceler = cancel
+		s.fuObPuber = publisher
+		s.fuObProducer = producer
+		s.fuObCtx = obCtx
+		s.fuObCtxCanceler = cancel
 	}
 	id, err := ob.ID(cex.BINANCE, pairType, symbol)
 	if err != nil {
 		return
 	}
-	return s.obPuber.Subscribe(ctx, id)
+	return s.fuObPuber.Subscribe(ctx, id)
 }
 
 func (s *suber) closeOb() {
-	s.obMux.Lock()
-	defer s.obMux.Unlock()
-	if s.obCtxCanceler != nil {
-		s.obCtxCanceler()
-		s.obCtx = nil
-		s.obCtxCanceler = nil
-		s.obProducer = nil
-		s.obPuber = nil
+	s.fuObMux.Lock()
+	defer s.fuObMux.Unlock()
+	if s.fuObCtxCanceler != nil {
+		s.fuObCtxCanceler()
+		s.fuObCtx = nil
+		s.fuObCtxCanceler = nil
+		s.fuObProducer = nil
+		s.fuObPuber = nil
 	}
 }
 
