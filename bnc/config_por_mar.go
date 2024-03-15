@@ -72,18 +72,18 @@ type PortfolioMarginBalance struct {
 	UpdateTime          int64   `json:"updateTime"`
 }
 
-var PortfolioMarginBalanceConfig = cex.ReqConfig[PortfolioMarginAccountBalanceParams, PortfolioMarginBalance]{
-	ReqBaseConfig: cex.ReqBaseConfig{
-		BaseUrl:          PapiBaseUrl,
-		Path:             PapiV1 + "/balance",
-		Method:           http.MethodGet,
-		IsUserData:       true,
-		UserTimeInterval: 0,
-		IpTimeInterval:   0,
-	},
-	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[PortfolioMarginBalance]),
-}
+//var PortfolioMarginBalanceConfig = cex.ReqConfig[PortfolioMarginAccountBalanceParams, PortfolioMarginBalance]{
+//	ReqBaseConfig: cex.ReqBaseConfig{
+//		BaseUrl:          PapiBaseUrl,
+//		Path:             PapiV1 + "/balance",
+//		Method:           http.MethodGet,
+//		IsUserData:       true,
+//		UserTimeInterval: 0,
+//		IpTimeInterval:   0,
+//	},
+//	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+//	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[PortfolioMarginBalance]),
+//}
 
 var PortfolioMarginBalancesConfig = cex.ReqConfig[cex.NilReqData, []PortfolioMarginBalance]{
 	ReqBaseConfig: cex.ReqBaseConfig{
