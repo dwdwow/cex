@@ -8,6 +8,8 @@ const (
 	FapiBaseUrl = "https://fapi.binance.com"
 	FapiV1      = "/fapi/v1"
 	FapiV2      = "/fapi/v2"
+	PapiBaseUrl = "https://papi.binance.com"
+	PapiV1      = "/papi/v1"
 )
 
 const (
