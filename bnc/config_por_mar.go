@@ -175,3 +175,25 @@ var PortfolioMarginPositionsConfig = cex.ReqConfig[FuturesPositionsParams, []Fut
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesPosition]),
 }
+
+type PortfolioMarginBNBTransferParams struct {
+	Amount       float64
+	TransferSide PortfolioMarginBNBTransferSide
+}
+
+type PortfolioMarginBNBTransferResult struct {
+	TranId int64
+}
+
+var PortfolioMarginBNBTransferConfig = cex.ReqConfig[PortfolioMarginBNBTransferParams, PortfolioMarginBNBTransferResult]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          PapiBaseUrl,
+		Path:             PapiV1 + "/um/positionRisk",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[PortfolioMarginBNBTransferResult]),
+}

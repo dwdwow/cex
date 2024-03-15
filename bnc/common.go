@@ -385,6 +385,13 @@ const (
 	PortfolioMarginAccountBankrupted        PortfolioMarginAccountStatus = "BANKRUPTED"
 )
 
+type PortfolioMarginBNBTransferSide string
+
+const (
+	PortfolioMarginBNBTransferToUm   PortfolioMarginBNBTransferSide = "TO_UM"
+	PortfolioMarginBNBTransferFromUm PortfolioMarginBNBTransferSide = "FROM_UM"
+)
+
 type CodeMsg struct {
 	// spot: 0, future: 200
 	Code int `json:"code"`
