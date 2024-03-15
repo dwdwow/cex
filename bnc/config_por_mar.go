@@ -18,21 +18,21 @@ type PortfolioMarginAccountAsset struct {
 }
 
 type PortfolioMarginAccountPosition struct {
-	Symbol                 string  `json:"symbol"`
-	InitialMargin          float64 `json:"initialMargin,string"`
-	MaintMargin            float64 `json:"maintMargin,string"`
-	UnrealizedProfit       float64 `json:"unrealizedProfit,string"`
-	PositionInitialMargin  float64 `json:"positionInitialMargin,string"`
-	OpenOrderInitialMargin float64 `json:"openOrderInitialMargin,string"`
-	Leverage               float64 `json:"leverage,string"`
-	EntryPrice             float64 `json:"entryPrice,string"`
-	MaxNotional            float64 `json:"maxNotional,string"`
-	BidNotional            float64 `json:"bidNotional,string"`
-	AskNotional            float64 `json:"askNotional,string"`
-	PositionSide           float64 `json:"positionSide,string"`
-	PositionAmt            float64 `json:"positionAmt,string"`
-	BreakEvenPrice         float64 `json:"breakEvenPrice,string"`
-	UpdateTime             int     `json:"updateTime"`
+	Symbol                 string              `json:"symbol"`
+	InitialMargin          float64             `json:"initialMargin,string"`
+	MaintMargin            float64             `json:"maintMargin,string"`
+	UnrealizedProfit       float64             `json:"unrealizedProfit,string"`
+	PositionInitialMargin  float64             `json:"positionInitialMargin,string"`
+	OpenOrderInitialMargin float64             `json:"openOrderInitialMargin,string"`
+	Leverage               float64             `json:"leverage,string"`
+	EntryPrice             float64             `json:"entryPrice,string"`
+	MaxNotional            float64             `json:"maxNotional,string"`
+	BidNotional            float64             `json:"bidNotional,string"`
+	AskNotional            float64             `json:"askNotional,string"`
+	PositionSide           FuturesPositionSide `json:"positionSide,string"`
+	PositionAmt            float64             `json:"positionAmt,string"`
+	BreakEvenPrice         float64             `json:"breakEvenPrice,string"`
+	UpdateTime             int                 `json:"updateTime"`
 }
 
 type PortfolioMarginAccountDetail struct {
