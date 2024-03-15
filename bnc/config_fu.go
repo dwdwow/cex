@@ -645,26 +645,28 @@ var FuturesPositionMarginChangeHistoriesConfig = cex.ReqConfig[FuturesPositionMa
 }
 
 type FuturesPositionsParams struct {
-	Symbol string `s2m:"symbol"`
+	Symbol string `s2m:"symbol,omitempty"`
 }
 
 type FuturesPosition struct {
-	Symbol           string                     `json:"symbol" bson:"symbol"`
-	PositionSide     string                     `json:"positionSide" bson:"positionSide"`
-	EntryPrice       float64                    `json:"entryPrice,string" bson:"entryPrice,string"`
-	BreakEvenPrice   float64                    `json:"breakEvenPrice,string" bson:"breakEvenPrice,string"`
-	MarginType       FuturesMarginLowerCaseType `json:"marginType" bson:"marginType"`
-	IsAutoAddMargin  SmallBool                  `json:"isAutoAddMargin" bson:"isAutoAddMargin"`
-	IsolatedMargin   float64                    `json:"isolatedMargin,string" bson:"isolatedMargin,string"`
-	Leverage         float64                    `json:"leverage,string" bson:"leverage,string"`
-	LiquidationPrice float64                    `json:"liquidationPrice,string" bson:"liquidationPrice,string"`
-	MarkPrice        float64                    `json:"markPrice,string" bson:"markPrice,string"`
-	MaxNotionalValue float64                    `json:"maxNotionalValue,string" bson:"maxNotionalValue,string"`
-	SignPositionAmt  float64                    `json:"positionAmt,string" bson:"positionAmt,string"` // long: > 0, short: < 0
-	Notional         float64                    `json:"notional,string" bson:"notional,string"`
-	IsolatedWallet   float64                    `json:"isolatedWallet,string" bson:"isolatedWallet,string"`
-	UnRealizedProfit float64                    `json:"unRealizedProfit,string" bson:"unRealizedProfit,string"`
-	UpdateTime       int                        `json:"updateTime" bson:"updateTime"`
+	Symbol           string  `json:"symbol" bson:"symbol"`
+	PositionSide     string  `json:"positionSide" bson:"positionSide"`
+	EntryPrice       float64 `json:"entryPrice,string" bson:"entryPrice,string"`
+	Leverage         float64 `json:"leverage,string" bson:"leverage,string"`
+	LiquidationPrice float64 `json:"liquidationPrice,string" bson:"liquidationPrice,string"`
+	MarkPrice        float64 `json:"markPrice,string" bson:"markPrice,string"`
+	MaxNotionalValue float64 `json:"maxNotionalValue,string" bson:"maxNotionalValue,string"`
+	SignPositionAmt  float64 `json:"positionAmt,string" bson:"positionAmt,string"` // long: > 0, short: < 0
+	Notional         float64 `json:"notional,string" bson:"notional,string"`
+	UnRealizedProfit float64 `json:"unRealizedProfit,string" bson:"unRealizedProfit,string"`
+	UpdateTime       int     `json:"updateTime" bson:"updateTime"`
+
+	// only for futures account, not for portfolio margin account
+	BreakEvenPrice  float64                    `json:"breakEvenPrice,string" bson:"breakEvenPrice,string"`
+	MarginType      FuturesMarginLowerCaseType `json:"marginType" bson:"marginType"`
+	IsAutoAddMargin SmallBool                  `json:"isAutoAddMargin" bson:"isAutoAddMargin"`
+	IsolatedMargin  float64                    `json:"isolatedMargin,string" bson:"isolatedMargin,string"`
+	IsolatedWallet  float64                    `json:"isolatedWallet,string" bson:"isolatedWallet,string"`
 }
 
 func (p FuturesPosition) AbsPositionAmt() float64 {

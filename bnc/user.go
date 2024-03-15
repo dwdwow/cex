@@ -16,7 +16,8 @@ import (
 )
 
 type UserConfig struct {
-	fuPosSide FuturesPositionSide
+	fuPosSide                FuturesPositionSide
+	isPortfolioMarginAccount bool
 }
 
 type User struct {
@@ -29,6 +30,18 @@ type UserOpt func(*User)
 func UserOptPositionSide(side FuturesPositionSide) func(*User) {
 	return func(user *User) {
 		user.cfg.fuPosSide = side
+	}
+}
+
+func UserOptSetPositionBothSide() func(*User) {
+	return func(user *User) {
+		user.cfg.fuPosSide = FuturesPositionSideBoth
+	}
+}
+
+func UserOptSetPortfolioMarginAccount() func(*User) {
+	return func(user *User) {
+		user.cfg.isPortfolioMarginAccount = true
 	}
 }
 
@@ -87,6 +100,26 @@ func (u *User) FuturesAccount(opts ...cex.CltOpt) (*resty.Response, FuturesAccou
 
 func (u *User) FuturesPositions(symbol string, opts ...cex.CltOpt) (*resty.Response, []FuturesPosition, cex.RequestError) {
 	return cex.Request(u, FuturesPositionsConfig, FuturesPositionsParams{Symbol: symbol}, opts...)
+}
+
+func (u *User) PortfolioMarginAccountInformation(opts ...cex.CltOpt) (*resty.Response, PortfolioMarginAccountInformation, cex.RequestError) {
+	return cex.Request(u, PortfolioMarginAccountInformationConfig, nil, opts...)
+}
+
+func (u *User) PortfolioMarginAccountDetail(opts ...cex.CltOpt) (*resty.Response, PortfolioMarginAccountDetail, cex.RequestError) {
+	return cex.Request(u, PortfolioMarginAccountDetailConfig, nil, opts...)
+}
+
+func (u *User) PortfolioMarginBalance(asset string, opts ...cex.CltOpt) (*resty.Response, PortfolioMarginBalance, cex.RequestError) {
+	return cex.Request(u, PortfolioMarginBalanceConfig, PortfolioMarginAccountBalanceParams{asset}, opts...)
+}
+
+func (u *User) PortfolioMarginBalances(opts ...cex.CltOpt) (*resty.Response, []PortfolioMarginBalance, cex.RequestError) {
+	return cex.Request(u, PortfolioMarginBalancesConfig, nil, opts...)
+}
+
+func (u *User) PortfolioMarginPositions(symbol string, opts ...cex.CltOpt) (*resty.Response, []FuturesPosition, cex.RequestError) {
+	return cex.Request(u, PortfolioMarginPositionsConfig, FuturesPositionsParams{symbol}, opts...)
 }
 
 // ------------------------------------------------------------
@@ -246,10 +279,16 @@ func (u *User) QuerySpotOrder(symbol string, orderId int64, cltOrdId string, opt
 // ------------------------------------------------------------
 
 func (u *User) CancelFuturesOrder(symbol string, orderId int64, cltOrdId string, opts ...cex.CltOpt) (*resty.Response, FuturesOrder, cex.RequestError) {
+	if u.cfg.isPortfolioMarginAccount {
+		return cex.Request(u, PortfolioMarginCancelOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId}, opts...)
+	}
 	return cex.Request(u, FuturesCancelOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId}, opts...)
 }
 
 func (u *User) QueryFuturesOrder(symbol string, orderId int64, cltOrdId string, opts ...cex.CltOpt) (*resty.Response, FuturesOrder, cex.RequestError) {
+	if u.cfg.isPortfolioMarginAccount {
+		return cex.Request(u, PortfolioMarginQueryOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId}, opts...)
+	}
 	return cex.Request(u, FuturesQueryOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId}, opts...)
 }
 
@@ -312,7 +351,10 @@ func (u *User) newFuOrd(asset, quote string, orderType cex.OrderType, orderSide 
 	if orderType == cex.OrderTypeLimit {
 		tif = TimeInForceGtc
 	}
-	resp, rawOrd, err := cex.Request(u, FuturesNewOrderConfig, FuturesNewOrderParams{
+	var resp *resty.Response
+	var rawOrd FuturesOrder
+	var err cex.RequestError
+	params := FuturesNewOrderParams{
 		Symbol:       symbol,
 		PositionSide: u.cfg.fuPosSide,
 		Type:         mapStrStr(orderType, ordTypByCexOrdTyp),
@@ -320,7 +362,12 @@ func (u *User) newFuOrd(asset, quote string, orderType cex.OrderType, orderSide 
 		Quantity:     qty,
 		Price:        price,
 		TimeInForce:  tif,
-	}, opts...)
+	}
+	if u.cfg.isPortfolioMarginAccount {
+		resp, rawOrd, err = cex.Request(u, PortfolioMarginNewOrderConfig, params, opts...)
+	} else {
+		resp, rawOrd, err = cex.Request(u, FuturesNewOrderConfig, params, opts...)
+	}
 
 	ord := SwitchFutureOrderToCexOrder(rawOrd)
 	ord.ApiKey = u.api.ApiKey

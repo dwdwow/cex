@@ -373,6 +373,18 @@ const (
 	SimpleEarnFlexibleRedeemDestinationFund SimpleEarnFlexibleRedeemDestination = "FUND"
 )
 
+type PortfolioMarginAccountStatus string
+
+const (
+	PortfolioMarginAccountNormal            PortfolioMarginAccountStatus = "NORMAL"
+	PortfolioMarginAccountMarginCall        PortfolioMarginAccountStatus = "MARGIN_CALL"
+	PortfolioMarginAccountSupplyMargin      PortfolioMarginAccountStatus = "SUPPLY_MARGIN"
+	PortfolioMarginAccountReduceOnly        PortfolioMarginAccountStatus = "REDUCE_ONLY"
+	PortfolioMarginAccountActiveLiquidation PortfolioMarginAccountStatus = "ACTIVE_LIQUIDATION"
+	PortfolioMarginAccountForceLiquidation  PortfolioMarginAccountStatus = "FORCE_LIQUIDATION"
+	PortfolioMarginAccountBankrupted        PortfolioMarginAccountStatus = "BANKRUPTED"
+)
+
 type CodeMsg struct {
 	// spot: 0, future: 200
 	Code int `json:"code"`
