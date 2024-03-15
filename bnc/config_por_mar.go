@@ -29,7 +29,7 @@ type PortfolioMarginAccountPosition struct {
 	MaxNotional            float64             `json:"maxNotional,string"`
 	BidNotional            float64             `json:"bidNotional,string"`
 	AskNotional            float64             `json:"askNotional,string"`
-	PositionSide           FuturesPositionSide `json:"positionSide,string"`
+	PositionSide           FuturesPositionSide `json:"positionSide"`
 	PositionAmt            float64             `json:"positionAmt,string"`
 	BreakEvenPrice         float64             `json:"breakEvenPrice,string"`
 	UpdateTime             int                 `json:"updateTime"`
