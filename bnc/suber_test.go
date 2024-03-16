@@ -33,3 +33,20 @@ func TestSubOb(t *testing.T) {
 		}
 	}
 }
+
+func TestSubSpOb(t *testing.T) {
+	sub, err := SubOb(context.Background(), cex.PairTypeSpot, "BOMEUSDT")
+	props.PanicIfNotNil(err)
+	for {
+		o, closed, err := sub.Receive(context.TODO())
+		props.PanicIfNotNil(err)
+		if closed {
+			panic("closed")
+		}
+		if o.Empty {
+			t.Error(o.Symbol, o.EmptyReason)
+		} else {
+			t.Log(o.Symbol, o.Asks[0])
+		}
+	}
+}

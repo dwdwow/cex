@@ -15,7 +15,7 @@ func TestSpotObWs(t *testing.T) {
 	publisher := spub.NewSimplePublisher[ob.Data](ob.NewSimplePublisherChannelUtil(), spub.SimpleRcvCapOption[ob.Data](100))
 	err := publisher.Start(context.TODO())
 	props.PanicIfNotNil(err)
-	wsCex := NewWsObMsgHandler(nil)
+	wsCex := NewWsSpObMsgHandler(nil)
 	obWs := ob.NewProducer(wsCex, publisher, nil)
 	err = obWs.Start(context.TODO())
 	props.PanicIfNotNil(err)
@@ -38,14 +38,13 @@ func TestSpotObWs(t *testing.T) {
 }
 
 func TestObSimplePublisher(t *testing.T) {
-	handler := NewWsObMsgHandler(nil)
+	handler := NewWsSpObMsgHandler(nil)
 	publisher := ob.NewSimplePublisher(handler, nil)
 	err := publisher.Start(context.TODO())
 	props.PanicIfNotNil(err)
 	consumer := spub.ConsumerService[ob.Data](publisher)
-	c, err := consumer.ChannelUtil().Marshal(ob.Data{Cex: cex.BINANCE, Type: cex.PairTypeSpot, Symbol: "ETHUSDT"})
+	c, err := consumer.ChannelUtil().Marshal(ob.Data{Cex: cex.BINANCE, Type: cex.PairTypeSpot, Symbol: "BOMEUSDT"})
 	props.PanicIfNotNil(err)
-	//c, err := ob.SimplePublisherChannel(ob.Data{Cex: cex.BINANCE, Type: cex.ObTypeSpot, Symbol: "ETHUSDT"})
 	sub, err := consumer.Subscribe(context.TODO(), c)
 	props.PanicIfNotNil(err)
 	for {

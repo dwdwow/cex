@@ -24,7 +24,7 @@ type WsSpObMsgHandler struct {
 	obCacheBySyb     props.SafeRWMap[string, ob.Data]
 }
 
-func NewWsObMsgHandler(logger *slog.Logger) *WsSpObMsgHandler {
+func NewWsSpObMsgHandler(logger *slog.Logger) *WsSpObMsgHandler {
 	mgClt := wsclt.
 		NewMergedClient(WsBaseUrl, true, maxTopicNumPerWs, logger).
 		SetTopicSuber(topicSuber).

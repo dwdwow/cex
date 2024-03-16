@@ -11,6 +11,12 @@ import (
 )
 
 type suber struct {
+	spObMux         sync.Mutex
+	spObCtx         context.Context
+	spObCtxCanceler context.CancelFunc
+	spObProducer    *ob.Producer
+	spObPuber       spub.Publisher[ob.Data]
+
 	fuObMux         sync.Mutex
 	fuObCtx         context.Context
 	fuObCtxCanceler context.CancelFunc
@@ -61,7 +67,45 @@ func (s *suber) closeFuOb() {
 }
 
 func (s *suber) subSpOb(ctx context.Context, symbol string) (sub spub.Subscription[ob.Data], err error) {
-	return
+	s.spObMux.Lock()
+	defer s.spObMux.Unlock()
+	if s.spObProducer == nil {
+		obCtx, cancel := context.WithCancel(context.Background())
+		defer func() {
+			if err != nil {
+				cancel()
+			}
+		}()
+		publisher := spub.NewSimplePublisher(ob.NewSimplePublisherChannelUtil(), spub.SimpleRcvCapOption[ob.Data](100))
+		if err = publisher.Start(obCtx); err != nil {
+			return
+		}
+		producer := ob.NewProducer(NewWsSpObMsgHandler(nil), publisher, nil)
+		if err = producer.Start(obCtx); err != nil {
+			return
+		}
+		s.spObPuber = publisher
+		s.spObProducer = producer
+		s.spObCtx = obCtx
+		s.spObCtxCanceler = cancel
+	}
+	id, err := ob.ID(cex.BINANCE, cex.PairTypeSpot, symbol)
+	if err != nil {
+		return
+	}
+	return s.spObPuber.Subscribe(ctx, id)
+}
+
+func (s *suber) closeSpOb() {
+	s.spObMux.Lock()
+	defer s.spObMux.Unlock()
+	if s.spObCtxCanceler != nil {
+		s.spObCtxCanceler()
+		s.spObCtx = nil
+		s.spObCtxCanceler = nil
+		s.spObProducer = nil
+		s.spObPuber = nil
+	}
 }
 
 var defaultSuber = &suber{}
