@@ -16,7 +16,7 @@ func TestSubOb(t *testing.T) {
 	for _, p := range pairs {
 		syb := p.PairSymbol
 		go func() {
-			err := SubObWithSubsription(context.Background(), sub, cex.PairTypeFutures, syb)
+			err := SubObWithSupsription(context.Background(), sub, cex.PairTypeFutures, syb)
 			props.PanicIfNotNil(err)
 		}()
 	}

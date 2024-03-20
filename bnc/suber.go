@@ -120,7 +120,7 @@ func SubOb(ctx context.Context, pairType cex.PairType, symbol string) (spub.Subs
 	return nil, fmt.Errorf("bnc: unknown pair type %v", pairType)
 }
 
-func SubObWithSubsription(ctx context.Context, sub spub.Subscription[ob.Data], pairType cex.PairType, symbol string) error {
+func SubObWithSubscription(ctx context.Context, sub spub.Subscription[ob.Data], pairType cex.PairType, symbol string) error {
 	id, err := ob.ID(cex.BINANCE, pairType, symbol)
 	if err != nil {
 		return err
