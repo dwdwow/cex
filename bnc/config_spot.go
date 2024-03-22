@@ -126,6 +126,35 @@ var UniversalTransferConfig = cex.ReqConfig[UniversalTransferParams, UniversalTr
 // Wallet
 // ---------------------------------------------
 
+type WithdrawParams struct {
+	Coin               string     `s2m:"coin,omitempty"`
+	WithdrawOrderId    string     `s2m:"withdrawOrderId,omitempty"`
+	Network            Network    `s2m:"network,omitempty"`
+	Address            string     `s2m:"address,omitempty"`
+	AddressTag         string     `s2m:"addressTag,omitempty"`
+	Amount             float64    `s2m:"amount,omitempty"`
+	TransactionFeeFlag bool       `s2m:"transactionFeeFlag,omitempty"` //	When making internal transfer, true for returning the fee to the destination account; false for returning the fee back to the departure account. Default false.
+	Name               string     `s2m:"name,omitempty"`               //	Description of the address. Space in name should be encoded into %20.
+	WalletType         WalletType `s2m:"walletType,omitempty"`
+}
+
+type WithdrawResult struct {
+	Id string `json:"id"`
+}
+
+var WithdrawConfig = cex.ReqConfig[WithdrawParams, WithdrawResult]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/capital/withdraw/apply",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[WithdrawResult]),
+}
+
 // ---------------------------------------------
 // Wallet
 // =============================================

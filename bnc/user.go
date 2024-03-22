@@ -122,6 +122,10 @@ func (u *User) PortfolioMarginPositions(symbol string, opts ...cex.CltOpt) (*res
 	return cex.Request(u, PortfolioMarginPositionsConfig, FuturesPositionsParams{symbol}, opts...)
 }
 
+func (u *User) Withdraw(coin string, network Network, address string, qty float64) (*resty.Response, WithdrawResult, cex.RequestError) {
+	return cex.Request(u, WithdrawConfig, WithdrawParams{Coin: coin, Network: network, Address: address, Amount: qty})
+}
+
 // ------------------------------------------------------------
 // Account API
 // ============================================================
