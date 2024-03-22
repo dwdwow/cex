@@ -10,7 +10,7 @@ import (
 
 func readApiKey() cex.Api {
 	apiKeys := cex.MustReadApiKey()
-	apiKey, ok := apiKeys["BINANCE"]
+	apiKey, ok := apiKeys["2022TEST"]
 	if !ok {
 		panic("no binance api key")
 	}

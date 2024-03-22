@@ -189,3 +189,7 @@ func TestUser_WaitOrder(t *testing.T) {
 	props.PanicIfNotNil(err.Err)
 	props.PrintlnIndent(ord)
 }
+
+func TestUser_Withdraw(t *testing.T) {
+	//userTestChecker(newTestUser().Withdraw("BOME"))
+}

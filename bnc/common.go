@@ -291,6 +291,7 @@ const (
 	NetworkEth  Network = "ETH"
 	NetworkTrx  Network = "TRX"
 	NetworkArb1 Network = "ARBITRUM"
+	NetworkSol  Network = "SOLANA"
 	NetworkErr  Network = "NoThisNetwork"
 )
 
