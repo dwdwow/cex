@@ -126,6 +126,10 @@ func (u *User) Withdraw(coin string, network Network, address string, qty float6
 	return cex.Request(u, WithdrawConfig, WithdrawParams{Coin: coin, Network: network, Address: address, Amount: qty})
 }
 
+func (u *User) DepositAddress(coin string, network Network) (*resty.Response, DepositAddress, cex.RequestError) {
+	return cex.Request(u, DepositAddressConfig, DepositAddressParams{Coin: coin, Network: network})
+}
+
 // ------------------------------------------------------------
 // Account API
 // ============================================================

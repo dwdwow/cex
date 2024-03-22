@@ -155,6 +155,32 @@ var WithdrawConfig = cex.ReqConfig[WithdrawParams, WithdrawResult]{
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[WithdrawResult]),
 }
 
+type DepositAddressParams struct {
+	Coin    string  `s2m:"coin,omitempty"`
+	Network Network `s2m:"network,omitempty"`
+	Amount  float64 `s2m:"amount,omitempty"`
+}
+
+type DepositAddress struct {
+	Address string `json:"address"`
+	Coin    string `json:"coin"`
+	Tag     string `json:"tag"`
+	Url     string `json:"url"`
+}
+
+var DepositAddressConfig = cex.ReqConfig[DepositAddressParams, DepositAddress]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/capital/deposit/address",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[DepositAddress]),
+}
+
 // ---------------------------------------------
 // Wallet
 // =============================================

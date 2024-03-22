@@ -193,3 +193,7 @@ func TestUser_WaitOrder(t *testing.T) {
 func TestUser_Withdraw(t *testing.T) {
 	userTestChecker(newTestUser().Withdraw("BOME", NetworkSol, "", 600))
 }
+
+func TestUser_DepositAddress(t *testing.T) {
+	userTestChecker(newTestUser().DepositAddress("BOME", NetworkSol))
+}
