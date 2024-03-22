@@ -191,5 +191,5 @@ func TestUser_WaitOrder(t *testing.T) {
 }
 
 func TestUser_Withdraw(t *testing.T) {
-	//userTestChecker(newTestUser().Withdraw("BOME"))
+	userTestChecker(newTestUser().Withdraw("BOME", NetworkSol, "", 600))
 }
