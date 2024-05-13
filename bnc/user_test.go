@@ -149,6 +149,34 @@ func TestUser_NewFuturesMarketSellOrder(t *testing.T) {
 	userTestChecker(newTestUser().NewFuturesMarketSellOrder("ETH", "USDT", 0.01))
 }
 
+func TestUser_NewFuturesCMOrder(t *testing.T) {
+	userTestChecker(newTestUser().NewFuturesCMOrder("ETH", "BTC", cex.OrderTypeLimit, cex.OrderSideBuy, 0.01, 1500))
+}
+
+func TestUser_QueryFuturesCMOrder(t *testing.T) {
+	userTestChecker(newTestUser().QueryFuturesOrder("ETHBTC", 0, ""))
+}
+
+func TestUser_CancelFuturesCMOrder(t *testing.T) {
+	userTestChecker(newTestUser().CancelFuturesOrder("ETHBTC", 0, ""))
+}
+
+func TestUser_NewFuturesLimitBuyCMOrder(t *testing.T) {
+	userTestChecker(newTestUser().NewFuturesLimitBuyCMOrder("ETH", "BTC", 0.01, 1600))
+}
+
+func TestUser_NewFuturesLimitSellCMOrder(t *testing.T) {
+	userTestChecker(newTestUser().NewFuturesLimitSellCMOrder("ETH", "BTC", 0.01, 3000))
+}
+
+func TestUser_NewFuturesMarketBuyCMOrder(t *testing.T) {
+	userTestChecker(newTestUser().NewFuturesMarketBuyCMOrder("ETH", "BTC", 0.01))
+}
+
+func TestUser_NewFuturesMarketSellCMOrder(t *testing.T) {
+	userTestChecker(newTestUser().NewFuturesMarketSellCMOrder("ETH", "BTC", 0.01))
+}
+
 func TestUser_QueryOrder(t *testing.T) {
 	_, ord, err := newTestUser().NewSpotLimitBuyOrder("ETH", "USDT", 0.01, 1900)
 	props.PanicIfNotNil(err.Err)

@@ -243,7 +243,7 @@ func (u *User) NewSpotMarketSellOrder(asset, quote string, qty float64, opts ...
 }
 
 func (u *User) NewFuturesOrder(asset, quote string, tradeType cex.OrderType, orderSide cex.OrderSide, qty, price float64, opts ...cex.CltOpt) (*resty.Response, *cex.Order, cex.RequestError) {
-	return u.newFuOrd(asset, quote, tradeType, orderSide, qty, price, opts...)
+	return u.newFuOrd(true, asset, quote, tradeType, orderSide, qty, price, opts...)
 }
 
 func (u *User) NewFuturesLimitBuyOrder(asset, quote string, qty, price float64, opts ...cex.CltOpt) (*resty.Response, *cex.Order, cex.RequestError) {
@@ -264,6 +264,34 @@ func (u *User) NewFuturesMarketSellOrder(asset, quote string, qty float64, opts 
 
 // ------------------------------------------------------------
 // cex.Trader Interface Implementations
+// ============================================================
+
+// ============================================================
+// CM Order
+// ------------------------------------------------------------
+
+func (u *User) NewFuturesCMOrder(asset, quote string, tradeType cex.OrderType, orderSide cex.OrderSide, qty, price float64, opts ...cex.CltOpt) (*resty.Response, *cex.Order, cex.RequestError) {
+	return u.newFuOrd(false, asset, quote, tradeType, orderSide, qty, price, opts...)
+}
+
+func (u *User) NewFuturesLimitBuyCMOrder(asset, quote string, qty, price float64, opts ...cex.CltOpt) (*resty.Response, *cex.Order, cex.RequestError) {
+	return u.NewFuturesCMOrder(asset, quote, cex.OrderTypeLimit, cex.OrderSideBuy, qty, price, opts...)
+}
+
+func (u *User) NewFuturesLimitSellCMOrder(asset, quote string, qty, price float64, opts ...cex.CltOpt) (*resty.Response, *cex.Order, cex.RequestError) {
+	return u.NewFuturesCMOrder(asset, quote, cex.OrderTypeLimit, cex.OrderSideSell, qty, price, opts...)
+}
+
+func (u *User) NewFuturesMarketBuyCMOrder(asset, quote string, qty float64, opts ...cex.CltOpt) (*resty.Response, *cex.Order, cex.RequestError) {
+	return u.NewFuturesCMOrder(asset, quote, cex.OrderTypeMarket, cex.OrderSideBuy, qty, 0, opts...)
+}
+
+func (u *User) NewFuturesMarketSellCMOrder(asset, quote string, qty float64, opts ...cex.CltOpt) (*resty.Response, *cex.Order, cex.RequestError) {
+	return u.NewFuturesCMOrder(asset, quote, cex.OrderTypeMarket, cex.OrderSideSell, qty, 0, opts...)
+}
+
+// ------------------------------------------------------------
+// CM Order
 // ============================================================
 
 // ============================================================
@@ -353,7 +381,7 @@ func (u *User) querySpotOrd(ord *cex.Order, opts ...cex.CltOpt) (*resty.Response
 	return resp, err
 }
 
-func (u *User) newFuOrd(asset, quote string, orderType cex.OrderType, orderSide cex.OrderSide, qty, price float64, opts ...cex.CltOpt) (*resty.Response, *cex.Order, cex.RequestError) {
+func (u *User) newFuOrd(isUm bool, asset, quote string, orderType cex.OrderType, orderSide cex.OrderSide, qty, price float64, opts ...cex.CltOpt) (*resty.Response, *cex.Order, cex.RequestError) {
 	symbol := asset + quote
 	var tif TimeInForce
 	if orderType == cex.OrderTypeLimit {
@@ -372,7 +400,11 @@ func (u *User) newFuOrd(asset, quote string, orderType cex.OrderType, orderSide 
 		TimeInForce:  tif,
 	}
 	if u.cfg.isPortfolioMarginAccount {
-		resp, rawOrd, err = cex.Request(u, PortfolioMarginNewOrderConfig, params, opts...)
+		if isUm {
+			resp, rawOrd, err = cex.Request(u, PortfolioMarginNewOrderConfig, params, opts...)
+		} else {
+			resp, rawOrd, err = cex.Request(u, PortfolioMarginNewCMOrderConfig, params, opts...)
+		}
 	} else {
 		resp, rawOrd, err = cex.Request(u, FuturesNewOrderConfig, params, opts...)
 	}

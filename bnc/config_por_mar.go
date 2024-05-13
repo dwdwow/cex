@@ -176,6 +176,58 @@ var PortfolioMarginPositionsConfig = cex.ReqConfig[FuturesPositionsParams, []Fut
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesPosition]),
 }
 
+var PortfolioMarginNewCMOrderConfig = cex.ReqConfig[FuturesNewOrderParams, FuturesOrder]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          PapiBaseUrl,
+		Path:             PapiV1 + "/cm/order",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesOrder]),
+}
+
+var PortfolioMarginQueryCMOrderConfig = cex.ReqConfig[FuturesQueryOrCancelOrderParams, FuturesOrder]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          PapiBaseUrl,
+		Path:             PapiV1 + "/cm/order",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesOrder]),
+}
+
+var PortfolioMarginCancelCMOrderConfig = cex.ReqConfig[FuturesQueryOrCancelOrderParams, FuturesOrder]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          PapiBaseUrl,
+		Path:             PapiV1 + "/cm/order",
+		Method:           http.MethodDelete,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesOrder]),
+}
+
+var PortfolioMarginCMPositionsConfig = cex.ReqConfig[FuturesPositionsParams, []FuturesPosition]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          PapiBaseUrl,
+		Path:             PapiV1 + "/cm/positionRisk",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesPosition]),
+}
+
 type PortfolioMarginBNBTransferParams struct {
 	Amount       float64
 	TransferSide PortfolioMarginBNBTransferSide
@@ -185,15 +237,15 @@ type PortfolioMarginBNBTransferResult struct {
 	TranId int64
 }
 
-var PortfolioMarginBNBTransferConfig = cex.ReqConfig[PortfolioMarginBNBTransferParams, PortfolioMarginBNBTransferResult]{
-	ReqBaseConfig: cex.ReqBaseConfig{
-		BaseUrl:          PapiBaseUrl,
-		Path:             PapiV1 + "/um/positionRisk",
-		Method:           http.MethodGet,
-		IsUserData:       true,
-		UserTimeInterval: 0,
-		IpTimeInterval:   0,
-	},
-	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[PortfolioMarginBNBTransferResult]),
-}
+//var PortfolioMarginBNBTransferConfig = cex.ReqConfig[PortfolioMarginBNBTransferParams, PortfolioMarginBNBTransferResult]{
+//	ReqBaseConfig: cex.ReqBaseConfig{
+//		BaseUrl:          PapiBaseUrl,
+//		Path:             PapiV1 + "/um/positionRisk",
+//		Method:           http.MethodGet,
+//		IsUserData:       true,
+//		UserTimeInterval: 0,
+//		IpTimeInterval:   0,
+//	},
+//	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+//	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[PortfolioMarginBNBTransferResult]),
+//}
