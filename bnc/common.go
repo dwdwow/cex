@@ -38,6 +38,13 @@ const (
 	SmallFalse SmallBool = "false"
 )
 
+type YesNo string
+
+const (
+	Yes YesNo = "Yes"
+	No  YesNo = "No"
+)
+
 type AccountType string
 
 const (

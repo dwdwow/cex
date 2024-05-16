@@ -613,6 +613,308 @@ var CryptoLoanFlexibleCollateralCoinsConfig = cex.ReqConfig[CryptoLoanFlexibleCo
 // =============================================
 
 // =============================================
+// VIP Flexible Loans
+// ---------------------------------------------
+
+type VIPLoanOngoingOrder struct {
+	OrderId                          int64   `json:"orderId"`
+	LoanCoin                         string  `json:"loanCoin"`
+	TotalDebt                        float64 `json:"totalDebt,string"`
+	LoanRate                         float64 `json:"loanRate,string"`
+	ResidualInterest                 float64 `json:"residualInterest,string"`
+	CollateralAccountId              string  `json:"collateralAccountId"`
+	CollateralCoin                   string  `json:"collateralCoin"`
+	TotalCollateralValueAfterHaircut float64 `json:"totalCollateralValueAfterHaircut,string"`
+	LockedCollateralValue            float64 `json:"lockedCollateralValue,string"`
+	CurrentLTV                       float64 `json:"currentLTV,string"`
+	ExpirationTime                   int64   `json:"expirationTime"`
+	LoanDate                         string  `json:"loanDate"`
+	LoanTerm                         string  `json:"loanTerm"`
+	InitialLtv                       string  `json:"initialLtv"`     // x%
+	MarginCallLtv                    string  `json:"marginCallLtv"`  // x%
+	LiquidationLtv                   string  `json:"liquidationLtv"` // x%
+}
+
+type VIPLoanOngoingOrderParams struct {
+	OrderId             int64  `s2m:"orderId,omitempty"`
+	CollateralAccountId int64  `s2m:"collateralAccountId,omitempty"`
+	LoanCoin            string `s2m:"loanCoin,omitempty"`
+	CollateralCoin      string `s2m:"collateralCoin,omitempty"`
+	Current             int64  `s2m:"current,omitempty"` //	Currently querying page. Start from 1, Default:1, Max: 1000.
+	Limit               int64  `s2m:"limit,omitempty"`   //	Default: 10, Max: 100
+}
+
+var VIPLoanOngoingOrderQueryConfig = cex.ReqConfig[VIPLoanOngoingOrderParams, Page[[]VIPLoanOngoingOrder]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/vip/ongoing/orders",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]VIPLoanOngoingOrder]]),
+}
+
+type VIPLoanRepayParams struct {
+	OrderId int64   `s2m:"orderId,omitempty"`
+	Amount  float64 `s2m:"amount,omitempty"`
+}
+
+type VIPLoanRepayStatus string
+
+const (
+	VIPLoanRepayStatusRepaid   VIPLoanRepayStatus = "Repaid"
+	VIPLoanRepayStatusRepaying VIPLoanRepayStatus = "Repaying"
+	VIPLoanRepayStatusFailed   VIPLoanRepayStatus = "Failed"
+)
+
+type VIPLoanOrderStatus string
+
+const (
+	VIPLoanOrderStatusRepaid           VIPLoanOrderStatus = "Repaid"
+	VIPLoanOrderStatusRepaying         VIPLoanOrderStatus = "Repaying"
+	VIPLoanOrderStatusFailed           VIPLoanOrderStatus = "Failed"
+	VIPLoanOrderStatusAccruingInterest VIPLoanOrderStatus = "Accruing_Interest"
+	VIPLoanOrderStatusOverdue          VIPLoanOrderStatus = "Overdue"
+	VIPLoanOrderStatusLiquidating      VIPLoanOrderStatus = "Liquidating"
+	VIPLoanOrderStatusLiquidated       VIPLoanOrderStatus = "Liquidated"
+	VIPLoanOrderStatusPending          VIPLoanOrderStatus = "Pending"
+)
+
+type VIPLoanRepayResult struct {
+	LoanCoin           string             `json:"loanCoin"`
+	RepayAmount        float64            `json:"repayAmount,string"`
+	RemainingPrincipal float64            `json:"remainingPrincipal,string"`
+	RemainingInterest  float64            `json:"remainingInterest,string"`
+	CurrentLTV         float64            `json:"currentLTV,string"`
+	CollateralCoin     string             `json:"collateralCoin"`
+	RepayStatus        VIPLoanRepayStatus `json:"repayStatus"`
+}
+
+var VIPLoanRepayConfig = cex.ReqConfig[VIPLoanRepayParams, VIPLoanRepayResult]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/vip/repay",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[VIPLoanRepayResult]),
+}
+
+type VIPLoanRepayHistoryParams struct {
+	OrderId   int64  `s2m:"orderId,omitempty"`
+	LoanCoin  string `s2m:"loanCoin,omitempty"`
+	StartTime int64  `s2m:"startTime,omitempty"`
+	EndTime   int64  `s2m:"endTime,omitempty"`
+	Current   int64  `s2m:"current,omitempty"` //	Currently querying page. Start from 1, Default:1, Max: 1000
+	Limit     int64  `s2m:"limit,omitempty"`   //	Default: 10, Max: 100
+}
+
+type VIPLoanRepayHistory struct {
+	LoanCoin       string             `json:"loanCoin"`
+	RepayAmount    float64            `json:"repayAmount,string"`
+	CollateralCoin string             `json:"collateralCoin"`
+	RepayStatus    VIPLoanRepayStatus `json:"repayStatus"`
+	LoanDate       int64              `json:"loanDate,string"`
+	RepayTime      int64              `json:"repayTime,string"`
+	OrderId        string             `json:"orderId"`
+}
+
+var VIPLoanRepayHistoryConfig = cex.ReqConfig[VIPLoanRepayHistoryParams, Page[[]VIPLoanRepayHistory]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/vip/repay/history",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]VIPLoanRepayHistory]]),
+}
+
+type VIPLoanLockedValue struct {
+	CollateralAccountId string `json:"collateralAccountId"`
+	CollateralCoin      string `json:"collateralCoin"`
+}
+
+type VIPLoanLockedValueQueryParams struct {
+	OrderId             int64 `s2m:"orderId,omitempty"`
+	CollateralAccountId int64 `s2m:"collateralAccountId,omitempty"`
+}
+
+var VIPLoanLockedValueConfig = cex.ReqConfig[VIPLoanLockedValueQueryParams, Page[[][]VIPLoanLockedValue]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/vip/collateral/account",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[][]VIPLoanLockedValue]]),
+}
+
+type VIPLoanBorrowParams struct {
+	loanAccountId       int64
+	loanCoin            string
+	loanAmount          float64
+	collateralAccountId string  // Multiple split by ,
+	collateralCoin      string  // Multiple split by,
+	isFlexibleRate      BigBool // Default: TRUE.TRUE: flexible rate FALSE: fixed rate
+	loanTerm            int64   // Mandatory for fixed rate.Optional for fixed interest rate.Eg: 30/60 days
+}
+
+type VIPLoanBorrowResult struct {
+	LoanAccountId       string  `json:"loanAccountId"`
+	RequestId           string  `json:"requestId"`
+	LoanCoin            string  `json:"loanCoin"`
+	IsFlexibleRate      YesNo   `json:"isFlexibleRate"`
+	LoanAmount          float64 `json:"loanAmount,string"`
+	CollateralAccountId string  `json:"collateralAccountId"`
+	CollateralCoin      string  `json:"collateralCoin"`
+	LoanTerm            string  `json:"loanTerm"`
+}
+
+var VIPLoanBorrowConfig = cex.ReqConfig[VIPLoanBorrowParams, VIPLoanBorrowResult]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/vip/borrow",
+		Method:           http.MethodPost,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[VIPLoanBorrowResult]),
+}
+
+type VIPLoanableAsset struct {
+	LoanCoin                   string  `json:"loanCoin"`
+	FlexibleHourlyInterestRate float64 `json:"_flexibleHourlyInterestRate,string"`
+	FlexibleYearlyInterestRate float64 `json:"_flexibleYearlyInterestRate,string"`
+	DDailyInterestRate         float64 `json:"_30dDailyInterestRate,string"`
+	DYearlyInterestRate        float64 `json:"_30dYearlyInterestRate,string"`
+	DDailyInterestRate1        float64 `json:"_60dDailyInterestRate,string"`
+	DYearlyInterestRate1       float64 `json:"_60dYearlyInterestRate,string"`
+	MinLimit                   float64 `json:"minLimit,string"`
+	MaxLimit                   float64 `json:"maxLimit,string"`
+	VipLevel                   int     `json:"vipLevel"`
+}
+
+type VIPLoanableAssetQueryParams struct {
+	LoanCoin string `s2m:"loanCoin,omitempty"`
+	VipLevel int    `s2m:"vipLevel,omitempty"`
+}
+
+var VIPLoanLoanableAssetsConfig = cex.ReqConfig[VIPLoanableAssetQueryParams, Page[[]VIPLoanableAsset]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/vip/loanable/data",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]VIPLoanableAsset]]),
+}
+
+type VIPLoanCollateralAsset struct {
+	CollateralCoin    string `json:"collateralCoin"`
+	StCollateralRatio string `json:"_1stCollateralRatio"` // x%
+	StCollateralRange string `json:"_1stCollateralRange"`
+	NdCollateralRatio string `json:"_2ndCollateralRatio"`
+	NdCollateralRange string `json:"_2ndCollateralRange"`
+	RdCollateralRatio string `json:"_3rdCollateralRatio"`
+	RdCollateralRange string `json:"_3rdCollateralRange"`
+	ThCollateralRatio string `json:"_4thCollateralRatio"`
+	ThCollateralRange string `json:"_4thCollateralRange"`
+}
+
+type VIPLoanCollateralAssetQueryParams struct {
+	CollateralCoin string `s2m:"collateralCoin,omitempty"`
+}
+
+var VIPLoanCollateralAssetsConfig = cex.ReqConfig[VIPLoanCollateralAssetQueryParams, Page[[]VIPLoanCollateralAsset]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/vip/collateral/data",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]VIPLoanCollateralAsset]]),
+}
+
+type VIPLoanApplicationStatusQueryParams struct {
+	Current int64 `s2m:"current,omitempty"` // Currently querying page. Start from 1, Default:1, Max: 1000
+	Limit   int64 `s2m:"limit,omitempty"`   // Default: 10, Max: 100
+}
+
+type VIPLoanApplicationStatusInfo struct {
+	LoanAccountId       string             `json:"loanAccountId"`
+	OrderId             string             `json:"orderId"`
+	RequestId           string             `json:"requestId"`
+	LoanCoin            string             `json:"loanCoin"`
+	LoanAmount          float64            `json:"loanAmount,string"`
+	CollateralAccountId string             `json:"collateralAccountId"`
+	CollateralCoin      string             `json:"collateralCoin"`
+	LoanTerm            string             `json:"loanTerm"`
+	Status              VIPLoanOrderStatus `json:"status"`
+	LoanDate            int64              `json:"loanDate,string"`
+}
+
+var VIPLoanApplicationStatusConfig = cex.ReqConfig[VIPLoanApplicationStatusQueryParams, Page[[]VIPLoanApplicationStatusInfo]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/vip/request/data",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]VIPLoanApplicationStatusInfo]]),
+}
+
+type VIPLoanInterestRateQueryParams struct {
+	LoanCoin string `s2m:"loanCoin,omitempty"` // Max 10 assets, Multiple split by ","
+}
+
+type VIPLoanInterestRateInfo struct {
+	Asset                      string  `json:"asset"`
+	FlexibleDailyInterestRate  float64 `json:"flexibleDailyInterestRate,string"`
+	FlexibleYearlyInterestRate float64 `json:"flexibleYearlyInterestRate,string"`
+	Time                       int64   `json:"time"`
+}
+
+var VIPLoanInterestRatesConfig = cex.ReqConfig[VIPLoanInterestRateQueryParams, Page[[]VIPLoanInterestRateInfo]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/loan/vip/request/interestRate",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]VIPLoanInterestRateInfo]]),
+}
+
+// ---------------------------------------------
+// VIP Flexible Loans
+// =============================================
+
+// =============================================
 // Spot Trading
 // ---------------------------------------------
 
