@@ -10,9 +10,10 @@ import (
 
 func spotBodyUnmshWrapper[D any](unmarshaler cex.RespBodyUnmarshaler[D]) cex.RespBodyUnmarshaler[D] {
 	return func(body []byte) (D, *cex.RespBodyUnmarshalerError) {
+		var d D
 		err := spotBodyUnmshCodeMsg(body)
 		if err != nil {
-			return *new(D), err
+			return d, err
 		}
 		return unmarshaler(body)
 	}

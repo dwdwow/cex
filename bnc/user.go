@@ -154,6 +154,10 @@ func (u *User) SimpleEarnFlexibleRateHistories(productId string, startTime, endT
 	return cex.Request(u, SimpleEarnFlexibleRateHistoryConfig, SimpleEarnFlexibleRateHistoryParams{ProductId: productId, StartTime: startTime, EndTime: endTime, Size: 100}, opts...)
 }
 
+func (u *User) SimpleEarnFlexibleAccount(opts ...cex.CltOpt) (*resty.Response, SimpleEarnFlexibleAccount, cex.RequestError) {
+	return cex.Request(u, SimpleEarnFlexibleAccountConfig, nil, opts...)
+}
+
 // ------------------------------------------------------------
 // Flexible Simple Earn API
 // ============================================================

@@ -48,7 +48,7 @@ func Request[ReqDataType, RespDataType any](
 	var err RequestError
 	for i := 0; i < 3; i++ {
 		resp, data, err = request(reqMaker, config, reqData, opts...)
-		if err.Err != nil && err.Is(ErrInvalidTimestamp) {
+		if err.Is(ErrInvalidTimestamp) {
 			continue
 		}
 		break
@@ -63,7 +63,7 @@ func request[ReqDataType, RespDataType any](
 	opts ...CltOpt,
 ) (*resty.Response, RespDataType, RequestError) {
 	reqErr := RequestError{ReqBaseConfig: config.ReqBaseConfig}
-	respData := *new(RespDataType)
+	var respData RespDataType
 
 	req, err := reqMaker.Make(config.ReqBaseConfig, reqData, opts...)
 	if err != nil {
