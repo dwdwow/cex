@@ -1,6 +1,7 @@
 package bnc
 
 import (
+	"math"
 	"net/http"
 
 	"github.com/dwdwow/cex"
@@ -30,9 +31,13 @@ type PortfolioMarginAccountPosition struct {
 	BidNotional            float64             `json:"bidNotional,string"`
 	AskNotional            float64             `json:"askNotional,string"`
 	PositionSide           FuturesPositionSide `json:"positionSide"`
-	PositionAmt            float64             `json:"positionAmt,string"`
+	SignPositionAmt        float64             `json:"positionAmt,string"`
 	BreakEvenPrice         float64             `json:"breakEvenPrice,string"`
 	UpdateTime             int                 `json:"updateTime"`
+}
+
+func (p PortfolioMarginAccountPosition) AbsPositionAmt() float64 {
+	return math.Abs(p.SignPositionAmt)
 }
 
 type PortfolioMarginAccountDetail struct {
