@@ -106,3 +106,9 @@ func TestQueryKlineAsync(t *testing.T) {
 	}
 	wg.Wait()
 }
+
+func TestQueryPortfolioMarginCollateralRates(t *testing.T) {
+	rates, err := QueryPortfolioMarginCollateralRates()
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(rates)
+}
