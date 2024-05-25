@@ -211,6 +211,50 @@ func (u *User) CryptoLoanFlexibleCollateralAssets(collateralCoin string, opts ..
 // ============================================================
 
 // ============================================================
+// VIP Loan API
+// ------------------------------------------------------------
+
+func (u *User) VIPLoanOngoingOrders(orderId, collateralAccountId int64, loanCoin, collateralCoin string, opts ...cex.CltOpt) (*resty.Response, Page[[]VIPLoanOngoingOrder], cex.RequestError) {
+	return cex.Request(u, VIPLoanOngoingOrderQueryConfig, VIPLoanOngoingOrderParams{OrderId: orderId, CollateralAccountId: collateralAccountId, LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100}, opts...)
+}
+
+func (u *User) VIPLoanRepay(orderId int64, amount float64, opts ...cex.CltOpt) (*resty.Response, VIPLoanRepayResult, cex.RequestError) {
+	return cex.Request(u, VIPLoanRepayConfig, VIPLoanRepayParams{OrderId: orderId, Amount: amount}, opts...)
+}
+
+func (u *User) VIPLoanRepayHistories(orderId int64, loanCoin string, startTime, endTime int64, opts ...cex.CltOpt) (*resty.Response, Page[[]VIPLoanRepayHistory], cex.RequestError) {
+	return cex.Request(u, VIPLoanRepayHistoryConfig, VIPLoanRepayHistoryParams{OrderId: orderId, LoanCoin: loanCoin, StartTime: startTime, EndTime: endTime, Limit: 100}, opts...)
+}
+
+func (u *User) VIPLoanLockedValue(orderId, collateralAccountId int64, opts ...cex.CltOpt) (*resty.Response, Page[[][]VIPLoanLockedValue], cex.RequestError) {
+	return cex.Request(u, VIPLoanLockedValueConfig, VIPLoanLockedValueQueryParams{OrderId: orderId, CollateralAccountId: collateralAccountId}, opts...)
+}
+
+func (u *User) VIPLoanBorrow(loanAccountId int64, loanCoin string, loanAmount float64, collateralAccountId, collateralCoin string, isFlexibleRate BigBool, loanTerm int64, opts ...cex.CltOpt) (*resty.Response, VIPLoanBorrowResult, cex.RequestError) {
+	return cex.Request(u, VIPLoanBorrowConfig, VIPLoanBorrowParams{LoanAccountId: loanAccountId, LoanCoin: loanCoin, LoanAmount: loanAmount, CollateralAccountId: collateralAccountId, CollateralCoin: collateralCoin, IsFlexibleRate: isFlexibleRate, LoanTerm: loanTerm}, opts...)
+}
+
+func (u *User) VIPLoanLoanableAssets(loanCoin string, vipLevel int, opts ...cex.CltOpt) (*resty.Response, Page[[]VIPLoanableAsset], cex.RequestError) {
+	return cex.Request(u, VIPLoanLoanableAssetsConfig, VIPLoanableAssetQueryParams{LoanCoin: loanCoin, VipLevel: vipLevel}, opts...)
+}
+
+func (u *User) VIPLoanCollateralAssets(collateralCoin string, opts ...cex.CltOpt) (*resty.Response, Page[[]VIPLoanCollateralAsset], cex.RequestError) {
+	return cex.Request(u, VIPLoanCollateralAssetsConfig, VIPLoanCollateralAssetQueryParams{CollateralCoin: collateralCoin}, opts...)
+}
+
+func (u *User) VIPLoanApplicationStatus(opts ...cex.CltOpt) (*resty.Response, Page[[]VIPLoanApplicationStatusInfo], cex.RequestError) {
+	return cex.Request(u, VIPLoanApplicationStatusConfig, VIPLoanApplicationStatusQueryParams{Limit: 100}, opts...)
+}
+
+func (u *User) VIPLoanInterestRates(loanCoin string, opts ...cex.CltOpt) (*resty.Response, Page[[]VIPLoanInterestRateInfo], cex.RequestError) {
+	return cex.Request(u, VIPLoanInterestRatesConfig, VIPLoanInterestRateQueryParams{loanCoin}, opts...)
+}
+
+// ------------------------------------------------------------
+// VIP Loan API
+// ============================================================
+
+// ============================================================
 // cex.Trader Interface Implementations
 // ------------------------------------------------------------
 

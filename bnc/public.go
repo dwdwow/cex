@@ -145,3 +145,11 @@ func QueryFuturesKline(symbol string, interval KlineInterval, start, end int64) 
 func QueryFuturesKlineWithLimit(symbol string, interval KlineInterval, start, end, limit int64) ([]Kline, error) {
 	return queryKline(FuturesKlineConfig, symbol, interval, start, end, limit)
 }
+
+func QueryPortfolioMarginCollateralRates() ([]PortfolioMarginCollateralRate, error) {
+	_, data, reqErr := cex.Request(emptyUser, PortfolioMarginCollateralRatesConfig, nil)
+	if reqErr.IsNotNil() {
+		return nil, reqErr.Err
+	}
+	return data.Data, nil
+}

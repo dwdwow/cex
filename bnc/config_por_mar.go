@@ -1,6 +1,7 @@
 package bnc
 
 import (
+	"math"
 	"net/http"
 
 	"github.com/dwdwow/cex"
@@ -30,9 +31,13 @@ type PortfolioMarginAccountPosition struct {
 	BidNotional            float64             `json:"bidNotional,string"`
 	AskNotional            float64             `json:"askNotional,string"`
 	PositionSide           FuturesPositionSide `json:"positionSide"`
-	PositionAmt            float64             `json:"positionAmt,string"`
+	SignPositionAmt        float64             `json:"positionAmt,string"`
 	BreakEvenPrice         float64             `json:"breakEvenPrice,string"`
 	UpdateTime             int                 `json:"updateTime"`
+}
+
+func (p PortfolioMarginAccountPosition) AbsPositionAmt() float64 {
+	return math.Abs(p.SignPositionAmt)
 }
 
 type PortfolioMarginAccountDetail struct {
@@ -237,15 +242,33 @@ type PortfolioMarginBNBTransferResult struct {
 	TranId int64
 }
 
-//var PortfolioMarginBNBTransferConfig = cex.ReqConfig[PortfolioMarginBNBTransferParams, PortfolioMarginBNBTransferResult]{
-//	ReqBaseConfig: cex.ReqBaseConfig{
-//		BaseUrl:          PapiBaseUrl,
-//		Path:             PapiV1 + "/um/positionRisk",
-//		Method:           http.MethodGet,
-//		IsUserData:       true,
-//		UserTimeInterval: 0,
-//		IpTimeInterval:   0,
-//	},
-//	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-//	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[PortfolioMarginBNBTransferResult]),
-//}
+var PortfolioMarginBNBTransferConfig = cex.ReqConfig[PortfolioMarginBNBTransferParams, PortfolioMarginBNBTransferResult]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          PapiBaseUrl,
+		Path:             PapiV1 + "/bnb-transfer",
+		Method:           http.MethodPost,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[PortfolioMarginBNBTransferResult]),
+}
+
+type PortfolioMarginCollateralRate struct {
+	Asset          string  `json:"asset"`
+	CollateralRate float64 `json:"collateralRate,string"`
+}
+
+var PortfolioMarginCollateralRatesConfig = cex.ReqConfig[cex.NilReqData, FrontData[[]PortfolioMarginCollateralRate]]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          "https://www.binance.com",
+		Path:             "/bapi/margin/v1/public/margin/portfolio/collateral-rate",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FrontData[[]PortfolioMarginCollateralRate]]),
+}

@@ -411,3 +411,10 @@ type Page[Slice any] struct {
 	Rows  Slice `json:"rows"`
 	Total int   `json:"total"`
 }
+
+type FrontData[Data any] struct {
+	Code          int64 `json:"code,string"`
+	Message       any   `json:"message"`
+	MessageDetail any   `json:"messageDetail"`
+	Data          Data  `json:"data"`
+}

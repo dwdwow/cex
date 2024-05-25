@@ -784,13 +784,13 @@ var VIPLoanLockedValueConfig = cex.ReqConfig[VIPLoanLockedValueQueryParams, Page
 }
 
 type VIPLoanBorrowParams struct {
-	loanAccountId       int64
-	loanCoin            string
-	loanAmount          float64
-	collateralAccountId string  // Multiple split by ,
-	collateralCoin      string  // Multiple split by,
-	isFlexibleRate      BigBool // Default: TRUE.TRUE: flexible rate FALSE: fixed rate
-	loanTerm            int64   // Mandatory for fixed rate.Optional for fixed interest rate.Eg: 30/60 days
+	LoanAccountId       int64   `s2m:"loanAccountId,omitempty"`
+	LoanCoin            string  `s2m:"loanCoin,omitempty"`
+	LoanAmount          float64 `s2m:"loanAmount,omitempty"`
+	CollateralAccountId string  `s2m:"collateralAccountId,omitempty"` // Multiple split by ,
+	CollateralCoin      string  `s2m:"collateralCoin,omitempty"`      // Multiple split by,
+	IsFlexibleRate      BigBool `s2m:"isFlexibleRate,omitempty"`      // Default: TRUE.TRUE: flexible rate FALSE: fixed rate
+	LoanTerm            int64   `s2m:"loanTerm,omitempty"`            // Mandatory for fixed rate.Optional for fixed interest rate.Eg: 30/60 days
 }
 
 type VIPLoanBorrowResult struct {
