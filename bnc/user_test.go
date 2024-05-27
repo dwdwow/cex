@@ -16,6 +16,11 @@ func newTestUser() *User {
 	return NewUser(apiKey.ApiKey, apiKey.SecretKey, UserOptPositionSide(FuturesPositionSideBoth))
 }
 
+func newTestVIPPortmarUser() *User {
+	apiKey := readVIPPortmarApiKey()
+	return NewUser(apiKey.ApiKey, apiKey.SecretKey, UserOptPositionSide(FuturesPositionSideBoth))
+}
+
 func userTestChecker[RespData any](resp *resty.Response, respData RespData, err cex.RequestError) {
 	props.PanicIfNotNil(err.Err)
 	props.PrintlnIndent(respData)
@@ -224,4 +229,8 @@ func TestUser_Withdraw(t *testing.T) {
 
 func TestUser_DepositAddress(t *testing.T) {
 	userTestChecker(newTestUser().DepositAddress("BOME", NetworkSol))
+}
+
+func TestUser_VIPLoanOngoingOrders(t *testing.T) {
+	userTestChecker(newTestVIPPortmarUser().VIPLoanOngoingOrders(0, 0, "", ""))
 }
