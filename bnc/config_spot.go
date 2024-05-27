@@ -617,7 +617,7 @@ var CryptoLoanFlexibleCollateralCoinsConfig = cex.ReqConfig[CryptoLoanFlexibleCo
 // ---------------------------------------------
 
 type VIPLoanOngoingOrder struct {
-	OrderId                          int64   `json:"orderId"`
+	OrderId                          string  `json:"orderId"`
 	LoanCoin                         string  `json:"loanCoin"`
 	TotalDebt                        float64 `json:"totalDebt,string"`
 	LoanRate                         string  `json:"loanRate"` // maybe Flexible Rate
