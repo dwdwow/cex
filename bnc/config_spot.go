@@ -627,7 +627,7 @@ type VIPLoanOngoingOrder struct {
 	TotalCollateralValueAfterHaircut float64 `json:"totalCollateralValueAfterHaircut,string"`
 	LockedCollateralValue            float64 `json:"lockedCollateralValue,string"`
 	CurrentLTV                       float64 `json:"currentLTV,string"`
-	ExpirationTime                   int64   `json:"expirationTime"`
+	ExpirationTime                   int64   `json:"expirationTime,string"`
 	LoanDate                         string  `json:"loanDate"`
 	LoanTerm                         string  `json:"loanTerm"`
 	InitialLtv                       string  `json:"initialLtv"`     // x%
