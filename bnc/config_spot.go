@@ -620,7 +620,7 @@ type VIPLoanOngoingOrder struct {
 	OrderId                          int64   `json:"orderId"`
 	LoanCoin                         string  `json:"loanCoin"`
 	TotalDebt                        float64 `json:"totalDebt,string"`
-	LoanRate                         float64 `json:"loanRate,string"`
+	LoanRate                         string  `json:"loanRate"` // maybe Flexible Rate
 	ResidualInterest                 float64 `json:"residualInterest,string"`
 	CollateralAccountId              string  `json:"collateralAccountId"`
 	CollateralCoin                   string  `json:"collateralCoin"`
