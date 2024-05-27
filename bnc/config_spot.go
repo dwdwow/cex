@@ -636,8 +636,8 @@ type VIPLoanOngoingOrder struct {
 }
 
 type VIPLoanOngoingOrderParams struct {
-	OrderId             int64  `s2m:"orderId,omitempty"`
-	CollateralAccountId int64  `s2m:"collateralAccountId,omitempty"`
+	OrderId             string `s2m:"orderId,omitempty"`
+	CollateralAccountId string `s2m:"collateralAccountId,omitempty"`
 	LoanCoin            string `s2m:"loanCoin,omitempty"`
 	CollateralCoin      string `s2m:"collateralCoin,omitempty"`
 	Current             int64  `s2m:"current,omitempty"` //	Currently querying page. Start from 1, Default:1, Max: 1000.
