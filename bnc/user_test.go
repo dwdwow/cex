@@ -232,5 +232,5 @@ func TestUser_DepositAddress(t *testing.T) {
 }
 
 func TestUser_VIPLoanOngoingOrders(t *testing.T) {
-	userTestChecker(newTestVIPPortmarUser().VIPLoanOngoingOrders(0, 0, "", ""))
+	userTestChecker(newTestVIPPortmarUser().VIPLoanOngoingOrders("", "", "", ""))
 }
