@@ -214,7 +214,7 @@ func (u *User) CryptoLoanFlexibleCollateralAssets(collateralCoin string, opts ..
 // VIP Loan API
 // ------------------------------------------------------------
 
-func (u *User) VIPLoanOngoingOrders(orderId, collateralAccountId int64, loanCoin, collateralCoin string, opts ...cex.CltOpt) (*resty.Response, Page[[]VIPLoanOngoingOrder], cex.RequestError) {
+func (u *User) VIPLoanOngoingOrders(orderId, collateralAccountId, loanCoin, collateralCoin string, opts ...cex.CltOpt) (*resty.Response, Page[[]VIPLoanOngoingOrder], cex.RequestError) {
 	return cex.Request(u, VIPLoanOngoingOrderQueryConfig, VIPLoanOngoingOrderParams{OrderId: orderId, CollateralAccountId: collateralAccountId, LoanCoin: loanCoin, CollateralCoin: collateralCoin, Limit: 100}, opts...)
 }
 

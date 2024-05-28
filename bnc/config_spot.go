@@ -639,17 +639,17 @@ var CryptoLoanFlexibleCollateralCoinsConfig = cex.ReqConfig[CryptoLoanFlexibleCo
 // ---------------------------------------------
 
 type VIPLoanOngoingOrder struct {
-	OrderId                          int64   `json:"orderId"`
+	OrderId                          string  `json:"orderId"`
 	LoanCoin                         string  `json:"loanCoin"`
 	TotalDebt                        float64 `json:"totalDebt,string"`
-	LoanRate                         float64 `json:"loanRate,string"`
+	LoanRate                         string  `json:"loanRate"` // maybe Flexible Rate
 	ResidualInterest                 float64 `json:"residualInterest,string"`
 	CollateralAccountId              string  `json:"collateralAccountId"`
 	CollateralCoin                   string  `json:"collateralCoin"`
 	TotalCollateralValueAfterHaircut float64 `json:"totalCollateralValueAfterHaircut,string"`
 	LockedCollateralValue            float64 `json:"lockedCollateralValue,string"`
 	CurrentLTV                       float64 `json:"currentLTV,string"`
-	ExpirationTime                   int64   `json:"expirationTime"`
+	ExpirationTime                   int64   `json:"expirationTime,string"`
 	LoanDate                         string  `json:"loanDate"`
 	LoanTerm                         string  `json:"loanTerm"`
 	InitialLtv                       string  `json:"initialLtv"`     // x%
@@ -658,8 +658,8 @@ type VIPLoanOngoingOrder struct {
 }
 
 type VIPLoanOngoingOrderParams struct {
-	OrderId             int64  `s2m:"orderId,omitempty"`
-	CollateralAccountId int64  `s2m:"collateralAccountId,omitempty"`
+	OrderId             string `s2m:"orderId,omitempty"`
+	CollateralAccountId string `s2m:"collateralAccountId,omitempty"`
 	LoanCoin            string `s2m:"loanCoin,omitempty"`
 	CollateralCoin      string `s2m:"collateralCoin,omitempty"`
 	Current             int64  `s2m:"current,omitempty"` //	Currently querying page. Start from 1, Default:1, Max: 1000.
@@ -698,7 +698,7 @@ const (
 	VIPLoanOrderStatusRepaid           VIPLoanOrderStatus = "Repaid"
 	VIPLoanOrderStatusRepaying         VIPLoanOrderStatus = "Repaying"
 	VIPLoanOrderStatusFailed           VIPLoanOrderStatus = "Failed"
-	VIPLoanOrderStatusAccruingInterest VIPLoanOrderStatus = "Accruing_Interest"
+	VIPLoanOrderStatusAccruingInterest VIPLoanOrderStatus = "Accruing_interest"
 	VIPLoanOrderStatusOverdue          VIPLoanOrderStatus = "Overdue"
 	VIPLoanOrderStatusLiquidating      VIPLoanOrderStatus = "Liquidating"
 	VIPLoanOrderStatusLiquidated       VIPLoanOrderStatus = "Liquidated"
@@ -890,7 +890,7 @@ type VIPLoanApplicationStatusInfo struct {
 	LoanAmount          float64            `json:"loanAmount,string"`
 	CollateralAccountId string             `json:"collateralAccountId"`
 	CollateralCoin      string             `json:"collateralCoin"`
-	LoanTerm            string             `json:"loanTerm"`
+	LoanTerm            int64              `json:"loanTerm"`
 	Status              VIPLoanOrderStatus `json:"status"`
 	LoanDate            int64              `json:"loanDate,string"`
 }

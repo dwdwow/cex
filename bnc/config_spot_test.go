@@ -17,6 +17,15 @@ func readApiKey() cex.Api {
 	return apiKey
 }
 
+func readVIPPortmarApiKey() cex.Api {
+	apiKeys := cex.MustReadApiKey()
+	apiKey, ok := apiKeys["HUANGYAN"]
+	if !ok {
+		panic("no binance api key")
+	}
+	return apiKey
+}
+
 func testConfig[ReqDataType, RespDataType any](
 	config cex.ReqConfig[ReqDataType, RespDataType],
 	reqData ReqDataType,
