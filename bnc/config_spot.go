@@ -676,7 +676,7 @@ const (
 	VIPLoanOrderStatusRepaid           VIPLoanOrderStatus = "Repaid"
 	VIPLoanOrderStatusRepaying         VIPLoanOrderStatus = "Repaying"
 	VIPLoanOrderStatusFailed           VIPLoanOrderStatus = "Failed"
-	VIPLoanOrderStatusAccruingInterest VIPLoanOrderStatus = "Accruing_Interest"
+	VIPLoanOrderStatusAccruingInterest VIPLoanOrderStatus = "Accruing_interest"
 	VIPLoanOrderStatusOverdue          VIPLoanOrderStatus = "Overdue"
 	VIPLoanOrderStatusLiquidating      VIPLoanOrderStatus = "Liquidating"
 	VIPLoanOrderStatusLiquidated       VIPLoanOrderStatus = "Liquidated"
@@ -868,7 +868,7 @@ type VIPLoanApplicationStatusInfo struct {
 	LoanAmount          float64            `json:"loanAmount,string"`
 	CollateralAccountId string             `json:"collateralAccountId"`
 	CollateralCoin      string             `json:"collateralCoin"`
-	LoanTerm            string             `json:"loanTerm"`
+	LoanTerm            int64              `json:"loanTerm"`
 	Status              VIPLoanOrderStatus `json:"status"`
 	LoanDate            int64              `json:"loanDate,string"`
 }
