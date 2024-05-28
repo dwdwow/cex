@@ -234,3 +234,23 @@ func TestUser_DepositAddress(t *testing.T) {
 func TestUser_VIPLoanOngoingOrders(t *testing.T) {
 	userTestChecker(newTestVIPPortmarUser().VIPLoanOngoingOrders("", "", "", ""))
 }
+
+func TestUser_VIPLoanApplicationStatus(t *testing.T) {
+	userTestChecker(newTestVIPPortmarUser().VIPLoanApplicationStatus())
+}
+
+func TestUser_PortfolioMarginAccountDetail(t *testing.T) {
+	userTestChecker(newTestVIPPortmarUser().PortfolioMarginAccountDetail())
+}
+
+func TestUser_PortfolioMarginAccountInformation(t *testing.T) {
+	userTestChecker(newTestVIPPortmarUser().PortfolioMarginAccountInformation())
+}
+
+func TestUser_PortfolioMarginBalances(t *testing.T) {
+	userTestChecker(newTestVIPPortmarUser().PortfolioMarginBalances())
+}
+
+func TestUser_PortfolioMarginPositions(t *testing.T) {
+	userTestChecker(newTestVIPPortmarUser().PortfolioMarginPositions(""))
+}
