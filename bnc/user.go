@@ -118,7 +118,7 @@ func (u *User) PortfolioMarginBalances(opts ...cex.CltOpt) (*resty.Response, []P
 	return cex.Request(u, PortfolioMarginBalancesConfig, nil, opts...)
 }
 
-func (u *User) PortfolioMarginPositions(symbol string, opts ...cex.CltOpt) (*resty.Response, []FuturesPosition, cex.RequestError) {
+func (u *User) PortfolioMarginPositions(symbol string, opts ...cex.CltOpt) (*resty.Response, []PortfolioMarginUMPositionRisk, cex.RequestError) {
 	return cex.Request(u, PortfolioMarginPositionsConfig, FuturesPositionsParams{symbol}, opts...)
 }
 

@@ -35,7 +35,7 @@ func fuBodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 			CexErrCode: code,
 			CexErrMsg:  msg,
 			Err: fmt.Errorf(
-				"bnc: %w: code: %v, msg: %v",
+				"bnc: %w: code: %d, msg: %s",
 				cex.ErrUnexpected, code, msg,
 			),
 		}
@@ -54,6 +54,6 @@ func fuBodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 	return &cex.RespBodyUnmarshalerError{
 		CexErrCode: code,
 		CexErrMsg:  msg,
-		Err:        fmt.Errorf("bnc: %v", errCtm),
+		Err:        fmt.Errorf("bnc: %w", errCtm),
 	}
 }

@@ -241,7 +241,7 @@ type RespBodyUnmarshalerError struct {
 }
 
 func (e *RespBodyUnmarshalerError) Error() string {
-	return fmt.Sprintf("code: %v, msg: %v, err: %v", e.CexErrCode, e.CexErrMsg, e.Err)
+	return fmt.Sprintf("code: %v, msg: %v, err: %w", e.CexErrCode, e.CexErrMsg, e.Err)
 }
 
 func (e *RespBodyUnmarshalerError) Is(target error) bool {

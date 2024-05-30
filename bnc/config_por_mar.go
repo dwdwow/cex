@@ -7,6 +7,8 @@ import (
 	"github.com/dwdwow/cex"
 )
 
+// futures account assets in portfolio margin mode
+// use portfolio margin account_balance first ?
 type PortfolioMarginAccountAsset struct {
 	Asset                  string  `json:"asset"`
 	CrossWalletBalance     float64 `json:"crossWalletBalance,string"`
@@ -18,6 +20,8 @@ type PortfolioMarginAccountAsset struct {
 	UpdateTime             int64   `json:"updateTime"`
 }
 
+// futures account positions in portfolio margin mode
+// use portfolio margin um_position_risk first ?
 type PortfolioMarginAccountPosition struct {
 	Symbol                 string              `json:"symbol"`
 	InitialMargin          float64             `json:"initialMargin,string"`
@@ -76,6 +80,23 @@ type PortfolioMarginBalance struct {
 	CmUnrealizedPNL     float64 `json:"cmUnrealizedPNL,string"`
 	UpdateTime          int64   `json:"updateTime"`
 }
+
+type PortfolioMarginUMPositionRisk struct {
+	Symbol           string  `json:"symbol"`
+	PositionAmt      float64 `json:"positionAmt,string"`
+	EntryPrice       float64 `json:"entryPrice,string"`
+	MarkPrice        float64 `json:"markPrice,string"`
+	UnRealizedProfit float64 `json:"unRealizedProfit,string"`
+	LiquidationPrice float64 `json:"liquidationPrice,string"`
+	Leverage         float64 `json:"leverage,string"`
+	PositionSide     string  `json:"positionSide"`
+	UpdateTime       int64   `json:"updateTime"`
+	MaxNotionalValue float64 `json:"maxNotionalValue,string"`
+	Notional         float64 `json:"notional,string"`
+	BreakEvenPrice   float64 `json:"breakEvenPrice,string"`
+}
+
+type PortfolioMarginCMPositionRisk PortfolioMarginUMPositionRisk
 
 //var PortfolioMarginBalanceConfig = cex.ReqConfig[PortfolioMarginAccountBalanceParams, PortfolioMarginBalance]{
 //	ReqBaseConfig: cex.ReqBaseConfig{
@@ -168,7 +189,7 @@ var PortfolioMarginCancelOrderConfig = cex.ReqConfig[FuturesQueryOrCancelOrderPa
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesOrder]),
 }
 
-var PortfolioMarginPositionsConfig = cex.ReqConfig[FuturesPositionsParams, []FuturesPosition]{
+var PortfolioMarginPositionsConfig = cex.ReqConfig[FuturesPositionsParams, []PortfolioMarginUMPositionRisk]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          PapiBaseUrl,
 		Path:             PapiV1 + "/um/positionRisk",
@@ -178,7 +199,7 @@ var PortfolioMarginPositionsConfig = cex.ReqConfig[FuturesPositionsParams, []Fut
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesPosition]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]PortfolioMarginUMPositionRisk]),
 }
 
 var PortfolioMarginNewCMOrderConfig = cex.ReqConfig[FuturesNewOrderParams, FuturesOrder]{
@@ -220,7 +241,7 @@ var PortfolioMarginCancelCMOrderConfig = cex.ReqConfig[FuturesQueryOrCancelOrder
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesOrder]),
 }
 
-var PortfolioMarginCMPositionsConfig = cex.ReqConfig[FuturesPositionsParams, []FuturesPosition]{
+var PortfolioMarginCMPositionsConfig = cex.ReqConfig[FuturesPositionsParams, []PortfolioMarginCMPositionRisk]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          PapiBaseUrl,
 		Path:             PapiV1 + "/cm/positionRisk",
@@ -230,7 +251,7 @@ var PortfolioMarginCMPositionsConfig = cex.ReqConfig[FuturesPositionsParams, []F
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesPosition]),
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]PortfolioMarginCMPositionRisk]),
 }
 
 type PortfolioMarginBNBTransferParams struct {
