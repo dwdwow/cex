@@ -88,8 +88,8 @@ func HTTPStatusCodeChecker(code int) error {
 	if code > 499 {
 		return cex.ErrHTTPCexInnerUnknownStatus
 	}
-	err := httpErrCodes[code]
-	if err != nil {
+	err, ok := httpErrCodes[code]
+	if ok {
 		return err
 	}
 	return fmt.Errorf("%w: status code %v is not in enum", cex.ErrHTTPCodeNotInEnum, code)

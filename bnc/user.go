@@ -118,7 +118,7 @@ func (u *User) PortfolioMarginBalances(opts ...cex.CltOpt) (*resty.Response, []P
 	return cex.Request(u, PortfolioMarginBalancesConfig, nil, opts...)
 }
 
-func (u *User) PortfolioMarginPositions(symbol string, opts ...cex.CltOpt) (*resty.Response, []FuturesPosition, cex.RequestError) {
+func (u *User) PortfolioMarginPositions(symbol string, opts ...cex.CltOpt) (*resty.Response, []PortfolioMarginUMPositionRisk, cex.RequestError) {
 	return cex.Request(u, PortfolioMarginPositionsConfig, FuturesPositionsParams{symbol}, opts...)
 }
 
@@ -152,6 +152,10 @@ func (u *User) SimpleEarnFlexibleRedeem(productId string, redeemAll bool, amount
 
 func (u *User) SimpleEarnFlexibleRateHistories(productId string, startTime, endTime int64, opts ...cex.CltOpt) (*resty.Response, Page[[]SimpleEarnFlexibleRateHistory], cex.RequestError) {
 	return cex.Request(u, SimpleEarnFlexibleRateHistoryConfig, SimpleEarnFlexibleRateHistoryParams{ProductId: productId, StartTime: startTime, EndTime: endTime, Size: 100}, opts...)
+}
+
+func (u *User) SimpleEarnFlexibleAccount(opts ...cex.CltOpt) (*resty.Response, SimpleEarnFlexibleAccount, cex.RequestError) {
+	return cex.Request(u, SimpleEarnFlexibleAccountConfig, nil, opts...)
 }
 
 // ------------------------------------------------------------

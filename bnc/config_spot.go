@@ -72,7 +72,7 @@ type SpotAccount struct {
 		Taker  float64 `json:"taker,string" bson:"taker,string"`
 		Buyer  float64 `json:"buyer,string" bson:"buyer,string"`
 		Seller float64 `json:"seller,string" bson:"seller,string"`
-	} `json:"commissionRates" bson:"commissionRates" bson:"commissionRates"`
+	} `json:"commissionRates" bson:"commissionRates"`
 	CanTrade                   bool          `json:"canTrade" bson:"canTrade"`
 	CanWithdraw                bool          `json:"canWithdraw" bson:"canWithdraw"`
 	CanDeposit                 bool          `json:"canDeposit" bson:"canDeposit"`
@@ -311,6 +311,28 @@ var SimpleEarnFlexibleRateHistoryConfig = cex.ReqConfig[SimpleEarnFlexibleRateHi
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[Page[[]SimpleEarnFlexibleRateHistory]]),
+}
+
+type SimpleEarnFlexibleAccount struct {
+	TotalAmountInBTC          string `json:"totalAmountInBTC"`
+	TotalAmountInUSDT         string `json:"totalAmountInUSDT"`
+	TotalFlexibleAmountInBTC  string `json:"totalFlexibleAmountInBTC"`
+	TotalFlexibleAmountInUSDT string `json:"totalFlexibleAmountInUSDT"`
+	TotalLockedInBTC          string `json:"totalLockedInBTC"`
+	TotalLockedInUSDT         string `json:"totalLockedInUSDT"`
+}
+
+var SimpleEarnFlexibleAccountConfig = cex.ReqConfig[cex.NilReqData, SimpleEarnFlexibleAccount]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             SapiV1 + "/simple-earn/account",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[SimpleEarnFlexibleAccount]),
 }
 
 // ---------------------------------------------
