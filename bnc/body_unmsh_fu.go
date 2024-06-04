@@ -9,9 +9,9 @@ import (
 
 func fuBodyUnmshWrapper[D any](unmarshaler cex.RespBodyUnmarshaler[D]) cex.RespBodyUnmarshaler[D] {
 	return func(body []byte) (D, *cex.RespBodyUnmarshalerError) {
-		err := fuBodyUnmshCodeMsg(body)
-		if err != nil {
-			return *new(D), err
+		var d D
+		if err := fuBodyUnmshCodeMsg(body); err != nil {
+			return d, err
 		}
 		return unmarshaler(body)
 	}

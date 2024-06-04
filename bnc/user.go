@@ -354,6 +354,10 @@ func (u *User) QuerySpotOrder(symbol string, orderId int64, cltOrdId string, opt
 	return cex.Request(u, SpotQueryOrderConfig, SpotQueryOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId}, opts...)
 }
 
+func (u *User) SpotPrices() (*resty.Response, []SpotPriceTicker, cex.RequestError) {
+	return cex.Request(u, SpotPricesConfig, nil)
+}
+
 // ------------------------------------------------------------
 // Spot API
 // ============================================================
@@ -374,6 +378,10 @@ func (u *User) QueryFuturesOrder(symbol string, orderId int64, cltOrdId string, 
 		return cex.Request(u, PortfolioMarginQueryOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId}, opts...)
 	}
 	return cex.Request(u, FuturesQueryOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId}, opts...)
+}
+
+func (u *User) FuturesPrices() (*resty.Response, []FuturesPriceTicker, cex.RequestError) {
+	return cex.Request(u, FuturesPricesConfig, nil)
 }
 
 //func (u *User) CloseFuturesOrder(symbol string, ordType OrderType, side OrderSide, opts ...cex.CltOpt) (*resty.Response, FuturesOrder, cex.RequestError) {

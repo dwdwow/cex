@@ -1185,6 +1185,24 @@ var SpotAllOrdersConfig = cex.ReqConfig[SpotAllOrdersParams, []SpotOrder]{
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotOrder]),
 }
 
+type SpotPriceTicker struct {
+	Symbol string  `json:"symbol"`
+	Price  float64 `json:"price,string"`
+}
+
+var SpotPricesConfig = cex.ReqConfig[cex.NilReqData, []SpotPriceTicker]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             ApiV3 + "/ticker/price",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotPriceTicker]),
+}
+
 // ---------------------------------------------
 // Spot Trading
 // =============================================
