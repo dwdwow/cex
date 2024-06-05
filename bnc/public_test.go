@@ -120,3 +120,7 @@ func TestQuerySpotPrices(t *testing.T) {
 func TestQueryFuturesPrices(t *testing.T) {
 	publicTestChecker(QueryFuturesPrices())
 }
+
+func TestQueryCMPremiumIndex(t *testing.T) {
+	publicTestChecker(QueryCMPremiumIndex("", "BTCUSD"))
+}

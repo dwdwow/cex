@@ -326,3 +326,33 @@ var FuturesPricesConfig = cex.ReqConfig[cex.NilReqData, []FuturesPriceTicker]{
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesPriceTicker]),
 }
+
+type CMPremiumIndex struct {
+	Symbol               string  `json:"symbol"`
+	Pair                 string  `json:"pair"`
+	MarkPrice            float64 `json:"markPrice,string"`
+	IndexPrice           float64 `json:"indexPrice,string"`
+	EstimatedSettlePrice float64 `json:"estimatedSettlePrice,string"`
+	LastFundingRate      string  `json:"lastFundingRate"`
+	InterestRate         string  `json:"interestRate"`
+	NextFundingTime      int64   `json:"nextFundingTime"`
+	Time                 int64   `json:"time"`
+}
+
+type CMPremiumIndexParams struct {
+	Symbol string `s2m:"symbol,omitempty"`
+	Pair   string `s2m:"pair,omitempty"`
+}
+
+var CMPremiumIndexConfig = cex.ReqConfig[CMPremiumIndexParams, []CMPremiumIndex]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          DapiBaseUrl,
+		Path:             DapiV1 + "/premiumIndex",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]CMPremiumIndex]),
+}

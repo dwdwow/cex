@@ -169,3 +169,14 @@ func QueryFuturesPrices() ([]FuturesPriceTicker, error) {
 	}
 	return data, nil
 }
+
+func QueryCMPremiumIndex(symbol, pair string) ([]CMPremiumIndex, error) {
+	_, data, reqErr := cex.Request(emptyUser, CMPremiumIndexConfig, CMPremiumIndexParams{
+		Symbol: symbol,
+		Pair:   pair,
+	})
+	if reqErr.IsNotNil() {
+		return nil, reqErr.Err
+	}
+	return data, nil
+}
