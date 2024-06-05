@@ -289,3 +289,40 @@ var FuturesKlineConfig = cex.ReqConfig[KlineParams, []Kline]{
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(klineBodyUnmsher),
 }
+
+type SpotPriceTicker struct {
+	Symbol string  `json:"symbol"`
+	Price  float64 `json:"price,string"`
+}
+
+var SpotPricesConfig = cex.ReqConfig[cex.NilReqData, []SpotPriceTicker]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             ApiV3 + "/ticker/price",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotPriceTicker]),
+}
+
+type FuturesPriceTicker struct {
+	Symbol string  `json:"symbol"`
+	Price  float64 `json:"price,string"`
+	Time   int64   `json:"time,omitempty"`
+}
+
+var FuturesPricesConfig = cex.ReqConfig[cex.NilReqData, []FuturesPriceTicker]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV2 + "/ticker/price",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]FuturesPriceTicker]),
+}

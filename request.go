@@ -241,7 +241,7 @@ type RespBodyUnmarshalerError struct {
 }
 
 func (e *RespBodyUnmarshalerError) Error() string {
-	return fmt.Sprintf("code: %v, msg: %v, err: %w", e.CexErrCode, e.CexErrMsg, e.Err)
+	return fmt.Sprintf("code: %v, msg: %v, err: %v", e.CexErrCode, e.CexErrMsg, e.Err)
 }
 
 func (e *RespBodyUnmarshalerError) Is(target error) bool {
@@ -331,8 +331,7 @@ func StdBodyUnmarshaler[D any](data []byte) (D, *RespBodyUnmarshalerError) {
 	case reflect.String:
 		anyRes = any(string(data))
 	case reflect.Slice, reflect.Struct, reflect.Map:
-		err := json.Unmarshal(data, respData)
-		if err != nil {
+		if err := json.Unmarshal(data, respData); err != nil {
 			return *respData, errUnmar.SetErr(fmt.Errorf("%w: unmarshal response body, %w", ErrJsonUnmarshal, err))
 		}
 		anyRes = any(*respData)

@@ -11,8 +11,7 @@ import (
 func spotBodyUnmshWrapper[D any](unmarshaler cex.RespBodyUnmarshaler[D]) cex.RespBodyUnmarshaler[D] {
 	return func(body []byte) (D, *cex.RespBodyUnmarshalerError) {
 		var d D
-		err := spotBodyUnmshCodeMsg(body)
-		if err != nil {
+		if err := spotBodyUnmshCodeMsg(body); err != nil {
 			return d, err
 		}
 		return unmarshaler(body)
@@ -65,7 +64,7 @@ func spotBodyUnmshCodeMsg(body []byte) *cex.RespBodyUnmarshalerError {
 	return &cex.RespBodyUnmarshalerError{
 		CexErrCode: code,
 		CexErrMsg:  msg,
-		Err:        fmt.Errorf("bnc: %v", errCtm),
+		Err:        fmt.Errorf("bnc: %w", errCtm),
 	}
 }
 

@@ -153,3 +153,19 @@ func QueryPortfolioMarginCollateralRates() ([]PortfolioMarginCollateralRate, err
 	}
 	return data.Data, nil
 }
+
+func QuerySpotPrices() ([]SpotPriceTicker, error) {
+	_, data, reqErr := cex.Request(emptyUser, SpotPricesConfig, nil)
+	if reqErr.IsNotNil() {
+		return nil, reqErr.Err
+	}
+	return data, nil
+}
+
+func QueryFuturesPrices() ([]FuturesPriceTicker, error) {
+	_, data, reqErr := cex.Request(emptyUser, FuturesPricesConfig, nil)
+	if reqErr.IsNotNil() {
+		return nil, reqErr.Err
+	}
+	return data, nil
+}
