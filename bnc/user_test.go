@@ -126,10 +126,6 @@ func TestUser_NewSpotMarketSellOrder(t *testing.T) {
 	userTestChecker(newTestUser().NewSpotMarketSellOrder("ETH", "USDT", 0.01))
 }
 
-func TestUser_SpotPrices(t *testing.T) {
-	userTestChecker(newTestVIPPortmarUser().SpotPrices())
-}
-
 func TestUser_NewFuturesOrder(t *testing.T) {
 	userTestChecker(newTestUser().NewFuturesOrder("ETH", "USDT", cex.OrderTypeLimit, cex.OrderSideBuy, 0.01, 1500))
 }
@@ -184,10 +180,6 @@ func TestUser_NewFuturesMarketBuyCMOrder(t *testing.T) {
 
 func TestUser_NewFuturesMarketSellCMOrder(t *testing.T) {
 	userTestChecker(newTestUser().NewFuturesMarketSellCMOrder("ETH", "BTC", 0.01))
-}
-
-func TestUser_FuturesPrices(t *testing.T) {
-	userTestChecker(newTestVIPPortmarUser().FuturesPrices())
 }
 
 func TestUser_QueryOrder(t *testing.T) {

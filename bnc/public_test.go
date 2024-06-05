@@ -112,3 +112,11 @@ func TestQueryPortfolioMarginCollateralRates(t *testing.T) {
 	props.PanicIfNotNil(err)
 	props.PrintlnIndent(rates)
 }
+
+func TestQuerySpotPrices(t *testing.T) {
+	publicTestChecker(QuerySpotPrices())
+}
+
+func TestQueryFuturesPrices(t *testing.T) {
+	publicTestChecker(QueryFuturesPrices())
+}
