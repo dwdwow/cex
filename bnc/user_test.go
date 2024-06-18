@@ -243,6 +243,10 @@ func TestUser_PortfolioMarginAccountDetail(t *testing.T) {
 	userTestChecker(newTestVIPPortmarUser().PortfolioMarginAccountDetail())
 }
 
+func TestUser_PortfolioMarginAccountCMDetail(t *testing.T) {
+	userTestChecker(newTestVIPPortmarUser().PortfolioMarginAccountCMDetail())
+}
+
 func TestUser_PortfolioMarginAccountInformation(t *testing.T) {
 	userTestChecker(newTestVIPPortmarUser().PortfolioMarginAccountInformation())
 }

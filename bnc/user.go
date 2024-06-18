@@ -110,6 +110,10 @@ func (u *User) PortfolioMarginAccountDetail(opts ...cex.CltOpt) (*resty.Response
 	return cex.Request(u, PortfolioMarginAccountDetailConfig, nil, opts...)
 }
 
+func (u *User) PortfolioMarginAccountCMDetail(opts ...cex.CltOpt) (*resty.Response, PortfolioMarginAccountDetail, cex.RequestError) {
+	return cex.Request(u, PortfolioMarginAccountCMDetailConfig, nil, opts...)
+}
+
 //func (u *User) PortfolioMarginBalance(asset string, opts ...cex.CltOpt) (*resty.Response, PortfolioMarginBalance, cex.RequestError) {
 //	return cex.Request(u, PortfolioMarginBalanceConfig, PortfolioMarginAccountBalanceParams{asset}, opts...)
 //}

@@ -37,7 +37,10 @@ type PortfolioMarginAccountPosition struct {
 	PositionSide           FuturesPositionSide `json:"positionSide"`
 	SignPositionAmt        float64             `json:"positionAmt,string"`
 	BreakEvenPrice         float64             `json:"breakEvenPrice,string"`
-	UpdateTime             int                 `json:"updateTime"`
+	UpdateTime             int64               `json:"updateTime"`
+
+	// just for CM position
+	MaxQty string `json:"maxQty"`
 }
 
 func (p PortfolioMarginAccountPosition) AbsPositionAmt() float64 {
@@ -53,6 +56,19 @@ var PortfolioMarginAccountDetailConfig = cex.ReqConfig[cex.NilReqData, Portfolio
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          PapiBaseUrl,
 		Path:             PapiV1 + "/um/account",
+		Method:           http.MethodGet,
+		IsUserData:       true,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[PortfolioMarginAccountDetail]),
+}
+
+var PortfolioMarginAccountCMDetailConfig = cex.ReqConfig[cex.NilReqData, PortfolioMarginAccountDetail]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          PapiBaseUrl,
+		Path:             PapiV1 + "/cm/account",
 		Method:           http.MethodGet,
 		IsUserData:       true,
 		UserTimeInterval: 0,
