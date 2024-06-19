@@ -106,7 +106,13 @@ func (u *User) PortfolioMarginAccountInformation(opts ...cex.CltOpt) (*resty.Res
 	return cex.Request(u, PortfolioMarginAccountInformationConfig, nil, opts...)
 }
 
+// PortfolioMarginAccountDetail
+// Deprecated: Use PortfolioMarginAccountUMDetail instead
 func (u *User) PortfolioMarginAccountDetail(opts ...cex.CltOpt) (*resty.Response, PortfolioMarginAccountDetail, cex.RequestError) {
+	return cex.Request(u, PortfolioMarginAccountDetailConfig, nil, opts...)
+}
+
+func (u *User) PortfolioMarginAccountUMDetail(opts ...cex.CltOpt) (*resty.Response, PortfolioMarginAccountDetail, cex.RequestError) {
 	return cex.Request(u, PortfolioMarginAccountDetailConfig, nil, opts...)
 }
 
