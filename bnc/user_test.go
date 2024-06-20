@@ -225,12 +225,41 @@ func TestUser_WaitOrder(t *testing.T) {
 		fmt.Println("cancel order")
 		_, err = newTestUser().CancelOrder(ord)
 		if err.Is(cex.ErrUnknownOrder) {
-			panic(err)
+			panic(err.Err)
 		}
 		props.PrintlnIndent(ord)
 	}
 	fmt.Println("query order")
 	_, err = newTestUser().queryOrd(ord)
+	props.PanicIfNotNil(err.Err)
+	props.PrintlnIndent(ord)
+}
+
+func TestUser_WaitFuturesCMOrder(t *testing.T) {
+	fmt.Println("new futures cm order")
+	_, ord, err := newTestVIPPortmarUser().NewFuturesLimitBuyCMOrder("ETH", "USD", 1, 1500)
+	props.PanicIfNotNil(err.Err)
+	props.PrintlnIndent(ord)
+	ctx, cancel := context.WithCancel(context.Background())
+	go func() {
+		time.Sleep(time.Second * 10)
+		cancel()
+	}()
+	fmt.Println("waiting order")
+	chErr := newTestVIPPortmarUser().WaitOrder(ctx, ord)
+	props.PrintlnIndent(ord)
+	err = <-chErr
+	if err.IsNotNil() && err.Is(context.Canceled) {
+		fmt.Println("ctx canceled")
+		fmt.Println("cancel order")
+		_, err = newTestVIPPortmarUser().CancelOrder(ord)
+		if err.Is(cex.ErrUnknownOrder) {
+			panic(err.Err)
+		}
+		props.PrintlnIndent(ord)
+	}
+	fmt.Println("query order")
+	_, err = newTestVIPPortmarUser().QueryOrder(ord)
 	props.PanicIfNotNil(err.Err)
 	props.PrintlnIndent(ord)
 }
