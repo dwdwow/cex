@@ -87,6 +87,7 @@ func ExchangeInfoToPair(info Exchange) (cex.Pair, error) {
 		IsPerpetual:   isPerpetual,
 
 		ContractSize: info.ContractSize,
+		ContractType: info.ContractType,
 	}
 	return pair, nil
 }
