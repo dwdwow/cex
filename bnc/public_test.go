@@ -42,6 +42,17 @@ func TestQueryFuturesPairs(t *testing.T) {
 	}
 }
 
+func TestQueryCMFuturesPairs(t *testing.T) {
+	pairs, _, err := QueryCMFuturesPairs()
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(pairs)
+	for _, pair := range pairs {
+		if pair.PairSymbol == "ETHUSD_PERP" {
+			props.PrintlnIndent(pair)
+		}
+	}
+}
+
 func TestQueryFuturesExchangeInfo(t *testing.T) {
 	publicTestChecker(QueryFuturesExchangeInfo())
 }
