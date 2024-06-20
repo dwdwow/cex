@@ -374,14 +374,14 @@ func (u *User) QuerySpotOrder(symbol string, orderId int64, cltOrdId string, opt
 
 func (u *User) CancelFuturesOrder(symbol string, orderId int64, cltOrdId string, opts ...cex.CltOpt) (*resty.Response, FuturesOrder, cex.RequestError) {
 	if u.cfg.isPortfolioMarginAccount {
-		return cex.Request(u, PortfolioMarginCancelOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId}, opts...)
+		return cex.Request(u, PortfolioMarginCancelCMOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId}, opts...)
 	}
 	return cex.Request(u, FuturesCancelOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId}, opts...)
 }
 
 func (u *User) QueryFuturesOrder(symbol string, orderId int64, cltOrdId string, opts ...cex.CltOpt) (*resty.Response, FuturesOrder, cex.RequestError) {
 	if u.cfg.isPortfolioMarginAccount {
-		return cex.Request(u, PortfolioMarginQueryOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId}, opts...)
+		return cex.Request(u, PortfolioMarginQueryCMOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId}, opts...)
 	}
 	return cex.Request(u, FuturesQueryOrderConfig, FuturesQueryOrCancelOrderParams{Symbol: symbol, OrderId: orderId, OrigClientOrderId: cltOrdId}, opts...)
 }
@@ -441,6 +441,9 @@ func (u *User) querySpotOrd(ord *cex.Order, opts ...cex.CltOpt) (*resty.Response
 
 func (u *User) newFuOrd(isUm bool, asset, quote string, orderType cex.OrderType, orderSide cex.OrderSide, qty, price float64, opts ...cex.CltOpt) (*resty.Response, *cex.Order, cex.RequestError) {
 	symbol := asset + quote
+	if isUm {
+		symbol += "_PERP"
+	}
 	var tif TimeInForce
 	if orderType == cex.OrderTypeLimit {
 		tif = TimeInForceGtc
