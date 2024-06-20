@@ -155,7 +155,7 @@ func TestUser_NewFuturesMarketSellOrder(t *testing.T) {
 }
 
 func TestUser_NewFuturesCMOrder(t *testing.T) {
-	userTestChecker(newTestVIPPortmarUser().NewFuturesCMOrder("ETH", "USD", cex.OrderTypeLimit, cex.OrderSideBuy, 0.01, 1500))
+	userTestChecker(newTestVIPPortmarUser().NewFuturesCMOrder("ETH", "USD", cex.OrderTypeLimit, cex.OrderSideBuy, 1, 1500))
 }
 
 func TestUser_QueryFuturesCMOrder(t *testing.T) {
@@ -167,19 +167,31 @@ func TestUser_CancelFuturesCMOrder(t *testing.T) {
 }
 
 func TestUser_NewFuturesLimitBuyCMOrder(t *testing.T) {
-	userTestChecker(newTestVIPPortmarUser().NewFuturesLimitBuyCMOrder("ETH", "USD", 0.01, 1600))
+	userTestChecker(newTestVIPPortmarUser().NewFuturesLimitBuyCMOrder("ETH", "USD", 1, 1600))
 }
 
 func TestUser_NewFuturesLimitSellCMOrder(t *testing.T) {
-	userTestChecker(newTestVIPPortmarUser().NewFuturesLimitSellCMOrder("ETH", "USD", 0.01, 3000))
+	userTestChecker(newTestVIPPortmarUser().NewFuturesLimitSellCMOrder("ETH", "USD", 1, 5000))
 }
 
 func TestUser_NewFuturesMarketBuyCMOrder(t *testing.T) {
-	userTestChecker(newTestVIPPortmarUser().NewFuturesMarketBuyCMOrder("ETH", "USD", 0.01))
+	userTestChecker(newTestVIPPortmarUser().NewFuturesMarketBuyCMOrder("ETH", "USD", 1))
 }
 
 func TestUser_NewFuturesMarketSellCMOrder(t *testing.T) {
-	userTestChecker(newTestVIPPortmarUser().NewFuturesMarketSellCMOrder("ETH", "USD", 0.01))
+	userTestChecker(newTestVIPPortmarUser().NewFuturesMarketSellCMOrder("ETH", "USD", 1))
+}
+
+func TestUser_CMOrder(t *testing.T) {
+	_, ord, err := newTestVIPPortmarUser().NewSpotLimitBuyOrder("ETH", "USD", 1, 1500)
+	props.PanicIfNotNil(err.Err)
+	props.PrintlnIndent(ord)
+	_, err = newTestVIPPortmarUser().QueryOrder(ord)
+	props.PanicIfNotNil(err.Err)
+	props.PrintlnIndent(ord)
+	_, err = newTestVIPPortmarUser().CancelOrder(ord)
+	props.PanicIfNotNil(err.Err)
+	props.PrintlnIndent(ord)
 }
 
 func TestUser_QueryOrder(t *testing.T) {
