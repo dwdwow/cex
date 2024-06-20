@@ -464,7 +464,13 @@ func (u *User) newFuOrd(isUm bool, asset, quote string, orderType cex.OrderType,
 			resp, rawOrd, err = cex.Request(u, PortfolioMarginNewCMOrderConfig, params, opts...)
 		}
 	} else {
-		resp, rawOrd, err = cex.Request(u, FuturesNewOrderConfig, params, opts...)
+		// TODO should consider CM order
+		if isUm {
+			resp, rawOrd, err = cex.Request(u, FuturesNewOrderConfig, params, opts...)
+		} else {
+			err = cex.RequestError{Err: errors.New("bnc: cm order not supported yet")}
+			return resp, nil, err
+		}
 	}
 
 	ord := SwitchFutureOrderToCexOrder(rawOrd)

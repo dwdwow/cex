@@ -18,7 +18,7 @@ func newTestUser() *User {
 
 func newTestVIPPortmarUser() *User {
 	apiKey := readVIPPortmarApiKey()
-	return NewUser(apiKey.ApiKey, apiKey.SecretKey, UserOptPositionSide(FuturesPositionSideBoth))
+	return NewUser(apiKey.ApiKey, apiKey.SecretKey, UserOptPositionSide(FuturesPositionSideBoth), UserOptSetPortfolioMarginAccount())
 }
 
 func userTestChecker[RespData any](resp *resty.Response, respData RespData, err cex.RequestError) {
@@ -155,31 +155,31 @@ func TestUser_NewFuturesMarketSellOrder(t *testing.T) {
 }
 
 func TestUser_NewFuturesCMOrder(t *testing.T) {
-	userTestChecker(newTestUser().NewFuturesCMOrder("ETH", "BTC", cex.OrderTypeLimit, cex.OrderSideBuy, 0.01, 1500))
+	userTestChecker(newTestVIPPortmarUser().NewFuturesCMOrder("ETH", "USD", cex.OrderTypeLimit, cex.OrderSideBuy, 0.01, 1500))
 }
 
 func TestUser_QueryFuturesCMOrder(t *testing.T) {
-	userTestChecker(newTestUser().QueryFuturesOrder("ETHBTC", 0, ""))
+	userTestChecker(newTestVIPPortmarUser().QueryFuturesOrder("ETHUSD", 0, ""))
 }
 
 func TestUser_CancelFuturesCMOrder(t *testing.T) {
-	userTestChecker(newTestUser().CancelFuturesOrder("ETHBTC", 0, ""))
+	userTestChecker(newTestVIPPortmarUser().CancelFuturesOrder("ETHUSD", 0, ""))
 }
 
 func TestUser_NewFuturesLimitBuyCMOrder(t *testing.T) {
-	userTestChecker(newTestUser().NewFuturesLimitBuyCMOrder("ETH", "BTC", 0.01, 1600))
+	userTestChecker(newTestVIPPortmarUser().NewFuturesLimitBuyCMOrder("ETH", "USD", 0.01, 1600))
 }
 
 func TestUser_NewFuturesLimitSellCMOrder(t *testing.T) {
-	userTestChecker(newTestUser().NewFuturesLimitSellCMOrder("ETH", "BTC", 0.01, 3000))
+	userTestChecker(newTestVIPPortmarUser().NewFuturesLimitSellCMOrder("ETH", "USD", 0.01, 3000))
 }
 
 func TestUser_NewFuturesMarketBuyCMOrder(t *testing.T) {
-	userTestChecker(newTestUser().NewFuturesMarketBuyCMOrder("ETH", "BTC", 0.01))
+	userTestChecker(newTestVIPPortmarUser().NewFuturesMarketBuyCMOrder("ETH", "USD", 0.01))
 }
 
 func TestUser_NewFuturesMarketSellCMOrder(t *testing.T) {
-	userTestChecker(newTestUser().NewFuturesMarketSellCMOrder("ETH", "BTC", 0.01))
+	userTestChecker(newTestVIPPortmarUser().NewFuturesMarketSellCMOrder("ETH", "USD", 0.01))
 }
 
 func TestUser_QueryOrder(t *testing.T) {
