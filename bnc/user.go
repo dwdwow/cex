@@ -441,7 +441,7 @@ func (u *User) querySpotOrd(ord *cex.Order, opts ...cex.CltOpt) (*resty.Response
 
 func (u *User) newFuOrd(isUm bool, asset, quote string, orderType cex.OrderType, orderSide cex.OrderSide, qty, price float64, opts ...cex.CltOpt) (*resty.Response, *cex.Order, cex.RequestError) {
 	symbol := asset + quote
-	if isUm {
+	if !isUm {
 		symbol += "_PERP"
 	}
 	var tif TimeInForce
