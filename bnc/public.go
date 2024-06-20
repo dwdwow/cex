@@ -38,6 +38,10 @@ func QueryFuturesExchangeInfo() (ExchangeInfo, error) {
 	return queryExchangeInfo(FuturesExchangeInfosConfig)
 }
 
+func QueryCMFuturesExchangeInfo() (ExchangeInfo, error) {
+	return queryExchangeInfo(CMFuturesExchangeInfosConfig)
+}
+
 func queryPairs(exInfoQuerier func() (ExchangeInfo, error)) (pairs []cex.Pair, info ExchangeInfo, err error) {
 	info, err = exInfoQuerier()
 	if err != nil {

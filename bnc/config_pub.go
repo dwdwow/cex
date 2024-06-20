@@ -100,6 +100,21 @@ type Exchange struct {
 	UnderlyingType    string   `json:"underlyingType" bson:"underlyingType"`
 	UnderlyingSubType []string `json:"underlyingSubType" bson:"underlyingSubType"`
 	SettlePlan        int      `json:"settlePlan" bson:"settlePlan"`
+
+	// just for cm futures
+	OrderType             []string `json:"OrderType"`
+	TimeInForce           []string `json:"timeInForce"`
+	LiquidationFee        string   `json:"liquidationFee"`
+	MarketTakeBound       string   `json:"marketTakeBound"`
+	DeliveryDate          int64    `json:"deliveryDate"`
+	ContractStatus        string   `json:"contractStatus"`
+	ContractSize          int      `json:"contractSize"`
+	PricePrecision        int      `json:"pricePrecision"`
+	QuantityPrecision     int      `json:"quantityPrecision"`
+	EqualQtyPrecision     int      `json:"equalQtyPrecision"`
+	TriggerProtect        string   `json:"triggerProtect"`
+	MaintMarginPercent    string   `json:"maintMarginPercent"`
+	RequiredMarginPercent string   `json:"requiredMarginPercent"`
 }
 
 type FuturesExchangeInfoAsset struct {
@@ -137,6 +152,19 @@ var FuturesExchangeInfosConfig = cex.ReqConfig[cex.NilReqData, ExchangeInfo]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          FapiBaseUrl,
 		Path:             FapiV1 + "/exchangeInfo",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[ExchangeInfo]),
+}
+
+var CMFuturesExchangeInfosConfig = cex.ReqConfig[cex.NilReqData, ExchangeInfo]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          DapiBaseUrl,
+		Path:             DapiV1 + "/exchangeInfo",
 		Method:           http.MethodGet,
 		IsUserData:       false,
 		UserTimeInterval: 0,

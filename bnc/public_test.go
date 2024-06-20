@@ -46,6 +46,17 @@ func TestQueryFuturesExchangeInfo(t *testing.T) {
 	publicTestChecker(QueryFuturesExchangeInfo())
 }
 
+func TestQueryCMFuturesExchangeInfo(t *testing.T) {
+	publicTestChecker(QueryCMFuturesExchangeInfo())
+	res, err := QueryCMFuturesExchangeInfo()
+	props.PanicIfNotNil(err)
+	for _, info := range res.Symbols {
+		if info.Pair == "BTCUSD" {
+			props.PrintlnIndent(info)
+		}
+	}
+}
+
 func TestQueryFundingRateHistories(t *testing.T) {
 	publicTestChecker(QueryFundingRateHistories("RNDRUSDT", 0, 0, 0))
 }
