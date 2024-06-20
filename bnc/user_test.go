@@ -182,8 +182,8 @@ func TestUser_NewFuturesMarketSellCMOrder(t *testing.T) {
 	userTestChecker(newTestVIPPortmarUser().NewFuturesMarketSellCMOrder("ETH", "USD", 1))
 }
 
-func TestUser_CMOrder(t *testing.T) {
-	_, ord, err := newTestVIPPortmarUser().NewSpotLimitBuyOrder("ETH", "USD", 1, 1500)
+func TestUser_FuturesCMOrder(t *testing.T) {
+	_, ord, err := newTestVIPPortmarUser().NewFuturesLimitBuyCMOrder("ETH", "USD", 1, 1500)
 	props.PanicIfNotNil(err.Err)
 	props.PrintlnIndent(ord)
 	_, err = newTestVIPPortmarUser().QueryOrder(ord)
