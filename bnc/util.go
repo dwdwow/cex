@@ -81,10 +81,12 @@ func ExchangeInfoToPair(info Exchange) (cex.Pair, error) {
 		MakerFeeTier:  makerFeeTier,
 		MinTradeQty:   0,
 		MinTradeQuote: minTradeQuote,
-		Tradable:      info.Status == ExchangeTrading,
+		Tradable:      info.Status == ExchangeTrading || info.ContractStatus == ExchangeTrading,
 		CanMarket:     true,
 		CanMargin:     info.IsMarginTradingAllowed,
 		IsPerpetual:   isPerpetual,
+
+		ContractSize: info.ContractSize,
 	}
 	return pair, nil
 }

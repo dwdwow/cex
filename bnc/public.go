@@ -66,6 +66,10 @@ func QueryFuturesPairs() ([]cex.Pair, ExchangeInfo, error) {
 	return queryPairs(QueryFuturesExchangeInfo)
 }
 
+func QueryCMFuturesPairs() ([]cex.Pair, ExchangeInfo, error) {
+	return queryPairs(QueryCMFuturesExchangeInfo)
+}
+
 func queryInfoAboutFundingRate[Req any, Resp any](config cex.ReqConfig[Req, Resp], params Req) (Resp, error) {
 	_, resp, err := cex.Request(emptyUser, config, params)
 	if err.IsNotNil() {

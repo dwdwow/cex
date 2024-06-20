@@ -37,4 +37,7 @@ type Pair struct {
 	IsCross       bool    `json:"isCross" bson:"isCross"`
 
 	IsPerpetual bool `json:"isPerpetual" bson:"isPerpetual"`
+
+	// just for cm futures
+	ContractSize float64 `json:"contractSize" bson:"contractSize"`
 }

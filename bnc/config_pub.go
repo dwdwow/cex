@@ -99,22 +99,22 @@ type Exchange struct {
 	MarginAsset       string   `json:"marginAsset" bson:"marginAsset"`
 	UnderlyingType    string   `json:"underlyingType" bson:"underlyingType"`
 	UnderlyingSubType []string `json:"underlyingSubType" bson:"underlyingSubType"`
-	SettlePlan        int      `json:"settlePlan" bson:"settlePlan"`
+	SettlePlan        int64    `json:"settlePlan" bson:"settlePlan"`
 
 	// just for cm futures
-	OrderType             []string `json:"OrderType"`
-	TimeInForce           []string `json:"timeInForce"`
-	LiquidationFee        string   `json:"liquidationFee"`
-	MarketTakeBound       string   `json:"marketTakeBound"`
-	DeliveryDate          int64    `json:"deliveryDate"`
-	ContractStatus        string   `json:"contractStatus"`
-	ContractSize          int      `json:"contractSize"`
-	PricePrecision        int      `json:"pricePrecision"`
-	QuantityPrecision     int      `json:"quantityPrecision"`
-	EqualQtyPrecision     int      `json:"equalQtyPrecision"`
-	TriggerProtect        string   `json:"triggerProtect"`
-	MaintMarginPercent    string   `json:"maintMarginPercent"`
-	RequiredMarginPercent string   `json:"requiredMarginPercent"`
+	OrderType             []string       `json:"OrderType"`
+	TimeInForce           []string       `json:"timeInForce"`
+	LiquidationFee        string         `json:"liquidationFee"`
+	MarketTakeBound       string         `json:"marketTakeBound"`
+	DeliveryDate          int64          `json:"deliveryDate"`
+	ContractStatus        ExchangeStatus `json:"contractStatus"`
+	ContractSize          float64        `json:"contractSize"`
+	PricePrecision        int64          `json:"pricePrecision"`
+	QuantityPrecision     int64          `json:"quantityPrecision"`
+	EqualQtyPrecision     int64          `json:"equalQtyPrecision"`
+	TriggerProtect        string         `json:"triggerProtect"`
+	MaintMarginPercent    string         `json:"maintMarginPercent"`
+	RequiredMarginPercent string         `json:"requiredMarginPercent"`
 }
 
 type FuturesExchangeInfoAsset struct {
