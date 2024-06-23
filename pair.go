@@ -41,4 +41,8 @@ type Pair struct {
 	// just for cm futures
 	ContractSize float64 `json:"contractSize" bson:"contractSize"`
 	ContractType string  `json:"contractType" bson:"contractType"`
+
+	// just for delivery contract
+	DeliveryDate int64 `json:"deliveryDate" bson:"deliveryDate"`
+	OnboardDate  int64 `json:"onboardDate" bson:"onboardDate"`
 }

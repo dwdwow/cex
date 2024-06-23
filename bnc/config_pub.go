@@ -94,7 +94,7 @@ type Exchange struct {
 	// just for future pair
 	Pair              string   `json:"pair" bson:"pair"`
 	ContractType      string   `json:"contractType" bson:"contractType"`
-	DeliveryData      int64    `json:"deliveryData" bson:"deliveryData"`
+	DeliveryDate      int64    `json:"deliveryDate"`
 	OnboardDate       int64    `json:"onboardDate" bson:"onboardDate"`
 	MarginAsset       string   `json:"marginAsset" bson:"marginAsset"`
 	UnderlyingType    string   `json:"underlyingType" bson:"underlyingType"`
@@ -106,7 +106,6 @@ type Exchange struct {
 	TimeInForce           []string       `json:"timeInForce"`
 	LiquidationFee        string         `json:"liquidationFee"`
 	MarketTakeBound       string         `json:"marketTakeBound"`
-	DeliveryDate          int64          `json:"deliveryDate"`
 	ContractStatus        ExchangeStatus `json:"contractStatus"`
 	ContractSize          float64        `json:"contractSize"`
 	PricePrecision        int64          `json:"pricePrecision"`

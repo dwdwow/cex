@@ -88,6 +88,9 @@ func ExchangeInfoToPair(info Exchange) (cex.Pair, error) {
 
 		ContractSize: info.ContractSize,
 		ContractType: info.ContractType,
+
+		DeliveryDate: info.DeliveryDate,
+		OnboardDate:  info.OnboardDate,
 	}
 	return pair, nil
 }
