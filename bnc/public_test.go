@@ -36,9 +36,12 @@ func TestQueryFuturesPairs(t *testing.T) {
 	props.PanicIfNotNil(err)
 	props.PrintlnIndent(pairs)
 	for _, pair := range pairs {
-		if !pair.IsPerpetual {
-			t.Log(pair.PairSymbol)
+		if pair.PairSymbol == "PEPE1000USDT" {
+			props.PrintlnIndent(pair)
 		}
+		//if !pair.IsPerpetual {
+		//	t.Log(pair.PairSymbol)
+		//}
 	}
 }
 
