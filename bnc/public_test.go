@@ -32,16 +32,22 @@ func TestQuerySpotPairs(t *testing.T) {
 }
 
 func TestQueryFuturesPairs(t *testing.T) {
-	pairs, _, err := QueryFuturesPairs()
+	pairs, info, err := QueryFuturesPairs()
 	props.PanicIfNotNil(err)
-	props.PrintlnIndent(pairs)
-	for _, pair := range pairs {
-		if pair.PairSymbol == "1000PEPEUSDT" {
-			props.PrintlnIndent(pair)
+	_ = pairs
+	//props.PrintlnIndent(pairs)
+	//for _, pair := range pairs {
+	//	if pair.PairSymbol == "1000PEPEUSDT" {
+	//		props.PrintlnIndent(pair)
+	//	}
+	//	//if !pair.IsPerpetual {
+	//	//	t.Log(pair.PairSymbol)
+	//	//}
+	//}
+	for _, syb := range info.Symbols {
+		if syb.Symbol == "1000PEPEUSDT" {
+			props.PrintlnIndent(syb)
 		}
-		//if !pair.IsPerpetual {
-		//	t.Log(pair.PairSymbol)
-		//}
 	}
 }
 
