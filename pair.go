@@ -38,9 +38,6 @@ type Pair struct {
 
 	IsPerpetual bool `json:"isPerpetual" bson:"isPerpetual"`
 
-	// just for futures
-	UnderlyingPair string `json:"underlyingPair" bson:"underlyingPair"`
-
 	// just for cm futures
 	ContractSize float64 `json:"contractSize" bson:"contractSize"`
 	ContractType string  `json:"contractType" bson:"contractType"`
