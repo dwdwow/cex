@@ -51,6 +51,12 @@ func TestQueryFuturesPairs(t *testing.T) {
 	}
 }
 
+func TestQueryUMFuturesPairs(t *testing.T) {
+	pairs, _, err := QueryUMFuturesPairs()
+	props.PanicIfNotNil(err)
+	props.PrintlnIndent(pairs)
+}
+
 func TestQueryCMFuturesPairs(t *testing.T) {
 	pairs, _, err := QueryCMFuturesPairs()
 	props.PanicIfNotNil(err)
