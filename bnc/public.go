@@ -68,8 +68,14 @@ func QuerySpotPairs() ([]cex.Pair, ExchangeInfo, error) {
 	return queryPairs(QuerySpotExchangeInfo)
 }
 
+// QueryFuturesPairs
+// Deprecated: use QueryUMFuturesPairs instead
 func QueryFuturesPairs() ([]cex.Pair, ExchangeInfo, error) {
 	return queryPairs(QueryFuturesExchangeInfo)
+}
+
+func QueryUMFuturesPairs() ([]cex.Pair, ExchangeInfo, error) {
+	return queryPairs(QueryUMFuturesExchangeInfo)
 }
 
 func QueryCMFuturesPairs() ([]cex.Pair, ExchangeInfo, error) {
