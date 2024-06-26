@@ -34,7 +34,13 @@ func QuerySpotExchangeInfo() (ExchangeInfo, error) {
 	return queryExchangeInfo(SpotExchangeInfosConfig)
 }
 
+// QueryFuturesExchangeInfo
+// Deprecated: use QueryUMFuturesExchangeInfo instead
 func QueryFuturesExchangeInfo() (ExchangeInfo, error) {
+	return queryExchangeInfo(FuturesExchangeInfosConfig)
+}
+
+func QueryUMFuturesExchangeInfo() (ExchangeInfo, error) {
 	return queryExchangeInfo(FuturesExchangeInfosConfig)
 }
 
