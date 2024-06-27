@@ -54,15 +54,20 @@ func TestQueryFuturesPairs(t *testing.T) {
 func TestQueryUMFuturesPairs(t *testing.T) {
 	pairs, _, err := QueryUMFuturesPairs()
 	props.PanicIfNotNil(err)
-	props.PrintlnIndent(pairs)
+	//props.PrintlnIndent(pairs)
+	for _, pair := range pairs {
+		if pair.PairSymbol == "1000PEPEUSDT" {
+			props.PrintlnIndent(pair)
+		}
+	}
 }
 
 func TestQueryCMFuturesPairs(t *testing.T) {
 	pairs, _, err := QueryCMFuturesPairs()
 	props.PanicIfNotNil(err)
-	props.PrintlnIndent(pairs)
+	//props.PrintlnIndent(pairs)
 	for _, pair := range pairs {
-		if pair.PairSymbol == "ETHUSD_PERP" {
+		if pair.ContractType == "PERPETUAL" {
 			props.PrintlnIndent(pair)
 		}
 	}

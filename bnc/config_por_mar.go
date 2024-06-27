@@ -112,8 +112,6 @@ type PortfolioMarginUMPositionRisk struct {
 	BreakEvenPrice   float64 `json:"breakEvenPrice,string"`
 }
 
-type PortfolioMarginCMPositionRisk PortfolioMarginUMPositionRisk
-
 //var PortfolioMarginBalanceConfig = cex.ReqConfig[PortfolioMarginAccountBalanceParams, PortfolioMarginBalance]{
 //	ReqBaseConfig: cex.ReqBaseConfig{
 //		BaseUrl:          PapiBaseUrl,
@@ -256,6 +254,8 @@ var PortfolioMarginCancelCMOrderConfig = cex.ReqConfig[FuturesQueryOrCancelOrder
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[FuturesOrder]),
 }
+
+type PortfolioMarginCMPositionRisk PortfolioMarginUMPositionRisk
 
 var PortfolioMarginCMPositionsConfig = cex.ReqConfig[FuturesPositionsParams, []PortfolioMarginCMPositionRisk]{
 	ReqBaseConfig: cex.ReqBaseConfig{

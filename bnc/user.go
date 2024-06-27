@@ -128,8 +128,18 @@ func (u *User) PortfolioMarginBalances(opts ...cex.CltOpt) (*resty.Response, []P
 	return cex.Request(u, PortfolioMarginBalancesConfig, nil, opts...)
 }
 
+// PortfolioMarginPositions
+// Deprecated: use PortfolioMarginUMPositions instead
 func (u *User) PortfolioMarginPositions(symbol string, opts ...cex.CltOpt) (*resty.Response, []PortfolioMarginUMPositionRisk, cex.RequestError) {
 	return cex.Request(u, PortfolioMarginPositionsConfig, FuturesPositionsParams{symbol}, opts...)
+}
+
+func (u *User) PortfolioMarginUMPositions(symbol string, opts ...cex.CltOpt) (*resty.Response, []PortfolioMarginUMPositionRisk, cex.RequestError) {
+	return cex.Request(u, PortfolioMarginPositionsConfig, FuturesPositionsParams{symbol}, opts...)
+}
+
+func (u *User) PortfolioMarginCMPositions(symbol string, opts ...cex.CltOpt) (*resty.Response, []PortfolioMarginCMPositionRisk, cex.RequestError) {
+	return cex.Request(u, PortfolioMarginCMPositionsConfig, FuturesPositionsParams{symbol}, opts...)
 }
 
 func (u *User) Withdraw(coin string, network Network, address string, qty float64) (*resty.Response, WithdrawResult, cex.RequestError) {
