@@ -299,3 +299,17 @@ func TestUser_PortfolioMarginBalances(t *testing.T) {
 func TestUser_PortfolioMarginPositions(t *testing.T) {
 	userTestChecker(newTestVIPPortmarUser().PortfolioMarginPositions(""))
 }
+
+func TestFuPosSybAndAsset(t *testing.T) {
+	user := newTestVIPPortmarUser()
+	_, tran, reqErr := user.Transfer(TransferTypeMainPortfolioMargin, "PEPE", 100000)
+	props.PanicIfNotNil(reqErr.Err)
+	props.PrintlnIndent(tran)
+	_, bals, reqErr := user.PortfolioMarginBalances()
+	props.PanicIfNotNil(reqErr.Err)
+	for _, bal := range bals {
+		if bal.TotalWalletBalance != 0 {
+			props.PrintlnIndent(bal)
+		}
+	}
+}
