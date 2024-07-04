@@ -784,6 +784,16 @@ func (u *User) makePublicReq(config cex.ReqBaseConfig, reqData any, opts ...cex.
 }
 
 func (u *User) makePrivateReq(config cex.ReqBaseConfig, reqData any, opts ...cex.CltOpt) (*resty.Request, error) {
+	// wired
+	if config.Method == http.MethodPost && slices.Contains([]string{SpotListenKeyUrl, PortfolioMarginListenKeyUrl}, config.BaseUrl) {
+		req, err := u.makePublicReq(config, reqData, opts...)
+		if err != nil {
+			return nil, err
+		}
+		req.SetHeader("X-MBX-APIKEY", u.api.ApiKey)
+		return req, nil
+	}
+
 	query, err := u.sign(reqData)
 	if err != nil {
 		return nil, err
@@ -791,14 +801,10 @@ func (u *User) makePrivateReq(config cex.ReqBaseConfig, reqData any, opts ...cex
 	// must compose url by self
 	// url.Values composing is alphabetical
 	// but binance require signature as the last one
+
 	clt := resty.New().
 		SetHeader("X-MBX-APIKEY", u.api.ApiKey).
 		SetBaseURL(config.BaseUrl + config.Path + "?" + query)
-
-	// wired
-	if config.Method == http.MethodPost && slices.Contains([]string{SpotListenKeyUrl, PortfolioMarginListenKeyUrl}, config.BaseUrl) {
-		clt.SetBaseURL(SpotListenKeyUrl)
-	}
 
 	for _, opt := range opts {
 		opt(clt)
