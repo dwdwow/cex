@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 	"net/url"
 	"slices"
 	"strconv"
@@ -794,7 +795,8 @@ func (u *User) makePrivateReq(config cex.ReqBaseConfig, reqData any, opts ...cex
 		SetHeader("X-MBX-APIKEY", u.api.ApiKey).
 		SetBaseURL(config.BaseUrl + config.Path + "?" + query)
 
-	if slices.Contains([]string{SpotListenKeyUrl, PortfolioMarginListenKeyUrl}, config.BaseUrl) {
+	// wired
+	if config.Method == http.MethodPost && slices.Contains([]string{SpotListenKeyUrl, PortfolioMarginListenKeyUrl}, config.BaseUrl) {
 		clt.SetBaseURL(SpotListenKeyUrl)
 	}
 
