@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
 	"net/url"
 	"slices"
 	"strconv"
@@ -785,7 +784,7 @@ func (u *User) makePublicReq(config cex.ReqBaseConfig, reqData any, opts ...cex.
 
 func (u *User) makePrivateReq(config cex.ReqBaseConfig, reqData any, opts ...cex.CltOpt) (*resty.Request, error) {
 	// wired
-	if config.Method == http.MethodPost && slices.Contains([]string{SpotListenKeyUrl, PortfolioMarginListenKeyUrl}, config.BaseUrl) {
+	if slices.Contains([]string{SpotListenKeyUrl, PortfolioMarginListenKeyUrl}, config.BaseUrl) {
 		req, err := u.makePublicReq(config, reqData, opts...)
 		if err != nil {
 			return nil, err
