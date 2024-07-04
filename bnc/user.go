@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -793,7 +794,7 @@ func (u *User) makePrivateReq(config cex.ReqBaseConfig, reqData any, opts ...cex
 		SetHeader("X-MBX-APIKEY", u.api.ApiKey).
 		SetBaseURL(config.BaseUrl + config.Path + "?" + query)
 
-	if config.BaseUrl == SpotListenKeyUrl {
+	if slices.Contains([]string{SpotListenKeyUrl, PortfolioMarginListenKeyUrl}, config.BaseUrl) {
 		clt.SetBaseURL(SpotListenKeyUrl)
 	}
 
