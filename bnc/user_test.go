@@ -313,3 +313,15 @@ func TestFuPosSybAndAsset(t *testing.T) {
 		}
 	}
 }
+
+func TestUser_NewListenKey(t *testing.T) {
+	userTestChecker(newTestVIPPortmarUser().NewListenKey(SpotListenKeyUrl))
+}
+
+func TestUser_KeepListenKey(t *testing.T) {
+	userTestChecker(newTestVIPPortmarUser().KeepListenKey(SpotListenKeyUrl, ""))
+}
+
+func TestUser_DeleteListenKey(t *testing.T) {
+	userTestChecker(newTestVIPPortmarUser().DeleteListenKey(SpotListenKeyUrl, ""))
+}

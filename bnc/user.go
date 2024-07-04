@@ -405,6 +405,37 @@ func (u *User) QueryFuturesOrder(symbol string, orderId int64, cltOrdId string, 
 // ============================================================
 
 // ============================================================
+// Listen Key
+// ------------------------------------------------------------
+
+const (
+	SpotListenKeyUrl            = ApiBaseUrl + ApiV3 + "/userDataStream"
+	PortfolioMarginListenKeyUrl = FapiBaseUrl + PapiV1 + "/listenKey"
+)
+
+func (u *User) NewListenKey(url string) (*resty.Response, ListenKeyResponse, cex.RequestError) {
+	cfg := NewListenKeyConfig
+	cfg.BaseUrl = url
+	return cex.Request(u, cfg, nil)
+}
+
+func (u *User) KeepListenKey(url, listenKey string) (*resty.Response, cex.NilReqData, cex.RequestError) {
+	cfg := KeepListenKeyConfig
+	cfg.BaseUrl = url
+	return cex.Request(u, cfg, ListenKeyParams{listenKey})
+}
+
+func (u *User) DeleteListenKey(url, listenKey string) (*resty.Response, cex.NilReqData, cex.RequestError) {
+	cfg := DeleteListenKeyConfig
+	cfg.BaseUrl = url
+	return cex.Request(u, cfg, ListenKeyParams{listenKey})
+}
+
+// ------------------------------------------------------------
+// Listen Key
+// ============================================================
+
+// ============================================================
 // Private Trade Functions
 // ------------------------------------------------------------
 

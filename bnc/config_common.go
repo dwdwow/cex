@@ -10,6 +10,10 @@ type ListenKeyResponse struct {
 	ListenKey string `json:"listenKey"`
 }
 
+type ListenKeyParams struct {
+	ListenKey string `s2m:"listenKey"`
+}
+
 var NewListenKeyConfig = cex.ReqConfig[cex.NilReqData, ListenKeyResponse]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          "",
@@ -23,7 +27,7 @@ var NewListenKeyConfig = cex.ReqConfig[cex.NilReqData, ListenKeyResponse]{
 	RespBodyUnmarshaler:   cex.StdBodyUnmarshaler[ListenKeyResponse],
 }
 
-var KeepListenKeyConfig = cex.ReqConfig[cex.NilReqData, ListenKeyResponse]{
+var KeepListenKeyConfig = cex.ReqConfig[ListenKeyParams, ListenKeyResponse]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          "",
 		Path:             "",
@@ -36,7 +40,7 @@ var KeepListenKeyConfig = cex.ReqConfig[cex.NilReqData, ListenKeyResponse]{
 	RespBodyUnmarshaler:   nil,
 }
 
-var DeleteListenKeyConfig = cex.ReqConfig[cex.NilReqData, ListenKeyResponse]{
+var DeleteListenKeyConfig = cex.ReqConfig[ListenKeyParams, ListenKeyResponse]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          "",
 		Path:             "",
