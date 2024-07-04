@@ -24,7 +24,7 @@ var NewListenKeyConfig = cex.ReqConfig[cex.NilReqData, ListenKeyResponse]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   cex.StdBodyUnmarshaler[ListenKeyResponse],
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[ListenKeyResponse]),
 }
 
 var KeepListenKeyConfig = cex.ReqConfig[ListenKeyParams, ListenKeyResponse]{

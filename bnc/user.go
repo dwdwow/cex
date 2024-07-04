@@ -410,7 +410,7 @@ func (u *User) QueryFuturesOrder(symbol string, orderId int64, cltOrdId string, 
 
 const (
 	SpotListenKeyUrl            = ApiBaseUrl + ApiV3 + "/userDataStream"
-	PortfolioMarginListenKeyUrl = FapiBaseUrl + PapiV1 + "/listenKey"
+	PortfolioMarginListenKeyUrl = PapiBaseUrl + PapiV1 + "/listenKey"
 )
 
 func (u *User) NewListenKey(url string) (*resty.Response, ListenKeyResponse, cex.RequestError) {
@@ -792,6 +792,11 @@ func (u *User) makePrivateReq(config cex.ReqBaseConfig, reqData any, opts ...cex
 	clt := resty.New().
 		SetHeader("X-MBX-APIKEY", u.api.ApiKey).
 		SetBaseURL(config.BaseUrl + config.Path + "?" + query)
+
+	if config.BaseUrl == SpotListenKeyUrl {
+		clt.SetBaseURL(SpotListenKeyUrl)
+	}
+
 	for _, opt := range opts {
 		opt(clt)
 	}
