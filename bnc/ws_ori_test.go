@@ -11,7 +11,7 @@ func TestWs_newFreqToken(t *testing.T) {
 	ws := NewWs(WsCfg{ReqDur: dur, MaxReqPerDur: maxreqPerDur}, nil, nil)
 	for i := 0; i < maxreqPerDur*2; i++ {
 		time.Sleep(dur / time.Duration(maxreqPerDur*2))
-		ok := ws.newReqToken()
+		ok := ws.canWriteMsg()
 		if i < maxreqPerDur == ok {
 			t.Log(i, ok)
 		} else {
@@ -21,7 +21,7 @@ func TestWs_newFreqToken(t *testing.T) {
 	time.Sleep(dur)
 	for i := 0; i < maxreqPerDur*2; i++ {
 		time.Sleep(dur / time.Duration(maxreqPerDur*2))
-		ok := ws.newReqToken()
+		ok := ws.canWriteMsg()
 		if i < maxreqPerDur == ok {
 			t.Log(i, ok)
 		} else {

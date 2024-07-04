@@ -34,6 +34,17 @@ type WsSubMsg struct {
 	Id     int64    `json:"id"`
 }
 
+type WsReqMsg struct {
+	Method WsMethod `json:"method"`
+	Params []any    `json:"params"`
+	Id     int64    `json:"id"`
+}
+
+type WsRespMsg[R any] struct {
+	Result R     `json:"result"`
+	Id     int64 `json:"id"`
+}
+
 type WsDepthMsg struct {
 	EventType WsEvent    `json:"e"`
 	EventTime int64      `json:"E"`
