@@ -27,7 +27,7 @@ var NewListenKeyConfig = cex.ReqConfig[cex.NilReqData, ListenKeyResponse]{
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[ListenKeyResponse]),
 }
 
-var KeepListenKeyConfig = cex.ReqConfig[ListenKeyParams, ListenKeyResponse]{
+var KeepListenKeyConfig = cex.ReqConfig[ListenKeyParams, string]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          "",
 		Path:             "",
@@ -37,10 +37,10 @@ var KeepListenKeyConfig = cex.ReqConfig[ListenKeyParams, ListenKeyResponse]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   nil,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[string]),
 }
 
-var DeleteListenKeyConfig = cex.ReqConfig[ListenKeyParams, ListenKeyResponse]{
+var DeleteListenKeyConfig = cex.ReqConfig[ListenKeyParams, string]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          "",
 		Path:             "",
@@ -50,5 +50,5 @@ var DeleteListenKeyConfig = cex.ReqConfig[ListenKeyParams, ListenKeyResponse]{
 		IpTimeInterval:   0,
 	},
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
-	RespBodyUnmarshaler:   nil,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[string]),
 }
