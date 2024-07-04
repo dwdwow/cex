@@ -414,6 +414,20 @@ const (
 	PortfolioMarginListenKeyUrl = PapiBaseUrl + PapiV1 + "/listenKey"
 )
 
+// NewListenKey
+// Do not use POST to keep listen key alive.
+// Sometimes binance will change listen key while using POST.
+// An API KEY just has one listen key alive,
+// so do not use DeleteListenKey if many people using it.
+// DOC:
+// https://binance-docs.github.io/apidocs/futures/en/#start-user-data-stream-user_stream
+// Start a new user data stream.
+// The stream will close after 60 minutes unless a keepalive is sent.
+// If the account has an active listenKey, that listenKey will be returned and its validity will be extended for 60 minutes.
+// In very rare cases, this endpoint will still generate a new listenKey when the account has a valid listenKey.
+// Please use this listenKey to reestablish the connection.
+// We do not recommend extending the listenKey using this endpoint.
+// Instead, we suggest using PUT /fapi/v1/listenKey to extend the listenKey.
 func (u *User) NewListenKey(url string) (*resty.Response, ListenKeyResponse, cex.RequestError) {
 	cfg := NewListenKeyConfig
 	cfg.BaseUrl = url
