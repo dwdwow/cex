@@ -14,9 +14,15 @@ type Ws struct {
 
 	muxReqToken   sync.Mutex
 	reqTokenDur   time.Duration
-	maxTokenNum   int
 	crrTokenIndex int
 	latestTokens  []int64
+}
+
+func NewWs(reqFreqDur time.Duration, maxReqPerDur int) *Ws {
+	return &Ws{
+		reqTokenDur:  reqFreqDur,
+		latestTokens: make([]int64, maxReqPerDur),
+	}
 }
 
 func (w *Ws) newReqToken() bool {
@@ -29,12 +35,13 @@ func (w *Ws) newReqToken() bool {
 			withinDurNum++
 		}
 	}
-	if withinDurNum >= w.maxTokenNum {
+	maxTokenNum := len(w.latestTokens)
+	if withinDurNum >= maxTokenNum {
 		return false
 	}
 	i := w.crrTokenIndex + 1
-	if i >= w.maxTokenNum {
-		i -= w.maxTokenNum
+	if i >= maxTokenNum {
+		i -= maxTokenNum
 	}
 	w.latestTokens[i] = t
 	w.crrTokenIndex = i
