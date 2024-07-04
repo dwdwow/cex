@@ -152,12 +152,13 @@ const (
 type OrderExecutionType string
 
 const (
-	OrderExecutionTypeNew      OrderExecutionType = "NEW"
-	OrderExecutionTypeCanceled OrderExecutionType = "CANCELED"
-	OrderExecutionTypeReplaced OrderExecutionType = "REPLACED"
-	OrderExecutionRejected     OrderExecutionType = "REJECTED"
-	OrderExecutionTrade        OrderExecutionType = "TRADE"
-	OrderExecutionExpired      OrderExecutionType = "EXPIRED"
+	OrderExecutionTypeNew         OrderExecutionType = "NEW"
+	OrderExecutionTypeCanceled    OrderExecutionType = "CANCELED"
+	OrderExecutionTypeReplaced    OrderExecutionType = "REPLACED"
+	OrderExecutionRejected        OrderExecutionType = "REJECTED"
+	OrderExecutionTrade           OrderExecutionType = "TRADE"
+	OrderExecutionExpired         OrderExecutionType = "EXPIRED"
+	OrderExecutionTradePrevention OrderExecutionType = "TRADE_PREVENTION"
 )
 
 type MarginOrderSideEffectType string

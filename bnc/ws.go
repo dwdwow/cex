@@ -81,6 +81,7 @@ func NewWs(cfg WsCfg, user *User, logger *slog.Logger) *Ws {
 }
 
 func (w *Ws) Start() {
+	w.logger.Info("Starting")
 	w.muxStatus.Lock()
 	w.status = 1
 	w.muxStatus.Unlock()

@@ -112,3 +112,14 @@ func GetPrecJustForBinanceFilter(size string) (int, error) {
 	}
 	return 0, fmt.Errorf("unknown size: %v", size)
 }
+
+func getWsEvent(data []byte) string {
+	ss := strings.Split(string(data), ",")
+	for _, s := range ss {
+		r := strings.Split(s, `"e":`)
+		if len(r) == 2 {
+			return r[1]
+		}
+	}
+	return ""
+}

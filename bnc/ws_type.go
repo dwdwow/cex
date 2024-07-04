@@ -26,6 +26,12 @@ const (
 	WsStrategyUpdate                WsEvent = "STRATEGY_UPDATE"
 	WsGridUpdate                    WsEvent = "GRID_UPDATE"
 	WsConditionalOrderTriggerReject WsEvent = "CONDITIONAL_ORDER_TRIGGER_REJECT"
+
+	WsEventOutboundAccountPosition WsEvent = "outboundAccountPosition"
+	WsEventBalanceUpdate           WsEvent = "balanceUpdate"
+	WsEventExecutionReport         WsEvent = "executionReport"
+	WsEventListStatus              WsEvent = "listStatus"
+	WsEventListenKeyExpired        WsEvent = "listenKeyExpired"
 )
 
 type WsSubMsg struct {
