@@ -44,7 +44,7 @@ var DeleteListenKeyConfig = cex.ReqConfig[ListenKeyParams, string]{
 	ReqBaseConfig: cex.ReqBaseConfig{
 		BaseUrl:          "",
 		Path:             "",
-		Method:           http.MethodPut,
+		Method:           http.MethodDelete,
 		IsUserData:       true,
 		UserTimeInterval: 0,
 		IpTimeInterval:   0,
