@@ -8,20 +8,30 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+type WsCfg struct {
+	Url string
+
+	// binance has incoming massage limitation
+	// ex. spot 5/s, futures 10/s
+	ReqDur       time.Duration
+	MaxReqPerDur int
+}
+
 type Ws struct {
+	cfg WsCfg
+
 	conn   *websocket.Conn
 	fanout props.Fanout[[]byte]
 
 	muxReqToken   sync.Mutex
-	reqTokenDur   time.Duration
 	crrTokenIndex int
 	latestTokens  []int64
 }
 
-func NewWs(reqFreqDur time.Duration, maxReqPerDur int) *Ws {
+func NewWs(cfg WsCfg) *Ws {
 	return &Ws{
-		reqTokenDur:  reqFreqDur,
-		latestTokens: make([]int64, maxReqPerDur),
+		cfg:          cfg,
+		latestTokens: make([]int64, cfg.MaxReqPerDur),
 	}
 }
 
@@ -31,7 +41,7 @@ func (w *Ws) newReqToken() bool {
 	t := time.Now().UnixMilli()
 	withinDurNum := 0
 	for _, v := range w.latestTokens {
-		if t-v < w.reqTokenDur.Milliseconds() {
+		if t-v < w.cfg.ReqDur.Milliseconds() {
 			withinDurNum++
 		}
 	}
