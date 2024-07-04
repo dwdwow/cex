@@ -8,7 +8,7 @@ import (
 func TestWs_newFreqToken(t *testing.T) {
 	dur := time.Second
 	maxreqPerDur := 5
-	ws := NewWs(WsCfg{ReqDur: dur, MaxReqPerDur: maxreqPerDur})
+	ws := NewWs(WsCfg{ReqDur: dur, MaxReqPerDur: maxreqPerDur}, nil)
 	for i := 0; i < maxreqPerDur*2; i++ {
 		time.Sleep(dur / time.Duration(maxreqPerDur*2))
 		ok := ws.newReqToken()

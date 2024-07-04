@@ -1,6 +1,9 @@
 package bnc
 
 import (
+	"context"
+	"log/slog"
+	"os"
 	"sync"
 	"time"
 
@@ -9,7 +12,9 @@ import (
 )
 
 type WsCfg struct {
-	Url string
+	// ws url without streams and auth tokens
+	Url          string
+	AuthTokenUrl string
 
 	// binance has incoming massage limitation
 	// ex. spot 5/s, futures 10/s
@@ -18,20 +23,47 @@ type WsCfg struct {
 }
 
 type Ws struct {
+	ctx       context.Context
+	ctxCancel context.CancelFunc
+
 	cfg WsCfg
 
+	user *User
+
+	muxAuthKey sync.Mutex
+	authKey    string
+
 	conn   *websocket.Conn
-	fanout props.Fanout[[]byte]
+	fanout *props.Fanout[[]byte]
 
 	muxReqToken   sync.Mutex
 	crrTokenIndex int
 	latestTokens  []int64
+
+	logger *slog.Logger
 }
 
-func NewWs(cfg WsCfg) *Ws {
+func NewWs(cfg WsCfg, user *User, logger *slog.Logger) *Ws {
+	if logger == nil {
+		logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
+	}
+	ctx, cancel := context.WithCancel(context.Background())
 	return &Ws{
+		ctx:          ctx,
+		ctxCancel:    cancel,
 		cfg:          cfg,
+		user:         user,
+		fanout:       props.NewFanout[[]byte](time.Second),
 		latestTokens: make([]int64, cfg.MaxReqPerDur),
+	}
+}
+
+func (w *Ws) authTokenKeeper(ctx context.Context, token string) {
+	for {
+		select {
+		case <-ctx.Done():
+		case <-time.After(time.Minute * 30):
+		}
 	}
 }
 
