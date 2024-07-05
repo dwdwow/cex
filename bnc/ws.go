@@ -222,6 +222,12 @@ func (w *RawWsClient) Unsub(c <-chan []byte) {
 }
 
 func (w *RawWsClient) SubStream(params []string) error {
+	w.muxStream.Lock()
+	oldStream := w.stream
+	w.muxStream.Unlock()
+	if len(oldStream)+len(params) > w.cfg.MaxStream {
+		return fmt.Errorf("bnc_ws: too many streams, max is %d", w.cfg.MaxStream)
+	}
 	if !w.muxConn.TryLock() {
 		return errors.New("bnc_ws: conn is busy")
 	}
