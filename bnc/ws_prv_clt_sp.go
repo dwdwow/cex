@@ -1,5 +1,9 @@
 package bnc
 
+import (
+	"time"
+)
+
 type WsSpotBalance struct {
 	Asset  string `json:"a"`
 	Free   string `json:"f"`
@@ -79,6 +83,10 @@ type WsSpotListStatus struct {
 	Objects           []WsSpotListStatusObject `json:"O"`
 }
 
-type SpotPrivateWs struct {
-	ws *Ws
+var SpotPrivateWsCfg = WsCfg{
+	Url:          WsBaseUrl,
+	ListenKeyUrl: SpotListenKeyUrl,
+	MaxStream:    1024,
+	ReqDur:       time.Second,
+	MaxReqPerDur: 10,
 }

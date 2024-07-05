@@ -30,7 +30,7 @@ type WsCfg struct {
 	MaxReqPerDur int
 }
 
-type Ws struct {
+type RawWsClient struct {
 	ctx       context.Context
 	ctxCancel context.CancelFunc
 
@@ -44,7 +44,7 @@ type Ws struct {
 	muxConn sync.Mutex
 	conn    *websocket.Conn
 
-	fanout *props.Fanout[[]byte]
+	fan *props.Fanout[[]byte]
 
 	muxReqToken   sync.Mutex
 	crrTokenIndex int
@@ -65,22 +65,23 @@ type Ws struct {
 	logger *slog.Logger
 }
 
-func NewWs(cfg WsCfg, user *User, logger *slog.Logger) *Ws {
+func NewWs(cfg WsCfg, user *User, logger *slog.Logger) *RawWsClient {
 	if logger == nil {
 		logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
 	}
 	logger = logger.With("ws", "binance", "url", cfg.Url)
-	return &Ws{
+	return &RawWsClient{
 		cfg:          cfg,
 		user:         user,
-		fanout:       props.NewFanout[[]byte](time.Second),
+		fan:          props.NewFanout[[]byte](time.Second),
 		latestTokens: make([]int64, cfg.MaxReqPerDur),
 		chRestart:    make(chan struct{}),
 		reqId:        1000,
+		logger:       logger,
 	}
 }
 
-func (w *Ws) Start() {
+func (w *RawWsClient) Start() {
 	w.logger.Info("Starting")
 	w.muxStatus.Lock()
 	w.status = 1
@@ -89,7 +90,7 @@ func (w *Ws) Start() {
 	w.chRestart <- struct{}{}
 }
 
-func (w *Ws) Close() {
+func (w *RawWsClient) Close() {
 	w.muxStatus.Lock()
 	w.status = -1
 	w.muxStatus.Unlock()
@@ -103,7 +104,7 @@ func (w *Ws) Close() {
 	w.muxConn.Unlock()
 }
 
-func (w *Ws) start() error {
+func (w *RawWsClient) start() error {
 	if w.ctxCancel != nil {
 		w.ctxCancel()
 	}
@@ -139,7 +140,7 @@ func (w *Ws) start() error {
 	return nil
 }
 
-func (w *Ws) mainThreadStarter() {
+func (w *RawWsClient) mainThreadStarter() {
 	for {
 		_ = <-w.chRestart
 		w.muxStatus.Lock()
@@ -155,7 +156,7 @@ func (w *Ws) mainThreadStarter() {
 	}
 }
 
-func (w *Ws) connListener(conn *websocket.Conn) {
+func (w *RawWsClient) connListener(conn *websocket.Conn) {
 	defer func() {
 		w.chRestart <- struct{}{}
 	}()
@@ -182,7 +183,7 @@ func (w *Ws) connListener(conn *websocket.Conn) {
 		case websocket.PongMessage:
 			w.logger.Info("Server pong received", "msg", string(d))
 		case websocket.TextMessage:
-			w.fanout.Broadcast(d)
+			w.fan.Broadcast(d)
 		case websocket.BinaryMessage:
 			w.logger.Info("Server binary received", "msg", string(d), "binary", d)
 		case websocket.CloseMessage:
@@ -191,7 +192,7 @@ func (w *Ws) connListener(conn *websocket.Conn) {
 	}
 }
 
-func (w *Ws) write(data []byte) error {
+func (w *RawWsClient) write(data []byte) error {
 	w.muxConn.Lock()
 	defer w.muxConn.Unlock()
 	if w.conn == nil {
@@ -203,7 +204,7 @@ func (w *Ws) write(data []byte) error {
 	return w.conn.WriteMessage(websocket.TextMessage, data)
 }
 
-func (w *Ws) read() (msgType int, data []byte, err error) {
+func (w *RawWsClient) read() (msgType int, data []byte, err error) {
 	w.muxConn.Lock()
 	defer w.muxConn.Unlock()
 	if w.conn == nil {
@@ -212,15 +213,15 @@ func (w *Ws) read() (msgType int, data []byte, err error) {
 	return w.conn.ReadMessage()
 }
 
-func (w *Ws) Sub() <-chan []byte {
-	return w.fanout.NewOuter()
+func (w *RawWsClient) Sub() <-chan []byte {
+	return w.fan.Sub()
 }
 
-func (w *Ws) Unsub(c <-chan []byte) {
-	w.fanout.RemoveOuter(c)
+func (w *RawWsClient) Unsub(c <-chan []byte) {
+	w.fan.Unsub(c)
 }
 
-func (w *Ws) SubStream(params []string) error {
+func (w *RawWsClient) SubStream(params []string) error {
 	if !w.muxConn.TryLock() {
 		return errors.New("bnc_ws: conn is busy")
 	}
@@ -249,7 +250,7 @@ func (w *Ws) SubStream(params []string) error {
 	return nil
 }
 
-func (w *Ws) UnsubStream(params []string) error {
+func (w *RawWsClient) UnsubStream(params []string) error {
 	if !w.muxConn.TryLock() {
 		return errors.New("bnc_ws: conn is busy")
 	}
@@ -277,7 +278,7 @@ func (w *Ws) UnsubStream(params []string) error {
 	return nil
 }
 
-func (w *Ws) newAndKeepListenKey() (string, error) {
+func (w *RawWsClient) newAndKeepListenKey() (string, error) {
 	lk, err := w.newListenKey()
 	if err != nil {
 		return "", err
@@ -287,12 +288,12 @@ func (w *Ws) newAndKeepListenKey() (string, error) {
 	return lk, nil
 }
 
-func (w *Ws) newListenKey() (string, error) {
+func (w *RawWsClient) newListenKey() (string, error) {
 	_, lk, err := w.user.NewListenKey(w.cfg.ListenKeyUrl)
 	return lk.ListenKey, err.Err
 }
 
-func (w *Ws) listenKeyKeeper(ctx context.Context) {
+func (w *RawWsClient) listenKeyKeeper(ctx context.Context) {
 	for {
 		select {
 		case <-ctx.Done():
@@ -305,7 +306,7 @@ func (w *Ws) listenKeyKeeper(ctx context.Context) {
 	}
 }
 
-func (w *Ws) canWriteMsg() bool {
+func (w *RawWsClient) canWriteMsg() bool {
 	w.muxReqToken.Lock()
 	defer w.muxReqToken.Unlock()
 	t := time.Now().UnixMilli()
@@ -328,7 +329,7 @@ func (w *Ws) canWriteMsg() bool {
 	return true
 }
 
-func (w *Ws) Request(method WsMethod, params []any) (id int64, err error) {
+func (w *RawWsClient) Request(method WsMethod, params []any) (id int64, err error) {
 	w.muxReqId.Lock()
 	w.reqId++
 	id = w.reqId
@@ -343,4 +344,83 @@ func (w *Ws) Request(method WsMethod, params []any) (id int64, err error) {
 	}
 	err = w.write(d)
 	return
+}
+
+type WsClient struct {
+	wsCfg WsCfg
+	ws    *RawWsClient
+
+	user *User
+
+	muxFan sync.Mutex
+	mfan   map[WsEvent]*props.Fanout[any]
+
+	logger *slog.Logger
+}
+
+func NewWsClient(cfg WsCfg, user *User, logger *slog.Logger) *WsClient {
+	if logger == nil {
+		logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
+	}
+	return &WsClient{
+		wsCfg:  cfg,
+		user:   user,
+		mfan:   map[WsEvent]*props.Fanout[any]{},
+		logger: logger,
+	}
+}
+
+func (w *WsClient) start() {
+	ws := NewWs(w.wsCfg, w.user, w.logger)
+	w.ws = ws
+	ch := ws.Sub()
+	ws.Start()
+	for {
+		w.dataHandler(<-ch)
+	}
+}
+
+func (w *WsClient) dataHandler(data []byte) {
+	e, ok := getWsEvent(data)
+	if !ok {
+		w.logger.Error("Can not get event", "data", string(data))
+		return
+	}
+	w.muxFan.Lock()
+	fan := w.mfan[e]
+	w.muxFan.Unlock()
+	if fan == nil {
+		return
+	}
+	fan.Broadcast(data)
+}
+
+// Sub
+// Pass empty string if you want listen all events.
+func (w *WsClient) Sub(event WsEvent) <-chan any {
+	w.muxFan.Lock()
+	defer w.muxFan.Unlock()
+	// do not use empty string as mfan key
+	if event == "" {
+		event = "all"
+	}
+	fan := w.mfan[event]
+	if fan == nil {
+		fan = props.NewFanout[any](time.Second)
+		w.mfan[event] = fan
+	}
+	return fan.Sub()
+}
+
+func (w *WsClient) Unsub(event WsEvent, ch <-chan any) {
+	w.muxFan.Lock()
+	defer w.muxFan.Unlock()
+	if event == "" {
+		event = "all"
+	}
+	fan := w.mfan[event]
+	if fan == nil {
+		return
+	}
+	fan.Unsub(ch)
 }

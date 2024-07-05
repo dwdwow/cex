@@ -3,7 +3,7 @@ module github.com/dwdwow/cex
 go 1.22.1
 
 require (
-	github.com/dwdwow/props v0.0.5
+	github.com/dwdwow/props v0.0.7
 	github.com/dwdwow/s2m v0.0.4
 	github.com/dwdwow/spub v0.0.1
 	github.com/dwdwow/ws v0.0.1
