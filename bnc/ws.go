@@ -65,7 +65,7 @@ type RawWsClient struct {
 	logger *slog.Logger
 }
 
-func NewWs(cfg WsCfg, user *User, logger *slog.Logger) *RawWsClient {
+func NewRawWsClient(cfg WsCfg, user *User, logger *slog.Logger) *RawWsClient {
 	if logger == nil {
 		logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
 	}
@@ -377,7 +377,7 @@ func NewWsClient(cfg WsCfg, user *User, logger *slog.Logger) *WsClient {
 }
 
 func (w *WsClient) start() {
-	ws := NewWs(w.wsCfg, w.user, w.logger)
+	ws := NewRawWsClient(w.wsCfg, w.user, w.logger)
 	w.ws = ws
 	ch := ws.Sub()
 	ws.Start()
