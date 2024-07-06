@@ -1,6 +1,7 @@
 package bnc
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -122,4 +123,9 @@ func getWsEvent(data []byte) (event WsEvent, ok bool) {
 		}
 	}
 	return "", false
+}
+
+func unmarshal[T any](data []byte) (t T, err error) {
+	err = json.Unmarshal(data, &t)
+	return
 }

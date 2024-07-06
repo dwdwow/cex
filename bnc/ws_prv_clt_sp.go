@@ -1,7 +1,6 @@
 package bnc
 
 import (
-	"encoding/json"
 	"fmt"
 	"math"
 	"time"
@@ -97,23 +96,20 @@ type WsListenKeyExpired struct {
 }
 
 func SpotPrivateWsMsgUnmarshaler(e WsEvent, data []byte) (any, error) {
-	var d any
 	switch e {
 	case WsEventOutboundAccountPosition:
-		d = WsSpotAccountUpdate{}
+		return unmarshal[WsSpotAccountUpdate](data)
 	case WsEventBalanceUpdate:
-		d = WsSpotBalanceUpdate{}
+		return unmarshal[WsSpotBalanceUpdate](data)
 	case WsEventExecutionReport:
-		d = WsSpotOrderExecutionReport{}
+		return unmarshal[WsSpotOrderExecutionReport](data)
 	case WsEventListStatus:
-		d = WsSpotListStatus{}
+		return unmarshal[WsSpotListStatus](data)
 	case WsEventListenKeyExpired:
-		d = WsListenKeyExpired{}
+		return unmarshal[WsListenKeyExpired](data)
 	default:
 		return nil, fmt.Errorf("bnc: unknown event %v", e)
 	}
-	err := json.Unmarshal(data, &d)
-	return d, err
 }
 
 var SpotPrivateWsCfg = WsCfg{
