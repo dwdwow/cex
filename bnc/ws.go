@@ -34,6 +34,11 @@ type WsCfg struct {
 	DataUnmarshaler WsDataUnmarshaler
 }
 
+type RawWsClientMsg struct {
+	Data []byte `json:"data"`
+	Err  error  `json:"err"`
+}
+
 type RawWsClient struct {
 	ctx       context.Context
 	ctxCancel context.CancelFunc
@@ -48,7 +53,7 @@ type RawWsClient struct {
 	muxConn sync.Mutex
 	conn    *websocket.Conn
 
-	fan *props.Fanout[[]byte]
+	fan *props.Fanout[RawWsClientMsg]
 
 	muxReqToken   sync.Mutex
 	crrTokenIndex int
@@ -77,7 +82,7 @@ func NewRawWsClient(cfg WsCfg, user *User, logger *slog.Logger) *RawWsClient {
 	return &RawWsClient{
 		cfg:          cfg,
 		user:         user,
-		fan:          props.NewFanout[[]byte](time.Second),
+		fan:          props.NewFanout[RawWsClientMsg](time.Second),
 		latestTokens: make([]int64, cfg.MaxReqPerDur),
 		chRestart:    make(chan struct{}),
 		reqId:        1000,
@@ -119,6 +124,7 @@ func (w *RawWsClient) mainThreadStarter() {
 		err := w.start()
 		if err != nil {
 			w.logger.Error("Cannot Start", "err", err)
+			w.fan.Broadcast(RawWsClientMsg{nil, err})
 		}
 	}
 }
@@ -170,10 +176,10 @@ func (w *RawWsClient) connListener(conn *websocket.Conn) {
 	}
 	w.logger.Info("Conn listener started")
 	for {
-		// cannot read and write concurrently
 		t, d, err := w.read()
 		if err != nil {
 			w.logger.Error("Read message", "err", err)
+			w.fan.Broadcast(RawWsClientMsg{nil, err})
 			return
 		}
 		switch t {
@@ -186,7 +192,7 @@ func (w *RawWsClient) connListener(conn *websocket.Conn) {
 		case websocket.PongMessage:
 			w.logger.Info("Server pong received", "msg", string(d))
 		case websocket.TextMessage:
-			w.fan.Broadcast(d)
+			w.fan.Broadcast(RawWsClientMsg{Data: d})
 		case websocket.BinaryMessage:
 			w.logger.Info("Server binary received", "msg", string(d), "binary", d)
 		case websocket.CloseMessage:
@@ -196,6 +202,7 @@ func (w *RawWsClient) connListener(conn *websocket.Conn) {
 }
 
 func (w *RawWsClient) write(data []byte) error {
+	// cannot read and write concurrently
 	w.muxConn.Lock()
 	defer w.muxConn.Unlock()
 	if w.conn == nil {
@@ -208,6 +215,7 @@ func (w *RawWsClient) write(data []byte) error {
 }
 
 func (w *RawWsClient) read() (msgType int, data []byte, err error) {
+	// cannot read and write concurrently
 	w.muxConn.Lock()
 	defer w.muxConn.Unlock()
 	if w.conn == nil {
@@ -216,11 +224,11 @@ func (w *RawWsClient) read() (msgType int, data []byte, err error) {
 	return w.conn.ReadMessage()
 }
 
-func (w *RawWsClient) Sub() <-chan []byte {
+func (w *RawWsClient) Sub() <-chan RawWsClientMsg {
 	return w.fan.Sub()
 }
 
-func (w *RawWsClient) Unsub(c <-chan []byte) {
+func (w *RawWsClient) Unsub(c <-chan RawWsClientMsg) {
 	w.fan.Unsub(c)
 }
 
@@ -359,6 +367,11 @@ func (w *RawWsClient) Request(method WsMethod, params []any) (id string, err err
 	return
 }
 
+type WsClientMsg struct {
+	Data any   `json:"data"`
+	Err  error `json:"err"`
+}
+
 type WsClient struct {
 	wsCfg WsCfg
 	rawWs *RawWsClient
@@ -366,7 +379,7 @@ type WsClient struct {
 	user *User
 
 	muxFan sync.Mutex
-	mfan   map[string]*props.Fanout[any]
+	mfan   map[string]*props.Fanout[WsClientMsg]
 
 	logger *slog.Logger
 }
@@ -378,7 +391,7 @@ func NewWsClient(cfg WsCfg, user *User, logger *slog.Logger) *WsClient {
 	return &WsClient{
 		wsCfg:  cfg,
 		user:   user,
-		mfan:   map[string]*props.Fanout[any]{},
+		mfan:   map[string]*props.Fanout[WsClientMsg]{},
 		logger: logger,
 	}
 }
@@ -399,16 +412,21 @@ func (w *WsClient) start() {
 
 const mfanKeyAll = "__all__"
 
-func (w *WsClient) dataHandler(data []byte) {
+func (w *WsClient) dataHandler(msg RawWsClientMsg) {
+	if msg.Err != nil {
+		w.sendToAll(WsClientMsg{Data: msg.Data, Err: msg.Err})
+		return
+	}
+	data := msg.Data
 	e, ok := getWsEvent(data)
 	if !ok {
 		w.logger.Error("Can not get event", "data", string(data))
 		return
 	}
 	w.muxFan.Lock()
+	defer w.muxFan.Unlock()
 	fan := w.mfan[string(e)]
 	allFan := w.mfan[mfanKeyAll]
-	w.muxFan.Unlock()
 	var d any = data
 	var err error
 	if w.rawWs.cfg.DataUnmarshaler != nil {
@@ -418,11 +436,22 @@ func (w *WsClient) dataHandler(data []byte) {
 			return
 		}
 	}
+	newMsg := WsClientMsg{Data: d}
 	if fan != nil {
-		fan.Broadcast(d)
+		fan.Broadcast(newMsg)
 	}
 	if allFan != nil {
-		allFan.Broadcast(d)
+		allFan.Broadcast(newMsg)
+	}
+}
+
+func (w *WsClient) sendToAll(msg WsClientMsg) {
+	w.muxFan.Lock()
+	defer w.muxFan.Unlock()
+	for _, fan := range w.mfan {
+		if fan != nil {
+			fan.Broadcast(msg)
+		}
 	}
 }
 
@@ -436,20 +465,20 @@ func (w *WsClient) event2MfanKey(event WsEvent) string {
 
 // Sub
 // Pass empty string if you want listen all events.
-func (w *WsClient) Sub(event WsEvent) <-chan any {
+func (w *WsClient) Sub(event WsEvent) <-chan WsClientMsg {
 	w.muxFan.Lock()
 	defer w.muxFan.Unlock()
 	// do not use empty string as mfan key
 	key := w.event2MfanKey(event)
 	fan := w.mfan[key]
 	if fan == nil {
-		fan = props.NewFanout[any](time.Second)
+		fan = props.NewFanout[WsClientMsg](time.Second)
 		w.mfan[key] = fan
 	}
 	return fan.Sub()
 }
 
-func (w *WsClient) Unsub(event WsEvent, ch <-chan any) {
+func (w *WsClient) Unsub(event WsEvent, ch <-chan WsClientMsg) {
 	w.muxFan.Lock()
 	defer w.muxFan.Unlock()
 	key := w.event2MfanKey(event)
