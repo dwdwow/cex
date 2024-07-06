@@ -109,7 +109,7 @@ func (w *RawWsClient) Close() {
 
 func (w *RawWsClient) mainThreadStarter() {
 	for {
-		_ = <-w.chRestart
+		<-w.chRestart
 		w.muxStatus.Lock()
 		status := w.status
 		w.muxStatus.Unlock()

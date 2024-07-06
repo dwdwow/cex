@@ -1,7 +1,6 @@
 package bnc
 
 import (
-	"fmt"
 	"testing"
 	"time"
 )
@@ -34,9 +33,12 @@ func TestWs_newFreqToken(t *testing.T) {
 func TestNewWsClient(t *testing.T) {
 	ws := NewWsClient(SpotPrivateWsCfg, newTestVIPPortmarUser(), nil)
 	ws.Start()
-	ch := ws.Sub("")
+	chAll := ws.Sub("")
+	chBalance := ws.Sub(WsEventBalanceUpdate)
 	for {
-		d := <-ch
-		fmt.Println(d)
+		d := <-chAll
+		t.Log("all", d)
+		d = <-chBalance
+		t.Log("balanceUpdate", d)
 	}
 }
