@@ -376,6 +376,10 @@ func NewWsClient(cfg WsCfg, user *User, logger *slog.Logger) *WsClient {
 	}
 }
 
+func (w *WsClient) Start() {
+	go w.start()
+}
+
 func (w *WsClient) start() {
 	ws := NewRawWsClient(w.wsCfg, w.user, w.logger)
 	w.ws = ws
@@ -398,7 +402,12 @@ func (w *WsClient) dataHandler(data []byte) {
 	if fan == nil {
 		return
 	}
-	fan.Broadcast(data)
+	d, err := UnmarshalSpotPrivateWsMsg(e, data)
+	if err != nil {
+		w.logger.Error("Can not unmarshal msg", "data", string(data))
+		return
+	}
+	fan.Broadcast(d)
 }
 
 func (w *WsClient) event2MfanKey(event WsEvent) string {
