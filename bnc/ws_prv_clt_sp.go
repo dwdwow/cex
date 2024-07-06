@@ -2,13 +2,14 @@ package bnc
 
 import (
 	"encoding/json"
+	"math"
 	"time"
 )
 
 type WsSpotBalance struct {
-	Asset  string `json:"a"`
-	Free   string `json:"f"`
-	Locked string `json:"l"`
+	Asset  string  `json:"a"`
+	Free   float64 `json:"f,string"`
+	Locked float64 `json:"l,string"`
 }
 
 type WsSpotAccountUpdate struct {
@@ -19,11 +20,15 @@ type WsSpotAccountUpdate struct {
 }
 
 type WsSpotBalanceUpdate struct {
-	EventType    string `json:"e"`
-	EventTime    int64  `json:"E"`
-	Asset        string `json:"a"`
-	BalanceDelta string `json:"d"`
-	ClearTime    int64  `json:"T"`
+	EventType        string  `json:"e"`
+	EventTime        int64   `json:"E"`
+	Asset            string  `json:"a"`
+	SignBalanceDelta float64 `json:"d,string"`
+	ClearTime        int64   `json:"T"`
+}
+
+func (w WsSpotBalanceUpdate) AbsBalanceDelta() float64 {
+	return math.Abs(w.SignBalanceDelta)
 }
 
 type WsSpotOrderExecutionReport struct {

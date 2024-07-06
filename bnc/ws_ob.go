@@ -2,6 +2,7 @@ package bnc
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
@@ -20,7 +21,7 @@ func topicSuber(client *wsclt.BaseClient, topics []string) error {
 	subMsg := WsSubMsg{
 		Method: WsMethodSub,
 		Params: topics,
-		Id:     time.Now().UnixMilli(),
+		Id:     fmt.Sprintf("%d", time.Now().UnixMilli()),
 	}
 	err := client.WriteJSON(subMsg)
 	if err != nil {
@@ -33,7 +34,7 @@ func topicUnsuber(client *wsclt.BaseClient, topics []string) error {
 	subMsg := WsSubMsg{
 		Method: WsMethodUnsub,
 		Params: topics,
-		Id:     time.Now().UnixMilli(),
+		Id:     fmt.Sprintf("%d", time.Now().UnixMilli()),
 	}
 	err := client.WriteJSON(subMsg)
 	if err != nil {

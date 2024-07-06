@@ -168,7 +168,7 @@ func (w *RawWsClient) connListener(conn *websocket.Conn) {
 	for {
 		// cannot read and write concurrently
 		w.muxConn.Lock()
-		t, d, err := conn.ReadMessage()
+		t, d, err := w.read()
 		w.muxConn.Unlock()
 		if err != nil {
 			w.logger.Error("Read message", "err", err)
@@ -237,7 +237,7 @@ func (w *RawWsClient) SubStream(params []string) error {
 	err := w.conn.WriteJSON(WsSubMsg{
 		Method: WsMethodSub,
 		Params: params,
-		Id:     1,
+		Id:     "1",
 	})
 
 	w.muxConn.Unlock()
@@ -266,7 +266,7 @@ func (w *RawWsClient) UnsubStream(params []string) error {
 	err := w.conn.WriteJSON(WsSubMsg{
 		Method: WsMethodUnsub,
 		Params: params,
-		Id:     1,
+		Id:     "1",
 	})
 
 	w.muxConn.Unlock()
@@ -341,10 +341,10 @@ func (w *RawWsClient) canWriteMsg() bool {
 	return true
 }
 
-func (w *RawWsClient) Request(method WsMethod, params []any) (id int64, err error) {
+func (w *RawWsClient) Request(method WsMethod, params []any) (id string, err error) {
 	w.muxReqId.Lock()
 	w.reqId++
-	id = w.reqId
+	id = fmt.Sprintf("%d", w.reqId)
 	w.muxReqId.Unlock()
 	d, err := json.Marshal(WsReqMsg{
 		Method: method,
@@ -360,7 +360,7 @@ func (w *RawWsClient) Request(method WsMethod, params []any) (id int64, err erro
 
 type WsClient struct {
 	wsCfg WsCfg
-	ws    *RawWsClient
+	rawWs *RawWsClient
 
 	user *User
 
@@ -387,14 +387,16 @@ func (w *WsClient) Start() {
 }
 
 func (w *WsClient) start() {
-	ws := NewRawWsClient(w.wsCfg, w.user, w.logger)
-	w.ws = ws
-	ch := ws.Sub()
-	ws.Start()
+	rawWs := NewRawWsClient(w.wsCfg, w.user, w.logger)
+	w.rawWs = rawWs
+	ch := rawWs.Sub()
+	rawWs.Start()
 	for {
 		w.dataHandler(<-ch)
 	}
 }
+
+const mfanKeyAll = "__all__"
 
 func (w *WsClient) dataHandler(data []byte) {
 	e, ok := getWsEvent(data)
@@ -404,22 +406,25 @@ func (w *WsClient) dataHandler(data []byte) {
 	}
 	w.muxFan.Lock()
 	fan := w.mfan[string(e)]
+	allFan := w.mfan[mfanKeyAll]
 	w.muxFan.Unlock()
-	if fan == nil {
-		return
-	}
 	d, err := UnmarshalSpotPrivateWsMsg(e, data)
 	if err != nil {
 		w.logger.Error("Can not unmarshal msg", "data", string(data))
 		return
 	}
-	fan.Broadcast(d)
+	if fan != nil {
+		fan.Broadcast(d)
+	}
+	if allFan != nil {
+		allFan.Broadcast(d)
+	}
 }
 
 func (w *WsClient) event2MfanKey(event WsEvent) string {
 	// do not use empty string as mfan key
 	if event == "" {
-		event = "__all__"
+		event = mfanKeyAll
 	}
 	return string(event)
 }

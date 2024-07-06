@@ -37,13 +37,13 @@ const (
 type WsSubMsg struct {
 	Method WsMethod `json:"method"`
 	Params []string `json:"params"`
-	Id     int64    `json:"id"`
+	Id     string   `json:"id"`
 }
 
 type WsReqMsg struct {
 	Method WsMethod `json:"method"`
 	Params []any    `json:"params"`
-	Id     int64    `json:"id"`
+	Id     string   `json:"id"`
 }
 
 type WsRespMsg[R any] struct {
