@@ -123,7 +123,7 @@ func (w *RawWsClient) start() error {
 	}
 
 	dialer := websocket.Dialer{}
-	conn, resp, err := dialer.DialContext(w.ctx, w.cfg.Url+"?listenKey="+lk, nil)
+	conn, resp, err := dialer.DialContext(w.ctx, w.cfg.Url+"/"+lk, nil)
 	if err != nil {
 		return err
 	}
