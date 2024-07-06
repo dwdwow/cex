@@ -69,7 +69,7 @@ func NewRawWsClient(cfg WsCfg, user *User, logger *slog.Logger) *RawWsClient {
 	if logger == nil {
 		logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
 	}
-	logger = logger.With("ws", "binance", "url", cfg.Url)
+	logger = logger.With("ws", "bnc_raw_ws", "url", cfg.Url)
 	return &RawWsClient{
 		cfg:          cfg,
 		user:         user,
@@ -285,10 +285,12 @@ func (w *RawWsClient) UnsubStream(params []string) error {
 }
 
 func (w *RawWsClient) newAndKeepListenKey() (string, error) {
+	w.logger.Info("Getting new listen key")
 	lk, err := w.newListenKey()
 	if err != nil {
 		return "", err
 	}
+	w.logger.Info("Listen key gotten")
 	w.listenKey = lk
 	go w.listenKeyKeeper(w.ctx)
 	return lk, nil
@@ -300,10 +302,12 @@ func (w *RawWsClient) newListenKey() (string, error) {
 }
 
 func (w *RawWsClient) listenKeyKeeper(ctx context.Context) {
+	w.logger.Info("Listen key keeper started")
 	for {
 		select {
 		case <-ctx.Done():
 		case <-time.After(time.Minute * 20):
+			w.logger.Info("Keep listening key")
 			_, _, err := w.user.KeepListenKey(w.cfg.ListenKeyUrl, w.listenKey)
 			if err.IsNotNil() {
 				w.logger.Error("Cannot Keep Listen Key", "err", err.Error())
