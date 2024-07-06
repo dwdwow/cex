@@ -359,7 +359,7 @@ type WsClient struct {
 	user *User
 
 	muxFan sync.Mutex
-	mfan   map[WsEvent]*props.Fanout[any]
+	mfan   map[string]*props.Fanout[any]
 
 	logger *slog.Logger
 }
@@ -371,7 +371,7 @@ func NewWsClient(cfg WsCfg, user *User, logger *slog.Logger) *WsClient {
 	return &WsClient{
 		wsCfg:  cfg,
 		user:   user,
-		mfan:   map[WsEvent]*props.Fanout[any]{},
+		mfan:   map[string]*props.Fanout[any]{},
 		logger: logger,
 	}
 }
@@ -393,12 +393,20 @@ func (w *WsClient) dataHandler(data []byte) {
 		return
 	}
 	w.muxFan.Lock()
-	fan := w.mfan[e]
+	fan := w.mfan[string(e)]
 	w.muxFan.Unlock()
 	if fan == nil {
 		return
 	}
 	fan.Broadcast(data)
+}
+
+func (w *WsClient) event2MfanKey(event WsEvent) string {
+	// do not use empty string as mfan key
+	if event == "" {
+		event = "__all__"
+	}
+	return string(event)
 }
 
 // Sub
@@ -407,13 +415,11 @@ func (w *WsClient) Sub(event WsEvent) <-chan any {
 	w.muxFan.Lock()
 	defer w.muxFan.Unlock()
 	// do not use empty string as mfan key
-	if event == "" {
-		event = "all"
-	}
-	fan := w.mfan[event]
+	key := w.event2MfanKey(event)
+	fan := w.mfan[key]
 	if fan == nil {
 		fan = props.NewFanout[any](time.Second)
-		w.mfan[event] = fan
+		w.mfan[key] = fan
 	}
 	return fan.Sub()
 }
@@ -421,10 +427,8 @@ func (w *WsClient) Sub(event WsEvent) <-chan any {
 func (w *WsClient) Unsub(event WsEvent, ch <-chan any) {
 	w.muxFan.Lock()
 	defer w.muxFan.Unlock()
-	if event == "" {
-		event = "all"
-	}
-	fan := w.mfan[event]
+	key := w.event2MfanKey(event)
+	fan := w.mfan[key]
 	if fan == nil {
 		return
 	}
