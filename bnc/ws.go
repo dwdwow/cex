@@ -167,9 +167,7 @@ func (w *RawWsClient) connListener(conn *websocket.Conn) {
 	w.logger.Info("Conn listener started")
 	for {
 		// cannot read and write concurrently
-		w.muxConn.Lock()
 		t, d, err := w.read()
-		w.muxConn.Unlock()
 		if err != nil {
 			w.logger.Error("Read message", "err", err)
 			return
