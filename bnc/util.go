@@ -116,9 +116,9 @@ func GetPrecJustForBinanceFilter(size string) (int, error) {
 func getWsEvent(data []byte) (event WsEvent, ok bool) {
 	ss := strings.Split(string(data), ",")
 	for _, s := range ss {
-		r := strings.Split(s, `\"e\":`)
+		r := strings.Split(s, "\"e\":")
 		if len(r) == 2 {
-			return WsEvent(strings.ReplaceAll(r[1], `\"`, "")), true
+			return WsEvent(strings.ReplaceAll(r[1], "\"", "")), true
 		}
 	}
 	return "", false
