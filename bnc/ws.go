@@ -82,7 +82,6 @@ func NewRawWsClient(cfg WsCfg, user *User, logger *slog.Logger) *RawWsClient {
 }
 
 func (w *RawWsClient) Start() {
-	w.logger.Info("Starting")
 	w.muxStatus.Lock()
 	w.status = 1
 	w.muxStatus.Unlock()
@@ -104,7 +103,24 @@ func (w *RawWsClient) Close() {
 	w.muxConn.Unlock()
 }
 
+func (w *RawWsClient) mainThreadStarter() {
+	for {
+		_ = <-w.chRestart
+		w.muxStatus.Lock()
+		status := w.status
+		w.muxStatus.Unlock()
+		if status == -1 {
+			return
+		}
+		err := w.start()
+		if err != nil {
+			w.logger.Error("Cannot Start", "err", err)
+		}
+	}
+}
+
 func (w *RawWsClient) start() error {
+	w.logger.Info("Starting")
 	if w.ctxCancel != nil {
 		w.ctxCancel()
 	}
@@ -140,22 +156,6 @@ func (w *RawWsClient) start() error {
 	return nil
 }
 
-func (w *RawWsClient) mainThreadStarter() {
-	for {
-		_ = <-w.chRestart
-		w.muxStatus.Lock()
-		status := w.status
-		w.muxStatus.Unlock()
-		if status == -1 {
-			return
-		}
-		err := w.start()
-		if err != nil {
-			w.logger.Error("Cannot Start", "err", err)
-		}
-	}
-}
-
 func (w *RawWsClient) connListener(conn *websocket.Conn) {
 	defer func() {
 		w.chRestart <- struct{}{}
@@ -164,6 +164,7 @@ func (w *RawWsClient) connListener(conn *websocket.Conn) {
 		w.logger.Error("Nil conn")
 		return
 	}
+	w.logger.Info("Conn listener started")
 	for {
 		// cannot read and write concurrently
 		w.muxConn.Lock()
@@ -183,6 +184,7 @@ func (w *RawWsClient) connListener(conn *websocket.Conn) {
 		case websocket.PongMessage:
 			w.logger.Info("Server pong received", "msg", string(d))
 		case websocket.TextMessage:
+			w.logger.Info("Server text message received", "msg", string(d))
 			w.fan.Broadcast(d)
 		case websocket.BinaryMessage:
 			w.logger.Info("Server binary received", "msg", string(d), "binary", d)
