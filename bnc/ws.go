@@ -15,6 +15,8 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+type WsDataUnmarshaler func(WsEvent, []byte) (any, error)
+
 type WsCfg struct {
 	// ws url without streams and auth tokens
 	Url          string
@@ -28,6 +30,8 @@ type WsCfg struct {
 	// ex. spot 5/s, futures 10/s
 	ReqDur       time.Duration
 	MaxReqPerDur int
+
+	DataUnmarshaler WsDataUnmarshaler
 }
 
 type RawWsClient struct {
@@ -182,7 +186,6 @@ func (w *RawWsClient) connListener(conn *websocket.Conn) {
 		case websocket.PongMessage:
 			w.logger.Info("Server pong received", "msg", string(d))
 		case websocket.TextMessage:
-			w.logger.Info("Server text message received", "msg", string(d))
 			w.fan.Broadcast(d)
 		case websocket.BinaryMessage:
 			w.logger.Info("Server binary received", "msg", string(d), "binary", d)
@@ -406,10 +409,14 @@ func (w *WsClient) dataHandler(data []byte) {
 	fan := w.mfan[string(e)]
 	allFan := w.mfan[mfanKeyAll]
 	w.muxFan.Unlock()
-	d, err := UnmarshalSpotPrivateWsMsg(e, data)
-	if err != nil {
-		w.logger.Error("Can not unmarshal msg", "data", string(data))
-		return
+	var d any = data
+	var err error
+	if w.rawWs.cfg.DataUnmarshaler != nil {
+		d, err = w.rawWs.cfg.DataUnmarshaler(e, data)
+		if err != nil {
+			w.logger.Error("Can not unmarshal msg", "data", string(data))
+			return
+		}
 	}
 	if fan != nil {
 		fan.Broadcast(d)
