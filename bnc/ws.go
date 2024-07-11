@@ -296,6 +296,9 @@ func (w *RawWsClient) UnsubStream(params []string) error {
 }
 
 func (w *RawWsClient) newAndKeepListenKey() (string, error) {
+	if w.user == nil {
+		return "", nil
+	}
 	w.logger.Info("Getting new listen key")
 	lk, err := w.newListenKey()
 	if err != nil {

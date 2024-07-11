@@ -45,9 +45,9 @@ type WsSpotKline struct {
 	BaseAssetVolume       float64       `json:"v,string"`
 	TradesNum             int64         `json:"n"`
 	IsKlineClosed         bool          `json:"x"`
-	QuoteVolume           string        `json:"q"`
-	BaseAssetTakerVolume  string        `json:"V"`
-	QuoteAssetTakerVolume string        `json:"Q"`
+	QuoteVolume           float64       `json:"q,string"`
+	BaseAssetTakerVolume  float64       `json:"V,string"`
+	QuoteAssetTakerVolume float64       `json:"Q,string"`
 	B                     string        `json:"B"` // ignore
 }
 
