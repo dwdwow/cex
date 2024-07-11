@@ -258,9 +258,22 @@ type KlineInterval string
 
 const (
 	// KlineInterval1s is only for spot
-	KlineInterval1s = "1s"
-	KlineInterval1m = "1m"
-	KlineInterval1h = "1h"
+	KlineInterval1s  KlineInterval = "1s"
+	KlineInterval1m  KlineInterval = "1m"
+	KlineInterval3m  KlineInterval = "3m"
+	KlineInterval5m  KlineInterval = "5m"
+	KlineInterval15m KlineInterval = "15m"
+	KlineInterval30m KlineInterval = "30m"
+	KlineInterval1h  KlineInterval = "1h"
+	KlineInterval2h  KlineInterval = "2h"
+	KlineInterval4h  KlineInterval = "4h"
+	KlineInterval6h  KlineInterval = "6h"
+	KlineInterval8h  KlineInterval = "8h"
+	KlineInterval12h KlineInterval = "12h"
+	KlineInterval1d  KlineInterval = "1d"
+	KlineInterval3d  KlineInterval = "3d"
+	KlineInterval1w  KlineInterval = "1w"
+	KlineInterval1M  KlineInterval = "1M"
 )
 
 type KlineParams struct {

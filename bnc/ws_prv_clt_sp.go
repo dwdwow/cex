@@ -95,7 +95,7 @@ type WsListenKeyExpired struct {
 	ListenKey string `json:"listenKey"`
 }
 
-func SpotPrivateWsMsgUnmarshaler(e WsEvent, data []byte) (any, error) {
+func SpotWsPrivateMsgUnmarshaler(e WsEvent, data []byte) (any, error) {
 	switch e {
 	case WsEventOutboundAccountPosition:
 		return unmarshal[WsSpotAccountUpdate](data)
@@ -118,5 +118,5 @@ var SpotPrivateWsCfg = WsCfg{
 	MaxStream:       1024,
 	ReqDur:          time.Second,
 	MaxReqPerDur:    10,
-	DataUnmarshaler: SpotPrivateWsMsgUnmarshaler,
+	DataUnmarshaler: SpotWsPrivateMsgUnmarshaler,
 }

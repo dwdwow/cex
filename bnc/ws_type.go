@@ -32,6 +32,18 @@ const (
 	WsEventExecutionReport         WsEvent = "executionReport"
 	WsEventListStatus              WsEvent = "listStatus"
 	WsEventListenKeyExpired        WsEvent = "listenKeyExpired"
+
+	WsEventTrade                         WsEvent = "trade"
+	WsEventAggTrade                      WsEvent = "aggTrade"
+	WsEventKline                         WsEvent = "kline"
+	WsEventDepthUpdate                   WsEvent = "depthUpdate"
+	WsEventMarginCall                    WsEvent = "MARGIN_CALL"
+	WsEventAccountUpdate                 WsEvent = "ACCOUNT_UPDATE"
+	WsEventOrderTradeUpdate              WsEvent = "ORDER_TRADE_UPDATE"
+	WsEventAccountConfigUpdate           WsEvent = "ACCOUNT_CONFIG_UPDATE"
+	WsEventStrategyUpdate                WsEvent = "STRATEGY_UPDATE"
+	WsEventGridUpdate                    WsEvent = "GRID_UPDATE"
+	WsEventConditionalOrderTriggerReject WsEvent = "CONDITIONAL_ORDER_TRIGGER_REJECT"
 )
 
 type WsSubMsg struct {
