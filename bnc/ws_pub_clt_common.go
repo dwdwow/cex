@@ -70,3 +70,69 @@ type WsKlineStream struct {
 }
 
 type WsDepthStream WsDepthMsg
+
+type WsOrderExecutionReport struct {
+	EventType               string                  `json:"e"`
+	EventTime               int64                   `json:"E"`
+	Symbol                  string                  `json:"s"`
+	ClientOrderId           string                  `json:"c"`
+	Side                    OrderSide               `json:"S"`
+	Type                    OrderType               `json:"o"`
+	TimeInForce             TimeInForce             `json:"f"`
+	Qty                     float64                 `json:"q,string"`
+	Price                   float64                 `json:"p,string"`
+	StopPrice               float64                 `json:"P,string"`
+	IcebergQty              float64                 `json:"F,string"`
+	OrderListId             int64                   `json:"g"`
+	OriginalClientId        string                  `json:"C"`
+	ExecutionType           OrderExecutionType      `json:"x"`
+	Status                  OrderStatus             `json:"X"`
+	RejectReason            string                  `json:"r"`
+	OrderId                 int64                   `json:"i"`
+	LastExecutedQty         float64                 `json:"l,string"`
+	FilledQty               float64                 `json:"z,string"`
+	LastExecutedPrice       float64                 `json:"L,string"`
+	CommissionAmt           float64                 `json:"n,string"`
+	CommissionAsset         string                  `json:"N"`
+	Time                    int64                   `json:"T"`
+	TradeId                 int64                   `json:"t"`
+	PreventedMatchId        int64                   `json:"v"`
+	Ignore                  int64                   `json:"I"`
+	IsOrderOnTheBook        bool                    `json:"w"`
+	IsMaker                 bool                    `json:"m"`
+	Ignore1                 bool                    `json:"M"`
+	CreationTime            int64                   `json:"O"`
+	FilledQuote             float64                 `json:"Z,string"`
+	LastExecutedQuote       float64                 `json:"Y,string"`
+	QuoteOrderQty           float64                 `json:"Q,string"`
+	WorkingTime             int64                   `json:"W"`
+	SelfTradePreventionMode SelfTradePreventionMode `json:"V"`
+
+	// just for margin order
+	TrailingDelta      float64 `json:"d"` // Trailing Delta; This is only visible if the order was a trailing stop order.
+	TrailingTime       int64   `json:"D"` // Trailing Time; This is only visible if the trailing stop order has been activated.
+	MarginStrategyId   int64   `json:"j"`
+	MarginStrategyType int64   `json:"J"`
+	TradeGroupId       int64   `json:"u"`
+	CounterOrderId     int64   `json:"U"`
+	PreventedQty       float64 `json:"A,string"`
+	LastPreventedQty   float64 `json:"B,string"`
+
+	// just for futures order
+	AvgPrice            string              `json:"ap"`
+	Sp                  string              `json:"sp"` // ignore
+	BidNotional         string              `json:"b"`
+	AskNotional         string              `json:"a"`
+	IsReduceOnly        bool                `json:"R"`
+	PositionSide        FuturesPositionSide `json:"ps"`
+	RealizedProfit      string              `json:"rp"`
+	FuturesStrategyType string              `json:"st"`
+	FuturesStrategyId   int64               `json:"si"`
+	Gtd                 int64               `json:"gtd"`
+}
+
+type WsListenKeyExpired struct {
+	EventType string `json:"e"`
+	EventTime int64  `json:"E"`
+	ListenKey string `json:"listenKey"`
+}

@@ -17,6 +17,9 @@ type WsSpotAccountUpdate struct {
 	EventTime  int64           `json:"E"`
 	UpdateTime int64           `json:"u"`
 	Balances   []WsSpotBalance `json:"B"`
+
+	// just for margin user data stream
+	TimeUpdateId int64 `json:"U"`
 }
 
 type WsSpotBalanceUpdate struct {
@@ -29,44 +32,6 @@ type WsSpotBalanceUpdate struct {
 
 func (w WsSpotBalanceUpdate) AbsBalanceDelta() float64 {
 	return math.Abs(w.SignBalanceDelta)
-}
-
-type WsSpotOrderExecutionReport struct {
-	EventType               string                  `json:"e"`
-	EventTime               int64                   `json:"E"`
-	Symbol                  string                  `json:"s"`
-	ClientOrderId           string                  `json:"c"`
-	Side                    OrderSide               `json:"S"`
-	Type                    OrderType               `json:"o"`
-	TimeInForce             TimeInForce             `json:"f"`
-	Qty                     float64                 `json:"q,string"`
-	Price                   float64                 `json:"p,string"`
-	StopPrice               float64                 `json:"P,string"`
-	IcebergQty              float64                 `json:"F,string"`
-	OrderListId             int64                   `json:"g"`
-	OriginalClientId        string                  `json:"C"`
-	ExecutionType           OrderExecutionType      `json:"x"`
-	Status                  OrderStatus             `json:"X"`
-	RejectReason            string                  `json:"r"`
-	OrderId                 int64                   `json:"i"`
-	LastExecutedQty         float64                 `json:"l,string"`
-	FilledQty               float64                 `json:"z,string"`
-	LastExecutedPrice       float64                 `json:"L,string"`
-	CommissionAmt           float64                 `json:"n,string"`
-	CommissionAsset         string                  `json:"N"`
-	Time                    int64                   `json:"T"`
-	TradeId                 int64                   `json:"t"`
-	PreventedMatchId        int64                   `json:"v"`
-	Ignore                  int64                   `json:"I"`
-	IsOrderOnTheBook        bool                    `json:"w"`
-	IsMaker                 bool                    `json:"m"`
-	Ignore1                 bool                    `json:"M"`
-	CreationTime            int64                   `json:"O"`
-	FilledQuote             float64                 `json:"Z,string"`
-	LastExecutedQuote       float64                 `json:"Y,string"`
-	QuoteOrderQty           float64                 `json:"Q,string"`
-	WorkingTime             int64                   `json:"W"`
-	SelfTradePreventionMode SelfTradePreventionMode `json:"V"`
 }
 
 type WsSpotListStatusObject struct {
@@ -89,12 +54,6 @@ type WsSpotListStatus struct {
 	Objects           []WsSpotListStatusObject `json:"O"`
 }
 
-type WsListenKeyExpired struct {
-	EventType string `json:"e"`
-	EventTime int64  `json:"E"`
-	ListenKey string `json:"listenKey"`
-}
-
 func SpotWsPrivateMsgUnmarshaler(e WsEvent, data []byte) (any, error) {
 	switch e {
 	case WsEventOutboundAccountPosition:
@@ -102,7 +61,7 @@ func SpotWsPrivateMsgUnmarshaler(e WsEvent, data []byte) (any, error) {
 	case WsEventBalanceUpdate:
 		return unmarshal[WsSpotBalanceUpdate](data)
 	case WsEventExecutionReport:
-		return unmarshal[WsSpotOrderExecutionReport](data)
+		return unmarshal[WsOrderExecutionReport](data)
 	case WsEventListStatus:
 		return unmarshal[WsSpotListStatus](data)
 	case WsEventListenKeyExpired:
