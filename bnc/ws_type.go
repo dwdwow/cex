@@ -1,8 +1,9 @@
 package bnc
 
 const (
-	WsBaseUrl       = "wss://stream.binance.com:9443/ws"
-	FutureWsBaseUrl = "wss://fstream.binance.com/ws"
+	WsBaseUrl         = "wss://stream.binance.com:9443/ws"
+	FutureWsBaseUrl   = "wss://fstream.binance.com/ws"
+	CMFutureWsBaseUrl = "wss://dstream.binance.com/ws"
 )
 
 type WsMethod string
