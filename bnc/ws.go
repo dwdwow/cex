@@ -458,17 +458,17 @@ func (w *WsClient) sendToAll(msg WsClientMsg) {
 	}
 }
 
-func (w *WsClient) event2MfanKey(event WsEvent) string {
+func (w *WsClient) event2MfanKey(event string) string {
 	// do not use empty string as mfan key
 	if event == "" {
 		event = mfanKeyAll
 	}
-	return string(event)
+	return event
 }
 
 // Sub
 // Pass empty string if you want listen all events.
-func (w *WsClient) Sub(event WsEvent) <-chan WsClientMsg {
+func (w *WsClient) Sub(event string) <-chan WsClientMsg {
 	w.muxFan.Lock()
 	defer w.muxFan.Unlock()
 	// do not use empty string as mfan key
@@ -481,7 +481,7 @@ func (w *WsClient) Sub(event WsEvent) <-chan WsClientMsg {
 	return fan.Sub()
 }
 
-func (w *WsClient) Unsub(event WsEvent, ch <-chan WsClientMsg) {
+func (w *WsClient) Unsub(event string, ch <-chan WsClientMsg) {
 	w.muxFan.Lock()
 	defer w.muxFan.Unlock()
 	key := w.event2MfanKey(event)

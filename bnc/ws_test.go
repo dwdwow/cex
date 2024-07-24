@@ -34,12 +34,22 @@ func TestNewWsClient(t *testing.T) {
 	ws := NewWsClient(SpotPrivateWsCfg, newTestVIPPortmarUser(), nil)
 	ws.Start()
 	chAll := ws.Sub("")
-	chBalance := ws.Sub(WsEventBalanceUpdate)
+	chBalance := ws.Sub(string(WsEventBalanceUpdate))
 	for {
 		d := <-chAll
 		t.Log("all", d)
 		d = <-chBalance
 		u := d.Data.(WsSpotBalanceUpdate)
 		t.Log("balanceUpdate", u)
+	}
+}
+
+func TestSpotPublicWsClient(t *testing.T) {
+	ws := NewWsClient(SpotPublicWsCfg, nil, nil)
+	ws.Start()
+	chAll := ws.Sub("btcusdt@" + string(WsEventAggTrade))
+	for {
+		msg := <-chAll
+		t.Log(msg.Data.(WsAggTradeStream))
 	}
 }
