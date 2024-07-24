@@ -428,6 +428,8 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 	}
 	w.muxFan.Lock()
 	defer w.muxFan.Unlock()
+
+	var uniqFan *props.Fanout[WsClientMsg]
 	fan := w.mfan[string(e)]
 	allFan := w.mfan[mfanKeyAll]
 	var d any = data
@@ -438,6 +440,13 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 			w.logger.Error("Can not unmarshal msg", "data", string(data))
 			return
 		}
+		switch e {
+		case WsEventAggTrade:
+			s, ok := d.(WsAggTradeStream)
+			if ok {
+				uniqFan = w.mfan[s.Symbol+"@"+string(WsEventAggTrade)]
+			}
+		}
 	}
 	newMsg := WsClientMsg{Data: d}
 	if fan != nil {
@@ -445,6 +454,9 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 	}
 	if allFan != nil {
 		allFan.Broadcast(newMsg)
+	}
+	if uniqFan != nil {
+		uniqFan.Broadcast(newMsg)
 	}
 }
 
@@ -468,7 +480,11 @@ func (w *WsClient) event2MfanKey(event string) string {
 
 // Sub
 // Pass empty string if you want listen all events.
-func (w *WsClient) Sub(event string) <-chan WsClientMsg {
+func (w *WsClient) Sub(event string) (<-chan WsClientMsg, error) {
+	err := w.rawWs.SubStream([]string{event})
+	if err != nil {
+		return nil, err
+	}
 	w.muxFan.Lock()
 	defer w.muxFan.Unlock()
 	// do not use empty string as mfan key
@@ -478,7 +494,7 @@ func (w *WsClient) Sub(event string) <-chan WsClientMsg {
 		fan = props.NewFanout[WsClientMsg](time.Second)
 		w.mfan[key] = fan
 	}
-	return fan.Sub()
+	return fan.Sub(), nil
 }
 
 func (w *WsClient) Unsub(event string, ch <-chan WsClientMsg) {
