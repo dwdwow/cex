@@ -155,7 +155,11 @@ func (w *RawWsClient) start() error {
 	}
 
 	dialer := websocket.Dialer{}
-	conn, resp, err := dialer.DialContext(w.ctx, w.cfg.Url+"/"+lk, nil)
+	var path string
+	if lk != "" {
+		path = "/" + lk
+	}
+	conn, resp, err := dialer.DialContext(w.ctx, w.cfg.Url+path, nil)
 	if err != nil {
 		return err
 	}
@@ -302,7 +306,7 @@ func (w *RawWsClient) UnsubStream(params []string) error {
 }
 
 func (w *RawWsClient) newAndKeepListenKey() (string, error) {
-	if w.user == nil {
+	if w.user == nil || w.cfg.ListenKeyUrl == "" {
 		return "", nil
 	}
 	w.logger.Info("Getting new listen key")
