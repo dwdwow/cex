@@ -39,7 +39,7 @@ func TestNewWsClient(t *testing.T) {
 		d := <-chAll
 		t.Log("all", d)
 		d = <-chBalance
-		u := d.(WsSpotBalanceUpdate)
+		u := d.Data.(WsSpotBalanceUpdate)
 		t.Log("balanceUpdate", u)
 	}
 }
