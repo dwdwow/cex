@@ -25,7 +25,7 @@ var SpotPublicWsCfg = WsCfg{
 	MaxStream:       1024,
 	ReqDur:          time.Second,
 	MaxReqPerDur:    5,
-	DataUnmarshaler: SpotWsPrivateMsgUnmarshaler,
+	DataUnmarshaler: SpotWsPublicMsgUnmarshaler,
 }
 
 func UmFuturesWsPublicMsgUnmarshaler(e WsEvent, data []byte) (any, error) {
