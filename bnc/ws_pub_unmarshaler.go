@@ -33,7 +33,9 @@ func UmFuturesWsPublicMsgUnmarshaler(e WsEvent, data []byte) (any, error) {
 	case WsEventAggTrade:
 		return unmarshal[WsAggTradeStream](data)
 	case WsEventMarkPriceUpdate:
-		return unmarshal[WsMarkPriceUpdate](data)
+		return unmarshal[WsMarkPriceStream](data)
+	case WsEventForceOrder:
+		return unmarshal[WsLiquidationOrderStream](data)
 	case WsEventKline:
 		return unmarshal[WsKlineStream](data)
 	case WsEventDepthUpdate:
@@ -49,4 +51,31 @@ var UmFuturesWsCfg = WsCfg{
 	ReqDur:          time.Second,
 	MaxReqPerDur:    5,
 	DataUnmarshaler: UmFuturesWsPublicMsgUnmarshaler,
+}
+
+func CmFuturesWsPublicMsgUnmarshaler(e WsEvent, data []byte) (any, error) {
+	switch e {
+	case WsEventAggTrade:
+		return unmarshal[WsAggTradeStream](data)
+	case WsEventIndexPriceUpdate:
+		return unmarshal[WsCMIndexPriceStream](data)
+	case WsEventMarkPriceUpdate:
+		return unmarshal[WsMarkPriceStream](data)
+	case WsEventForceOrder:
+		return unmarshal[WsLiquidationOrderStream](data)
+	case WsEventKline:
+		return unmarshal[WsKlineStream](data)
+	case WsEventDepthUpdate:
+		return unmarshal[WsDepthStream](data)
+	default:
+		return nil, fmt.Errorf("bnc: unknown event %v", e)
+	}
+}
+
+var CmFuturesWsCfg = WsCfg{
+	Url:             CMFutureWsBaseUrl,
+	MaxStream:       1024,
+	ReqDur:          time.Second,
+	MaxReqPerDur:    5,
+	DataUnmarshaler: CmFuturesWsPublicMsgUnmarshaler,
 }

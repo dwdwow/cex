@@ -1,19 +1,5 @@
 package bnc
 
-// WsMarkPriceUpdate 3000ms or 1000ms
-// url: wss://fstream.binance.com/ws
-// event: WsEventMarkPriceUpdate
-type WsMarkPriceUpdate struct {
-	EventType            WsEvent `json:"e"`
-	EventTime            int64   `json:"E"`
-	Symbol               string  `json:"s"`
-	MarkPrice            string  `json:"p"`
-	IndexPrice           string  `json:"i"`
-	EstimatedSettlePrice string  `json:"P"` // Estimated Settle Price, only useful in the last hour before the settlement starts
-	FundingRate          string  `json:"r"`
-	NextFundingTime      int64   `json:"T"`
-}
-
 // WsCMIndexPriceStream
 // url: wss://dstream.binance.com/ws
 // event: WsEventIndexPriceUpdate
@@ -24,10 +10,10 @@ type WsCMIndexPriceStream struct {
 	Price     float64 `json:"p,string"`
 }
 
-// WsCMMarkPriceStream
+// WsMarkPriceStream
 // url: wss://dstream.binance.com/ws
 // event: WsEventMarkPriceUpdate
-type WsCMMarkPriceStream struct {
+type WsMarkPriceStream struct {
 	EventType            WsEvent `json:"e"`
 	EventTime            int64   `json:"E"`
 	Symbol               string  `json:"s"`
@@ -35,7 +21,7 @@ type WsCMMarkPriceStream struct {
 	EstimatedSettlePrice float64 `json:"P,string"`
 	IndexPrice           float64 `json:"i,string"`
 	FundingRate          float64 `json:"r,string"`
-	NextFundingRate      float64 `json:"T,string"`
+	NextFundingTime      int64   `json:"T,string"`
 }
 
 type WsStrategyOrder struct {
@@ -212,4 +198,24 @@ type WsMarginBalanceUpdate struct {
 	BalanceDelta float64 `json:"d,string"`
 	UpdateId     int64   `json:"U"`
 	ClearTime    int64   `json:"T"`
+}
+
+type WsLiquidationOrder struct {
+	Symbol        string      `json:"s"`
+	OrderSide     OrderSide   `json:"S"`
+	OrderType     OrderType   `json:"o"`
+	TimeInForce   TimeInForce `json:"f"`
+	OriQty        float64     `json:"q,string"`
+	Price         float64     `json:"p,string"`
+	AvgPrice      float64     `json:"ap,string"`
+	OrderStatus   OrderStatus `json:"X"`
+	LastFilledQty float64     `json:"l,string"`
+	FilledQty     float64     `json:"z,string"`
+	TradeTime     int64       `json:"T"`
+}
+
+type WsLiquidationOrderStream struct {
+	EventType WsEvent            `json:"e"`
+	EventTime int64              `json:"E"`
+	Order     WsLiquidationOrder `json:"o"`
 }

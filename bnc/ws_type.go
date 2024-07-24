@@ -39,6 +39,7 @@ const (
 	WsEventDepthUpdate                   WsEvent = "depthUpdate"
 	WsEventMarkPriceUpdate               WsEvent = "markPriceUpdate"
 	WsEventIndexPriceUpdate              WsEvent = "indexPriceUpdate"
+	WsEventForceOrder                    WsEvent = "forceOrder"
 	WsEventMarginCall                    WsEvent = "MARGIN_CALL"
 	WsEventAccountUpdate                 WsEvent = "ACCOUNT_UPDATE"
 	WsEventOrderTradeUpdate              WsEvent = "ORDER_TRADE_UPDATE"
