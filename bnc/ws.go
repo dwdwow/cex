@@ -463,7 +463,7 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 	if w.rawWs.cfg.DataUnmarshaler != nil {
 		d, err = w.rawWs.cfg.DataUnmarshaler(e, data)
 		if err != nil {
-			w.logger.Error("Can not unmarshal msg", "data", string(data))
+			w.logger.Error("Can not unmarshal msg", "err", err, "data", string(data))
 			return
 		}
 		switch e {
