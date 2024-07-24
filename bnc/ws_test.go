@@ -50,6 +50,10 @@ func TestSpotPublicWsClient(t *testing.T) {
 	chAll := ws.Sub("btcusdt@" + string(WsEventAggTrade))
 	for {
 		msg := <-chAll
+		if msg.Err != nil {
+			t.Error(msg.Err)
+			break
+		}
 		t.Log(msg.Data.(WsAggTradeStream))
 	}
 }
