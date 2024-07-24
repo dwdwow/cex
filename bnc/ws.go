@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"os"
 	"slices"
+	"strings"
 	"sync"
 	"time"
 
@@ -90,12 +91,17 @@ func NewRawWsClient(cfg WsCfg, user *User, logger *slog.Logger) *RawWsClient {
 	}
 }
 
-func (w *RawWsClient) Start() {
+func (w *RawWsClient) Start() error {
 	w.muxStatus.Lock()
 	w.status = 1
 	w.muxStatus.Unlock()
+	err := w.start()
+	if err != nil {
+		return err
+	}
 	go w.mainThreadStarter()
-	w.chRestart <- struct{}{}
+	//w.chRestart <- struct{}{}
+	return nil
 }
 
 func (w *RawWsClient) Close() {
@@ -376,6 +382,9 @@ type WsClientMsg struct {
 }
 
 type WsClient struct {
+	ctx       context.Context
+	ctxCancel context.CancelFunc
+
 	wsCfg WsCfg
 	rawWs *RawWsClient
 
@@ -391,26 +400,39 @@ func NewWsClient(cfg WsCfg, user *User, logger *slog.Logger) *WsClient {
 	if logger == nil {
 		logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
 	}
+	ctx, cancel := context.WithCancel(context.Background())
 	return &WsClient{
-		wsCfg:  cfg,
-		user:   user,
-		mfan:   map[string]*props.Fanout[WsClientMsg]{},
-		logger: logger,
+		ctx:       ctx,
+		ctxCancel: cancel,
+		wsCfg:     cfg,
+		user:      user,
+		mfan:      map[string]*props.Fanout[WsClientMsg]{},
+		logger:    logger,
 	}
 }
 
-func (w *WsClient) Start() {
-	go w.start()
+func (w *WsClient) Start() error {
+	return w.start()
 }
 
-func (w *WsClient) start() {
+func (w *WsClient) start() error {
 	rawWs := NewRawWsClient(w.wsCfg, w.user, w.logger)
 	w.rawWs = rawWs
 	ch := rawWs.Sub()
-	rawWs.Start()
-	for {
-		w.dataHandler(<-ch)
+	if err := rawWs.Start(); err != nil {
+		return err
 	}
+	go func() {
+		for {
+			select {
+			case <-w.ctx.Done():
+				return
+			case msg := <-ch:
+				w.dataHandler(msg)
+			}
+		}
+	}()
+	return nil
 }
 
 const mfanKeyAll = "__all__"
@@ -444,7 +466,7 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 		case WsEventAggTrade:
 			s, ok := d.(WsAggTradeStream)
 			if ok {
-				uniqFan = w.mfan[s.Symbol+"@"+string(WsEventAggTrade)]
+				uniqFan = w.mfan[strings.ToLower(s.Symbol)+"@"+string(WsEventAggTrade)]
 			}
 		}
 	}

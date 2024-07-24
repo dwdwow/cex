@@ -3,6 +3,8 @@ package bnc
 import (
 	"testing"
 	"time"
+
+	"github.com/dwdwow/props"
 )
 
 func TestWs_newFreqToken(t *testing.T) {
@@ -32,9 +34,12 @@ func TestWs_newFreqToken(t *testing.T) {
 
 func TestNewWsClient(t *testing.T) {
 	ws := NewWsClient(SpotPrivateWsCfg, newTestVIPPortmarUser(), nil)
-	ws.Start()
-	chAll := ws.Sub("")
-	chBalance := ws.Sub(string(WsEventBalanceUpdate))
+	err := ws.Start()
+	props.PanicIfNotNil(err)
+	chAll, err := ws.Sub("")
+	props.PanicIfNotNil(err)
+	chBalance, err := ws.Sub(string(WsEventBalanceUpdate))
+	props.PanicIfNotNil(err)
 	for {
 		d := <-chAll
 		t.Log("all", d)
@@ -46,8 +51,10 @@ func TestNewWsClient(t *testing.T) {
 
 func TestSpotPublicWsClient(t *testing.T) {
 	ws := NewWsClient(SpotPublicWsCfg, nil, nil)
-	ws.Start()
-	chAll := ws.Sub("btcusdt@" + string(WsEventAggTrade))
+	err := ws.Start()
+	props.PanicIfNotNil(err)
+	chAll, err := ws.Sub("btcusdt@" + string(WsEventAggTrade))
+	props.PanicIfNotNil(err)
 	for {
 		msg := <-chAll
 		if msg.Err != nil {
