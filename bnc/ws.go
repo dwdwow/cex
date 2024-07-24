@@ -449,6 +449,9 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 	data := msg.Data
 	e, ok := getWsEvent(data)
 	if !ok {
+		if string(data) == "{\"result\":null,\"id\":\"1\"}" {
+			return
+		}
 		w.logger.Error("Can not get event", "data", string(data))
 		return
 	}
