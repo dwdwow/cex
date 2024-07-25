@@ -47,9 +47,9 @@ func UmFuturesWsPublicMsgUnmarshaler(e WsEvent, data []byte) (any, error) {
 
 var UmFuturesWsCfg = WsCfg{
 	Url:             FutureWsBaseUrl,
-	MaxStream:       1024,
+	MaxStream:       200,
 	ReqDur:          time.Second,
-	MaxReqPerDur:    5,
+	MaxReqPerDur:    10,
 	DataUnmarshaler: UmFuturesWsPublicMsgUnmarshaler,
 }
 
@@ -74,8 +74,8 @@ func CmFuturesWsPublicMsgUnmarshaler(e WsEvent, data []byte) (any, error) {
 
 var CmFuturesWsCfg = WsCfg{
 	Url:             CMFutureWsBaseUrl,
-	MaxStream:       1024,
+	MaxStream:       200,
 	ReqDur:          time.Second,
-	MaxReqPerDur:    5,
+	MaxReqPerDur:    10,
 	DataUnmarshaler: CmFuturesWsPublicMsgUnmarshaler,
 }

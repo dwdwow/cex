@@ -53,7 +53,8 @@ func TestSpotPublicWsClient(t *testing.T) {
 	ws := NewWsClient(SpotPublicWsCfg, nil, nil)
 	err := ws.Start()
 	props.PanicIfNotNil(err)
-	chAll, err := ws.Sub("btcusdt@" + string(WsEventAggTrade))
+	err = ws.SubStream([]string{"btcusdt@depth", "ethusdt@depth@100ms"})
+	chAll, err := ws.Sub(string(WsEventDepthUpdate))
 	props.PanicIfNotNil(err)
 	for {
 		msg := <-chAll
@@ -61,6 +62,40 @@ func TestSpotPublicWsClient(t *testing.T) {
 			t.Error(msg.Err)
 			break
 		}
-		t.Log(msg.Data.(WsAggTradeStream))
+		t.Log(msg.Data)
+	}
+}
+
+func TestUmFuturesPublicWsClient(t *testing.T) {
+	ws := NewWsClient(UmFuturesWsCfg, nil, nil)
+	err := ws.start()
+	props.PanicIfNotNil(err)
+	err = ws.SubStream([]string{"btcusdt@depth", "ethusdt@depth@100ms"})
+	chAll, err := ws.Sub(string(WsEventDepthUpdate))
+	props.PanicIfNotNil(err)
+	for {
+		msg := <-chAll
+		if msg.Err != nil {
+			t.Error(msg.Err)
+			break
+		}
+		t.Log(msg.Data)
+	}
+}
+
+func TestCmFuturesPublicWsClient(t *testing.T) {
+	ws := NewWsClient(CmFuturesWsCfg, nil, nil)
+	err := ws.start()
+	props.PanicIfNotNil(err)
+	err = ws.SubStream([]string{"btcusd_perp@depth", "ethusd_perp@depth@100ms"})
+	chAll, err := ws.Sub(string(WsEventDepthUpdate))
+	props.PanicIfNotNil(err)
+	for {
+		msg := <-chAll
+		if msg.Err != nil {
+			t.Error(msg.Err)
+			break
+		}
+		t.Log(msg.Data)
 	}
 }

@@ -21,7 +21,7 @@ type WsMarkPriceStream struct {
 	EstimatedSettlePrice float64 `json:"P,string"`
 	IndexPrice           float64 `json:"i,string"`
 	FundingRate          float64 `json:"r,string"`
-	NextFundingTime      int64   `json:"T,string"`
+	NextFundingTime      int64   `json:"T"`
 }
 
 type WsStrategyOrder struct {

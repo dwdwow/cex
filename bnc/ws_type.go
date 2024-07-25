@@ -59,6 +59,12 @@ type WsSubMsg struct {
 	Id     string   `json:"id"`
 }
 
+type WsSubMsgInt64Id struct {
+	Method WsMethod `json:"method"`
+	Params []string `json:"params"`
+	Id     int64    `json:"id"`
+}
+
 type WsReqMsg struct {
 	Method WsMethod `json:"method"`
 	Params []any    `json:"params"`

@@ -253,11 +253,21 @@ func (w *RawWsClient) SubStream(params []string) error {
 		return errors.New("bnc_ws: conn is busy")
 	}
 
-	err := w.conn.WriteJSON(WsSubMsg{
-		Method: WsMethodSub,
-		Params: params,
-		Id:     "1",
-	})
+	var err error
+
+	if strings.Contains(w.cfg.Url, "dstream.binance.com") {
+		err = w.conn.WriteJSON(WsSubMsgInt64Id{
+			Method: WsMethodSub,
+			Params: params,
+			Id:     1,
+		})
+	} else {
+		err = w.conn.WriteJSON(WsSubMsg{
+			Method: WsMethodSub,
+			Params: params,
+			Id:     "1",
+		})
+	}
 
 	w.muxConn.Unlock()
 
@@ -449,7 +459,8 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 	data := msg.Data
 	e, ok := getWsEvent(data)
 	if !ok {
-		if string(data) == "{\"result\":null,\"id\":\"1\"}" {
+		if string(data) == "{\"result\":null,\"id\":\"1\"}" ||
+			string(data) == "{\"result\":null,\"id\":1}" {
 			return
 		}
 		w.logger.Error("Can not get event", "data", string(data))
@@ -458,7 +469,7 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 	w.muxFan.Lock()
 	defer w.muxFan.Unlock()
 
-	var uniqFan *props.Fanout[WsClientMsg]
+	var specFans []*props.Fanout[WsClientMsg]
 	fan := w.mfan[string(e)]
 	allFan := w.mfan[mfanKeyAll]
 	var d any = data
@@ -469,13 +480,7 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 			w.logger.Error("Can not unmarshal msg", "err", err, "data", string(data))
 			return
 		}
-		switch e {
-		case WsEventAggTrade:
-			s, ok := d.(WsAggTradeStream)
-			if ok {
-				uniqFan = w.mfan[strings.ToLower(s.Symbol)+"@"+string(WsEventAggTrade)]
-			}
-		}
+		specFans = w.specFans(e, d)
 	}
 	newMsg := WsClientMsg{Data: d}
 	if fan != nil {
@@ -484,9 +489,83 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 	if allFan != nil {
 		allFan.Broadcast(newMsg)
 	}
-	if uniqFan != nil {
-		uniqFan.Broadcast(newMsg)
+	for _, fan := range specFans {
+		if fan != nil {
+			fan.Broadcast(newMsg)
+		}
 	}
+}
+
+func (w *WsClient) specFans(e WsEvent, d any) (fans []*props.Fanout[WsClientMsg]) {
+	switch e {
+	case WsEventAggTrade:
+		s, ok := d.(WsAggTradeStream)
+		if !ok {
+			return
+		}
+		fan := w.mfan[strings.ToLower(s.Symbol)+"@"+string(WsEventAggTrade)]
+		if fan != nil {
+			fans = append(fans, fan)
+		}
+	case WsEventTrade:
+		s, ok := d.(WsTradeStream)
+		if !ok {
+			return
+		}
+		fan := w.mfan[strings.ToLower(s.Symbol)+"@"+string(WsEventTrade)]
+		if fan != nil {
+			fans = append(fans, fan)
+		}
+	case WsEventKline:
+		s, ok := d.(WsKlineStream)
+		if !ok {
+			return
+		}
+		fan := w.mfan[strings.ToLower(s.Symbol)+"@"+string(WsEventKline)+"_"+string(s.Kline.Interval)]
+		if fan != nil {
+			fans = append(fans, fan)
+		}
+	case WsEventDepthUpdate:
+		s, ok := d.(WsDepthStream)
+		if !ok {
+			return
+		}
+		fan := w.mfan[strings.ToLower(s.Symbol)+"@depth"]
+		if fan != nil {
+			fans = append(fans, fan)
+		}
+		fan = w.mfan[strings.ToLower(s.Symbol)+"@depth@100ms"]
+		if fan != nil {
+			fans = append(fans, fan)
+		}
+		fan = w.mfan[strings.ToLower(s.Symbol)+"@depth@500ms"]
+		if fan != nil {
+			fans = append(fans, fan)
+		}
+	case WsEventMarkPriceUpdate:
+		s, ok := d.(WsMarkPriceStream)
+		if !ok {
+			return
+		}
+		fan := w.mfan[strings.ToLower(s.Symbol)+"@markPrice"]
+		if fan != nil {
+			fans = append(fans, fan)
+		}
+		fan = w.mfan[strings.ToLower(s.Symbol)+"@markPrice@1s"]
+		if fan != nil {
+			fans = append(fans, fan)
+		}
+	case WsEventForceOrder:
+		s, ok := d.(WsLiquidationOrderStream)
+		if !ok {
+			return
+		}
+		fan := w.mfan[strings.ToLower(s.Order.Symbol)+"@"+string(WsEventForceOrder)]
+		if fan != nil {
+			fans = append(fans, fan)
+		}
+	}
+	return
 }
 
 func (w *WsClient) sendToAll(msg WsClientMsg) {
@@ -509,11 +588,8 @@ func (w *WsClient) event2MfanKey(event string) string {
 
 // Sub
 // Pass empty string if you want listen all events.
+// Should SubStream firstly.
 func (w *WsClient) Sub(event string) (<-chan WsClientMsg, error) {
-	err := w.rawWs.SubStream([]string{event})
-	if err != nil {
-		return nil, err
-	}
 	w.muxFan.Lock()
 	defer w.muxFan.Unlock()
 	// do not use empty string as mfan key
@@ -535,4 +611,8 @@ func (w *WsClient) Unsub(event string, ch <-chan WsClientMsg) {
 		return
 	}
 	fan.Unsub(ch)
+}
+
+func (w *WsClient) SubStream(events []string) error {
+	return w.rawWs.SubStream(events)
 }
