@@ -292,11 +292,21 @@ func (w *RawWsClient) UnsubStream(params []string) error {
 		return errors.New("bnc_ws: conn is busy")
 	}
 
-	err := w.conn.WriteJSON(WsSubMsg{
-		Method: WsMethodUnsub,
-		Params: params,
-		Id:     "1",
-	})
+	var err error
+
+	if strings.Contains(w.cfg.Url, "dstream.binance.com") {
+		err = w.conn.WriteJSON(WsSubMsgInt64Id{
+			Method: WsMethodUnsub,
+			Params: params,
+			Id:     1,
+		})
+	} else {
+		err = w.conn.WriteJSON(WsSubMsg{
+			Method: WsMethodUnsub,
+			Params: params,
+			Id:     "1",
+		})
+	}
 
 	w.muxConn.Unlock()
 
