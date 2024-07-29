@@ -54,7 +54,7 @@ type WsSpotListStatus struct {
 	Objects           []WsSpotListStatusObject `json:"O"`
 }
 
-func SpotWsPrivateMsgUnmarshaler(e WsEvent, data []byte) (any, error) {
+func SpotWsPrivateMsgUnmarshaler(e WsEvent, _ bool, data []byte) (any, error) {
 	switch e {
 	case WsEventOutboundAccountPosition:
 		return unmarshal[WsSpotAccountUpdate](data)

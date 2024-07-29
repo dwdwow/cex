@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func SpotWsPublicMsgUnmarshaler(e WsEvent, data []byte) (any, error) {
+func SpotWsPublicMsgUnmarshaler(e WsEvent, _ bool, data []byte) (any, error) {
 	switch e {
 	case WsEventAggTrade:
 		return unmarshal[WsAggTradeStream](data)
@@ -28,11 +28,14 @@ var SpotPublicWsCfg = WsCfg{
 	DataUnmarshaler: SpotWsPublicMsgUnmarshaler,
 }
 
-func UmFuturesWsPublicMsgUnmarshaler(e WsEvent, data []byte) (any, error) {
+func UmFuturesWsPublicMsgUnmarshaler(e WsEvent, isArray bool, data []byte) (any, error) {
 	switch e {
 	case WsEventAggTrade:
 		return unmarshal[WsAggTradeStream](data)
 	case WsEventMarkPriceUpdate:
+		if isArray {
+			return unmarshal[[]WsMarkPriceStream](data)
+		}
 		return unmarshal[WsMarkPriceStream](data)
 	case WsEventForceOrder:
 		return unmarshal[WsLiquidationOrderStream](data)
@@ -53,7 +56,7 @@ var UmFuturesWsCfg = WsCfg{
 	DataUnmarshaler: UmFuturesWsPublicMsgUnmarshaler,
 }
 
-func CmFuturesWsPublicMsgUnmarshaler(e WsEvent, data []byte) (any, error) {
+func CmFuturesWsPublicMsgUnmarshaler(e WsEvent, isArray bool, data []byte) (any, error) {
 	switch e {
 	case WsEventAggTrade:
 		return unmarshal[WsAggTradeStream](data)

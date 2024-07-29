@@ -16,7 +16,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-type WsDataUnmarshaler func(WsEvent, []byte) (any, error)
+type WsDataUnmarshaler func(e WsEvent, isArray bool, data []byte) (any, error)
 
 type WsCfg struct {
 	// ws url without streams and auth tokens
@@ -467,7 +467,7 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 		return
 	}
 	data := msg.Data
-	e, ok := getWsEvent(data)
+	e, isArray, ok := getWsEvent(data)
 	if !ok {
 		if string(data) == "{\"result\":null,\"id\":\"1\"}" ||
 			string(data) == "{\"result\":null,\"id\":1}" {
@@ -480,12 +480,12 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 	defer w.muxFan.Unlock()
 
 	var specFans []*props.Fanout[WsClientMsg]
-	fan := w.mfan[string(e)]
+	singleFan := w.mfan[string(e)]
 	allFan := w.mfan[mfanKeyAll]
 	var d any = data
 	var err error
 	if w.rawWs.cfg.DataUnmarshaler != nil {
-		d, err = w.rawWs.cfg.DataUnmarshaler(e, data)
+		d, err = w.rawWs.cfg.DataUnmarshaler(e, isArray, data)
 		if err != nil {
 			w.logger.Error("Can not unmarshal msg", "err", err, "data", string(data))
 			return
@@ -493,8 +493,8 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 		specFans = w.specFans(e, d)
 	}
 	newMsg := WsClientMsg{Data: d}
-	if fan != nil {
-		fan.Broadcast(newMsg)
+	if singleFan != nil {
+		singleFan.Broadcast(newMsg)
 	}
 	if allFan != nil {
 		allFan.Broadcast(newMsg)
@@ -625,4 +625,81 @@ func (w *WsClient) Unsub(event string, ch <-chan WsClientMsg) {
 
 func (w *WsClient) SubStream(events []string) error {
 	return w.rawWs.SubStream(events)
+}
+
+// SubAggTradeStream real time
+func (w *WsClient) SubAggTradeStream(symbol string) error {
+	return w.SubStream([]string{symbol + "@aggTrade"})
+}
+
+// SubTradeStream real time
+// just for spot ws
+func (w *WsClient) SubTradeStream(symbol string) error {
+	return w.SubStream([]string{symbol + "@trade"})
+}
+
+// SubKlineStream 1000ms for 1s, 2000ms for others
+// 1s just for spot kline
+func (w *WsClient) SubKlineStream(symbol string, interval KlineInterval) error {
+	return w.SubStream([]string{fmt.Sprintf("%s@kline_%v", symbol, interval)})
+}
+
+// SubDepthUpdateStream 1000ms for spot, 250ms for futures
+func (w *WsClient) SubDepthUpdateStream(symbol string) error {
+	return w.SubStream([]string{symbol + "@depth"})
+}
+
+// SubDepthUpdateStream500ms 500ms
+// just for futures ws
+func (w *WsClient) SubDepthUpdateStream500ms(symbol string) error {
+	return w.SubStream([]string{symbol + "@depth@500ms"})
+}
+
+// SubDepthUpdateStream100ms 100ms
+func (w *WsClient) SubDepthUpdateStream100ms(symbol string) error {
+	return w.SubStream([]string{symbol + "@depth@100ms"})
+}
+
+// SubMarkPriceStream1s 1s
+func (w *WsClient) SubMarkPriceStream1s(symbol string) error {
+	return w.SubStream([]string{symbol + "@markPrice@1s"})
+}
+
+// SubMarkPriceStream3s 3s
+func (w *WsClient) SubMarkPriceStream3s(symbol string) error {
+	return w.SubStream([]string{symbol + "@markPrice"})
+}
+
+// SubAllMarkPriceStream1s 1s
+// just for um futures
+func (w *WsClient) SubAllMarkPriceStream1s() error {
+	return w.SubStream([]string{"!markPrice@arr@1s"})
+}
+
+// SubAllMarkPriceStream3s 3s
+// just for um futures
+func (w *WsClient) SubAllMarkPriceStream3s() error {
+	return w.SubStream([]string{"!markPrice@arr"})
+}
+
+// SubIndexPriceStream3s 3s
+// just for cm futures
+func (w *WsClient) SubIndexPriceStream3s(pair string) error {
+	return w.SubStream([]string{pair + "@indexPrice"})
+}
+
+// SubIndexPriceStream1s 1s
+// just for cm futures
+func (w *WsClient) SubIndexPriceStream1s(pair string) error {
+	return w.SubStream([]string{pair + "@indexPrice@1s"})
+}
+
+// SubLiquidationOrderStream 1s
+func (w *WsClient) SubLiquidationOrderStream(symbol string) error {
+	return w.SubStream([]string{symbol + "@forceOrder"})
+}
+
+// SubAllMarketLiquidationOrderStream 1s
+func (w *WsClient) SubAllMarketLiquidationOrderStream() error {
+	return w.SubStream([]string{"!forceOrder@arr"})
 }

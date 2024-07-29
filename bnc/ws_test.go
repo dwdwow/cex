@@ -9,22 +9,22 @@ import (
 
 func TestWs_newFreqToken(t *testing.T) {
 	dur := time.Second
-	maxreqPerDur := 5
-	ws := NewRawWsClient(WsCfg{ReqDur: dur, MaxReqPerDur: maxreqPerDur}, nil, nil)
-	for i := 0; i < maxreqPerDur*2; i++ {
-		time.Sleep(dur / time.Duration(maxreqPerDur*2))
+	maxReqPerDur := 5
+	ws := NewRawWsClient(WsCfg{ReqDur: dur, MaxReqPerDur: maxReqPerDur}, nil, nil)
+	for i := 0; i < maxReqPerDur*2; i++ {
+		time.Sleep(dur / time.Duration(maxReqPerDur*2))
 		ok := ws.canWriteMsg()
-		if i < maxreqPerDur == ok {
+		if i < maxReqPerDur == ok {
 			t.Log(i, ok)
 		} else {
 			t.Error(i, ok)
 		}
 	}
 	time.Sleep(dur)
-	for i := 0; i < maxreqPerDur*2; i++ {
-		time.Sleep(dur / time.Duration(maxreqPerDur*2))
+	for i := 0; i < maxReqPerDur*2; i++ {
+		time.Sleep(dur / time.Duration(maxReqPerDur*2))
 		ok := ws.canWriteMsg()
-		if i < maxreqPerDur == ok {
+		if i < maxReqPerDur == ok {
 			t.Log(i, ok)
 		} else {
 			t.Error(i, ok)
