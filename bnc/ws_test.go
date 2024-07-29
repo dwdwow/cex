@@ -87,8 +87,8 @@ func TestCmFuturesPublicWsClient(t *testing.T) {
 	ws := NewWsClient(CmFuturesWsCfg, nil, nil)
 	err := ws.start()
 	props.PanicIfNotNil(err)
-	err = ws.SubStream([]string{"btcusd_perp@depth", "ethusd_perp@depth@100ms"})
-	chAll, err := ws.Sub(string(WsEventDepthUpdate))
+	err = ws.SubStream([]string{"btcusd_perp@kline_1m", "ethusd_perp@kline_1m"})
+	chAll, err := ws.Sub(string(WsEventKline))
 	props.PanicIfNotNil(err)
 	for {
 		msg := <-chAll
