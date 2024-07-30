@@ -401,8 +401,64 @@ func (w *RawWsClient) Request(method WsMethod, params []any) (id string, err err
 }
 
 type WsClientMsg struct {
-	Data any   `json:"data"`
-	Err  error `json:"err"`
+	Event   WsEvent `json:"event"`
+	Data    any     `json:"data"`
+	IsArray bool    `json:"isArray"`
+	Err     error   `json:"err"`
+}
+
+type WsClientSubscriptionMsg[D any] struct {
+	D   D     `json:"d"`
+	Err error `json:"err"`
+}
+
+type WsClientSubscription[D any] struct {
+	ctx       context.Context
+	ctxCancel context.CancelFunc
+	rawCh     <-chan WsClientMsg
+	ch        chan WsClientSubscriptionMsg[D]
+}
+
+func NewWsClientSubscription[D any](ch <-chan WsClientMsg) *WsClientSubscription[D] {
+	ctx, ctxCancel := context.WithCancel(context.Background())
+	return &WsClientSubscription[D]{
+		ctx:       ctx,
+		ctxCancel: ctxCancel,
+		rawCh:     ch,
+		ch:        make(chan WsClientSubscriptionMsg[D], 1),
+	}
+}
+
+func (w *WsClientSubscription[D]) start() {
+	go func() {
+		for {
+			var rawMsg WsClientMsg
+			select {
+			case <-w.ctx.Done():
+				return
+			case rawMsg = <-w.rawCh:
+			}
+			var msg WsClientSubscriptionMsg[D]
+			if rawMsg.Err != nil {
+				msg.Err = rawMsg.Err
+			} else {
+				var ok bool
+				msg.D, ok = rawMsg.Data.(D)
+				if !ok {
+					msg.Err = errors.New("invalid data type")
+				}
+			}
+			w.ch <- msg
+		}
+	}()
+}
+
+func (w *WsClientSubscription[D]) close() {
+	w.ctxCancel()
+}
+
+func (w *WsClientSubscription[D]) Chan() <-chan WsClientSubscriptionMsg[D] {
+	return w.ch
 }
 
 type WsClient struct {
@@ -490,9 +546,9 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 			w.logger.Error("Can not unmarshal msg", "err", err, "data", string(data))
 			return
 		}
-		specFans = w.specFans(e, d)
+		specFans = w.specFans(e, isArray, d)
 	}
-	newMsg := WsClientMsg{Data: d}
+	newMsg := WsClientMsg{Event: e, Data: d, IsArray: isArray}
 	if singleFan != nil {
 		singleFan.Broadcast(newMsg)
 	}
@@ -506,7 +562,7 @@ func (w *WsClient) dataHandler(msg RawWsClientMsg) {
 	}
 }
 
-func (w *WsClient) specFans(e WsEvent, d any) (fans []*props.Fanout[WsClientMsg]) {
+func (w *WsClient) specFans(e WsEvent, isArray bool, d any) (fans []*props.Fanout[WsClientMsg]) {
 	switch e {
 	case WsEventAggTrade:
 		s, ok := d.(WsAggTradeStream)
@@ -548,11 +604,26 @@ func (w *WsClient) specFans(e WsEvent, d any) (fans []*props.Fanout[WsClientMsg]
 		if fan != nil {
 			fans = append(fans, fan)
 		}
+		fan = w.mfan[strings.ToLower(s.Symbol)+"@depth@250ms"]
+		if fan != nil {
+			fans = append(fans, fan)
+		}
 		fan = w.mfan[strings.ToLower(s.Symbol)+"@depth@500ms"]
 		if fan != nil {
 			fans = append(fans, fan)
 		}
 	case WsEventMarkPriceUpdate:
+		if isArray {
+			fan := w.mfan["!markPrice@arr@1s"]
+			if fan != nil {
+				fans = append(fans, fan)
+			}
+			fan = w.mfan["!markPrice@arr"]
+			if fan != nil {
+				fans = append(fans, fan)
+			}
+			return
+		}
 		s, ok := d.(WsMarkPriceStream)
 		if !ok {
 			return
@@ -565,7 +636,27 @@ func (w *WsClient) specFans(e WsEvent, d any) (fans []*props.Fanout[WsClientMsg]
 		if fan != nil {
 			fans = append(fans, fan)
 		}
+	case WsEventIndexPriceUpdate:
+		s, ok := d.(WsCMIndexPriceStream)
+		if !ok {
+			return
+		}
+		fan := w.mfan[strings.ToLower(s.Pair)+"@indexPrice"]
+		if fan != nil {
+			fans = append(fans, fan)
+		}
+		fan = w.mfan[strings.ToLower(s.Pair)+"@indexPrice@1s"]
+		if fan != nil {
+			fans = append(fans, fan)
+		}
 	case WsEventForceOrder:
+		if isArray {
+			fan := w.mfan["!forceOrder@arr"]
+			if fan != nil {
+				fans = append(fans, fan)
+			}
+			return
+		}
 		s, ok := d.(WsLiquidationOrderStream)
 		if !ok {
 			return
@@ -627,9 +718,28 @@ func (w *WsClient) SubStream(events []string) error {
 	return w.rawWs.SubStream(events)
 }
 
+func wsClientSubEvent[D any](rawChGetter func() (<-chan WsClientMsg, error)) (*WsClientSubscription[D], error) {
+	ch, err := rawChGetter()
+	if err != nil {
+		return nil, err
+	}
+	return NewWsClientSubscription[D](ch), nil
+}
+
 // SubAggTradeStream real time
 func (w *WsClient) SubAggTradeStream(symbol string) error {
 	return w.SubStream([]string{symbol + "@aggTrade"})
+}
+
+// SubAggTrade real time
+// if symbol is empty, will listen all aggTrade events
+func (w *WsClient) SubAggTrade(symbol string) (*WsClientSubscription[WsAggTradeStream], error) {
+	return wsClientSubEvent[WsAggTradeStream](func() (<-chan WsClientMsg, error) {
+		if symbol != "" {
+			return w.Sub(symbol + "@aggTrade")
+		}
+		return w.Sub(string(WsEventAggTrade))
+	})
 }
 
 // SubTradeStream real time
@@ -638,10 +748,28 @@ func (w *WsClient) SubTradeStream(symbol string) error {
 	return w.SubStream([]string{symbol + "@trade"})
 }
 
+// SubTrade real time
+// if symbol is empty, will listen all trade events
+func (w *WsClient) SubTrade(symbol string) (*WsClientSubscription[WsTradeStream], error) {
+	return wsClientSubEvent[WsTradeStream](func() (<-chan WsClientMsg, error) {
+		if symbol != "" {
+			return w.Sub(symbol + "@trade")
+
+		}
+		return w.Sub(string(WsEventTrade))
+	})
+}
+
 // SubKlineStream 1000ms for 1s, 2000ms for others
 // 1s just for spot kline
 func (w *WsClient) SubKlineStream(symbol string, interval KlineInterval) error {
 	return w.SubStream([]string{fmt.Sprintf("%s@kline_%v", symbol, interval)})
+}
+
+func (w *WsClient) SubKline(symbol string, interval KlineInterval) (*WsClientSubscription[WsKlineStream], error) {
+	return wsClientSubEvent[WsKlineStream](func() (<-chan WsClientMsg, error) {
+		return w.Sub(fmt.Sprintf("%s@kline_%v", symbol, interval))
+	})
 }
 
 // SubDepthUpdateStream 1000ms for spot, 250ms for futures
@@ -660,6 +788,15 @@ func (w *WsClient) SubDepthUpdateStream100ms(symbol string) error {
 	return w.SubStream([]string{symbol + "@depth@100ms"})
 }
 
+func (w *WsClient) SubDepthUpdate(symbol string) (*WsClientSubscription[WsDepthStream], error) {
+	return wsClientSubEvent[WsDepthStream](func() (<-chan WsClientMsg, error) {
+		if symbol != "" {
+			return w.Sub(symbol + "@depth")
+		}
+		return w.Sub(string(WsEventDepthUpdate))
+	})
+}
+
 // SubMarkPriceStream1s 1s
 func (w *WsClient) SubMarkPriceStream1s(symbol string) error {
 	return w.SubStream([]string{symbol + "@markPrice@1s"})
@@ -668,6 +805,18 @@ func (w *WsClient) SubMarkPriceStream1s(symbol string) error {
 // SubMarkPriceStream3s 3s
 func (w *WsClient) SubMarkPriceStream3s(symbol string) error {
 	return w.SubStream([]string{symbol + "@markPrice"})
+}
+
+func (w *WsClient) SubMarkPrice1s(symbol string) (*WsClientSubscription[WsMarkPriceStream], error) {
+	return wsClientSubEvent[WsMarkPriceStream](func() (<-chan WsClientMsg, error) {
+		return w.Sub(symbol + "@markPrice@1s")
+	})
+}
+
+func (w *WsClient) SubMarkPrice3s(symbol string) (*WsClientSubscription[WsMarkPriceStream], error) {
+	return wsClientSubEvent[WsMarkPriceStream](func() (<-chan WsClientMsg, error) {
+		return w.Sub(symbol + "@markPrice")
+	})
 }
 
 // SubAllMarkPriceStream1s 1s
@@ -682,16 +831,58 @@ func (w *WsClient) SubAllMarkPriceStream3s() error {
 	return w.SubStream([]string{"!markPrice@arr"})
 }
 
-// SubIndexPriceStream3s 3s
+func (w *WsClient) SubAllMarkPrice1s() (*WsClientSubscription[[]WsMarkPriceStream], error) {
+	return wsClientSubEvent[[]WsMarkPriceStream](func() (<-chan WsClientMsg, error) {
+		return w.Sub("!markPrice@arr@1s")
+	})
+}
+
+func (w *WsClient) SubAllMarkPrice3s() (*WsClientSubscription[[]WsMarkPriceStream], error) {
+	return wsClientSubEvent[[]WsMarkPriceStream](func() (<-chan WsClientMsg, error) {
+		return w.Sub("!markPrice@arr")
+	})
+}
+
+func (w *WsClient) SubAllMarkPriceEvents() (*WsClientSubscription[[]WsMarkPriceStream], error) {
+	return wsClientSubEvent[[]WsMarkPriceStream](func() (<-chan WsClientMsg, error) {
+		return w.Sub(string(WsEventMarkPriceUpdate))
+	})
+}
+
+// SubCMIndexPriceStream3s 3s
 // just for cm futures
-func (w *WsClient) SubIndexPriceStream3s(pair string) error {
+func (w *WsClient) SubCMIndexPriceStream3s(pair string) error {
 	return w.SubStream([]string{pair + "@indexPrice"})
 }
 
-// SubIndexPriceStream1s 1s
+// SubCMIndexPriceStream1s 1s
 // just for cm futures
-func (w *WsClient) SubIndexPriceStream1s(pair string) error {
+func (w *WsClient) SubCMIndexPriceStream1s(pair string) error {
 	return w.SubStream([]string{pair + "@indexPrice@1s"})
+}
+
+// SubCMIndexPrice3s
+// just for cm futures
+func (w *WsClient) SubCMIndexPrice3s(pair string) (*WsClientSubscription[WsCMIndexPriceStream], error) {
+	return wsClientSubEvent[WsCMIndexPriceStream](func() (<-chan WsClientMsg, error) {
+		return w.Sub(pair + "@indexPrice")
+	})
+}
+
+// SubCMIndexPrice1s
+// just for cm futures
+func (w *WsClient) SubCMIndexPrice1s(pair string) (*WsClientSubscription[WsCMIndexPriceStream], error) {
+	return wsClientSubEvent[WsCMIndexPriceStream](func() (<-chan WsClientMsg, error) {
+		return w.Sub(pair + "@indexPrice@1s")
+	})
+}
+
+// SubAllCMIndexPriceEvents
+// just for cm futures
+func (w *WsClient) SubAllCMIndexPriceEvents() (*WsClientSubscription[WsCMIndexPriceStream], error) {
+	return wsClientSubEvent[WsCMIndexPriceStream](func() (<-chan WsClientMsg, error) {
+		return w.Sub(string(WsEventIndexPriceUpdate))
+	})
 }
 
 // SubLiquidationOrderStream 1s
@@ -699,7 +890,25 @@ func (w *WsClient) SubLiquidationOrderStream(symbol string) error {
 	return w.SubStream([]string{symbol + "@forceOrder"})
 }
 
+func (w *WsClient) SubLiquidationOrder(symbol string) (*WsClientSubscription[WsLiquidationOrderStream], error) {
+	return wsClientSubEvent[WsLiquidationOrderStream](func() (<-chan WsClientMsg, error) {
+		return w.Sub(symbol + "@forceOrder")
+	})
+}
+
+func (w *WsClient) SubAllLiquidationOrderEvents() (*WsClientSubscription[WsLiquidationOrderStream], error) {
+	return wsClientSubEvent[WsLiquidationOrderStream](func() (<-chan WsClientMsg, error) {
+		return w.Sub(string(WsEventForceOrder))
+	})
+}
+
 // SubAllMarketLiquidationOrderStream 1s
 func (w *WsClient) SubAllMarketLiquidationOrderStream() error {
 	return w.SubStream([]string{"!forceOrder@arr"})
+}
+
+func (w *WsClient) SubAllMarketLiquidationOrder() (*WsClientSubscription[[]WsLiquidationOrderStream], error) {
+	return wsClientSubEvent[[]WsLiquidationOrderStream](func() (<-chan WsClientMsg, error) {
+		return w.Sub("!forceOrder@arr")
+	})
 }
