@@ -415,15 +415,19 @@ type WsClientSubscriptionMsg[D any] struct {
 type WsClientSubscription[D any] struct {
 	ctx       context.Context
 	ctxCancel context.CancelFunc
+	ws        *WsClient
+	event     string
 	rawCh     <-chan WsClientMsg
 	ch        chan WsClientSubscriptionMsg[D]
 }
 
-func NewWsClientSubscription[D any](ch <-chan WsClientMsg) *WsClientSubscription[D] {
+func NewWsClientSubscription[D any](ws *WsClient, event string, ch <-chan WsClientMsg) *WsClientSubscription[D] {
 	ctx, ctxCancel := context.WithCancel(context.Background())
 	return &WsClientSubscription[D]{
 		ctx:       ctx,
 		ctxCancel: ctxCancel,
+		ws:        ws,
+		event:     event,
 		rawCh:     ch,
 		ch:        make(chan WsClientSubscriptionMsg[D], 1),
 	}
@@ -455,6 +459,7 @@ func (w *WsClientSubscription[D]) start() {
 
 func (w *WsClientSubscription[D]) close() {
 	w.ctxCancel()
+	w.ws.Unsub(w.event, w.rawCh)
 }
 
 func (w *WsClientSubscription[D]) Chan() <-chan WsClientSubscriptionMsg[D] {
@@ -719,12 +724,12 @@ func (w *WsClient) SubStream(events []string) error {
 	return w.rawWs.SubStream(events)
 }
 
-func wsClientSubEvent[D any](rawChGetter func() (<-chan WsClientMsg, error)) (*WsClientSubscription[D], error) {
+func wsClientSubEvent[D any](ws *WsClient, event string, rawChGetter func() (<-chan WsClientMsg, error)) (*WsClientSubscription[D], error) {
 	ch, err := rawChGetter()
 	if err != nil {
 		return nil, err
 	}
-	sub := NewWsClientSubscription[D](ch)
+	sub := NewWsClientSubscription[D](ws, event, ch)
 	sub.start()
 	return sub, nil
 }
@@ -741,11 +746,14 @@ func (w *WsClient) SubAggTradeStream(symbols ...string) error {
 // SubAggTrade real time
 // if symbol is empty, will listen all aggTrade events
 func (w *WsClient) SubAggTrade(symbol string) (*WsClientSubscription[WsAggTradeStream], error) {
-	return wsClientSubEvent[WsAggTradeStream](func() (<-chan WsClientMsg, error) {
-		if symbol != "" {
-			return w.Sub(strings.ToLower(symbol) + "@aggTrade")
-		}
-		return w.Sub(string(WsEventAggTrade))
+	var event string
+	if symbol != "" {
+		event = strings.ToLower(symbol) + "@aggTrade"
+	} else {
+		event = string(WsEventAggTrade)
+	}
+	return wsClientSubEvent[WsAggTradeStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }
 
@@ -762,12 +770,14 @@ func (w *WsClient) SubTradeStream(symbols ...string) error {
 // SubTrade real time
 // if symbol is empty, will listen all trade events
 func (w *WsClient) SubTrade(symbol string) (*WsClientSubscription[WsTradeStream], error) {
-	return wsClientSubEvent[WsTradeStream](func() (<-chan WsClientMsg, error) {
-		if symbol != "" {
-			return w.Sub(strings.ToLower(symbol) + "@trade")
-
-		}
-		return w.Sub(string(WsEventTrade))
+	var event string
+	if symbol != "" {
+		event = strings.ToLower(symbol) + "@trade"
+	} else {
+		event = string(WsEventTrade)
+	}
+	return wsClientSubEvent[WsTradeStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }
 
@@ -784,11 +794,14 @@ func (w *WsClient) SubKlineStream(interval KlineInterval, symbols ...string) err
 // SubKline
 // if symbol is empty, will listen all kline events
 func (w *WsClient) SubKline(symbol string, interval KlineInterval) (*WsClientSubscription[WsKlineStream], error) {
-	return wsClientSubEvent[WsKlineStream](func() (<-chan WsClientMsg, error) {
-		if symbol == "" {
-			return w.Sub(string(WsEventKline))
-		}
-		return w.Sub(fmt.Sprintf("%s@kline_%v", strings.ToLower(symbol), interval))
+	var event string
+	if symbol != "" {
+		event = fmt.Sprintf("%s@kline_%v", strings.ToLower(symbol), interval)
+	} else {
+		event = string(WsEventKline)
+	}
+	return wsClientSubEvent[WsKlineStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }
 
@@ -823,33 +836,42 @@ func (w *WsClient) SubDepthUpdateStream100ms(symbols ...string) error {
 // SubDepthUpdate
 // if symbol is empty, will listen all depthUpdate events
 func (w *WsClient) SubDepthUpdate(symbol string) (*WsClientSubscription[WsDepthStream], error) {
-	return wsClientSubEvent[WsDepthStream](func() (<-chan WsClientMsg, error) {
-		if symbol != "" {
-			return w.Sub(strings.ToLower(symbol) + "@depth")
-		}
-		return w.Sub(string(WsEventDepthUpdate))
+	var event string
+	if symbol != "" {
+		event = strings.ToLower(symbol) + "@depth"
+	} else {
+		event = string(WsEventDepthUpdate)
+	}
+	return wsClientSubEvent[WsDepthStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }
 
 // SubDepthUpdate500ms
 // if symbol is empty, will listen all depthUpdate 500ms events
 func (w *WsClient) SubDepthUpdate500ms(symbol string) (*WsClientSubscription[WsDepthStream], error) {
-	return wsClientSubEvent[WsDepthStream](func() (<-chan WsClientMsg, error) {
-		if symbol != "" {
-			return w.Sub(strings.ToLower(symbol) + "@depth@500ms")
-		}
-		return w.Sub(string(WsEventDepthUpdate))
+	var event string
+	if symbol != "" {
+		event = strings.ToLower(symbol) + "@depth@500ms"
+	} else {
+		event = string(WsEventDepthUpdate)
+	}
+	return wsClientSubEvent[WsDepthStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }
 
 // SubDepthUpdate100ms
 // if symbol is empty, will listen all depthUpdate 100ms events
 func (w *WsClient) SubDepthUpdate100ms(symbol string) (*WsClientSubscription[WsDepthStream], error) {
-	return wsClientSubEvent[WsDepthStream](func() (<-chan WsClientMsg, error) {
-		if symbol != "" {
-			return w.Sub(strings.ToLower(symbol) + "@depth@100ms")
-		}
-		return w.Sub(string(WsEventDepthUpdate))
+	var event string
+	if symbol != "" {
+		event = strings.ToLower(symbol) + "@depth@100ms"
+	} else {
+		event = string(WsEventDepthUpdate)
+	}
+	return wsClientSubEvent[WsDepthStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }
 
@@ -872,20 +894,26 @@ func (w *WsClient) SubMarkPriceStream3s(symbols ...string) error {
 }
 
 func (w *WsClient) SubMarkPrice1s(symbol string) (*WsClientSubscription[WsMarkPriceStream], error) {
-	return wsClientSubEvent[WsMarkPriceStream](func() (<-chan WsClientMsg, error) {
-		if symbol != "" {
-			return w.Sub(strings.ToLower(symbol) + "@markPrice@1s")
-		}
-		return w.Sub(string(WsEventMarkPriceUpdate))
+	var event string
+	if symbol != "" {
+		event = strings.ToLower(symbol) + "@markPrice@1s"
+	} else {
+		event = string(WsEventMarkPriceUpdate)
+	}
+	return wsClientSubEvent[WsMarkPriceStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }
 
 func (w *WsClient) SubMarkPrice3s(symbol string) (*WsClientSubscription[WsMarkPriceStream], error) {
-	return wsClientSubEvent[WsMarkPriceStream](func() (<-chan WsClientMsg, error) {
-		if symbol != "" {
-			return w.Sub(strings.ToLower(symbol) + "@markPrice")
-		}
-		return w.Sub(string(WsEventMarkPriceUpdate))
+	var event string
+	if symbol != "" {
+		event = strings.ToLower(symbol) + "@markPrice"
+	} else {
+		event = string(WsEventMarkPriceUpdate)
+	}
+	return wsClientSubEvent[WsMarkPriceStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }
 
@@ -902,20 +930,23 @@ func (w *WsClient) SubAllMarkPriceStream3s() error {
 }
 
 func (w *WsClient) SubAllMarkPrice1s() (*WsClientSubscription[[]WsMarkPriceStream], error) {
-	return wsClientSubEvent[[]WsMarkPriceStream](func() (<-chan WsClientMsg, error) {
-		return w.Sub("!markPrice@arr@1s")
+	event := "!markPrice@arr@1s"
+	return wsClientSubEvent[[]WsMarkPriceStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }
 
 func (w *WsClient) SubAllMarkPrice3s() (*WsClientSubscription[[]WsMarkPriceStream], error) {
-	return wsClientSubEvent[[]WsMarkPriceStream](func() (<-chan WsClientMsg, error) {
-		return w.Sub("!markPrice@arr")
+	event := "!markPrice@arr"
+	return wsClientSubEvent[[]WsMarkPriceStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }
 
 func (w *WsClient) SubAllMarkPriceEvents() (*WsClientSubscription[[]WsMarkPriceStream], error) {
-	return wsClientSubEvent[[]WsMarkPriceStream](func() (<-chan WsClientMsg, error) {
-		return w.Sub(string(WsEventMarkPriceUpdate))
+	event := string(WsEventMarkPriceUpdate)
+	return wsClientSubEvent[[]WsMarkPriceStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }
 
@@ -943,11 +974,14 @@ func (w *WsClient) SubCMIndexPriceStream1s(pairs ...string) error {
 // just for cm futures
 // if pair is empty, will listen all WsEventIndexPriceUpdate events
 func (w *WsClient) SubCMIndexPrice3s(pair string) (*WsClientSubscription[WsCMIndexPriceStream], error) {
-	return wsClientSubEvent[WsCMIndexPriceStream](func() (<-chan WsClientMsg, error) {
-		if pair != "" {
-			return w.Sub(strings.ToLower(pair) + "@indexPrice")
-		}
-		return w.Sub(string(WsEventIndexPriceUpdate))
+	var event string
+	if pair != "" {
+		event = strings.ToLower(pair) + "@indexPrice"
+	} else {
+		event = string(WsEventIndexPriceUpdate)
+	}
+	return wsClientSubEvent[WsCMIndexPriceStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }
 
@@ -955,11 +989,14 @@ func (w *WsClient) SubCMIndexPrice3s(pair string) (*WsClientSubscription[WsCMInd
 // just for cm futures
 // if pair is empty, will listen all WsEventIndexPriceUpdate events
 func (w *WsClient) SubCMIndexPrice1s(pair string) (*WsClientSubscription[WsCMIndexPriceStream], error) {
-	return wsClientSubEvent[WsCMIndexPriceStream](func() (<-chan WsClientMsg, error) {
-		if pair != "" {
-			return w.Sub(strings.ToLower(pair) + "@indexPrice@1s")
-		}
-		return w.Sub(string(WsEventIndexPriceUpdate))
+	var event string
+	if pair != "" {
+		event = strings.ToLower(pair) + "@indexPrice@1s"
+	} else {
+		event = string(WsEventIndexPriceUpdate)
+	}
+	return wsClientSubEvent[WsCMIndexPriceStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }
 
@@ -977,11 +1014,14 @@ func (w *WsClient) SubLiquidationOrderStream(symbols ...string) error {
 // just for futures
 // if symbol is empty, will listen all WsEventForceOrder events
 func (w *WsClient) SubLiquidationOrder(symbol string) (*WsClientSubscription[WsLiquidationOrderStream], error) {
-	return wsClientSubEvent[WsLiquidationOrderStream](func() (<-chan WsClientMsg, error) {
-		if symbol != "" {
-			return w.Sub(strings.ToLower(symbol) + "@forceOrder")
-		}
-		return w.Sub(string(WsEventForceOrder))
+	var event string
+	if symbol != "" {
+		event = strings.ToLower(symbol) + "@forceOrder"
+	} else {
+		event = string(WsEventForceOrder)
+	}
+	return wsClientSubEvent[WsLiquidationOrderStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }
 
@@ -991,7 +1031,8 @@ func (w *WsClient) SubAllMarketLiquidationOrderStream() error {
 }
 
 func (w *WsClient) SubAllMarketLiquidationOrder() (*WsClientSubscription[WsLiquidationOrderStream], error) {
-	return wsClientSubEvent[WsLiquidationOrderStream](func() (<-chan WsClientMsg, error) {
-		return w.Sub("!forceOrder@arr")
+	event := "!forceOrder@arr"
+	return wsClientSubEvent[WsLiquidationOrderStream](w, event, func() (<-chan WsClientMsg, error) {
+		return w.Sub(event)
 	})
 }

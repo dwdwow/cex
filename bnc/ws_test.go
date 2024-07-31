@@ -142,7 +142,7 @@ func TestWsClient_SubKline(t *testing.T) {
 	props.PanicIfNotNil(err)
 	err = ws.SubKlineStream(KlineInterval1s, "ETHUSDT", "BTCUSDT")
 	props.PanicIfNotNil(err)
-	sub, err := ws.SubKline("", "")
+	sub, err := ws.SubKline("ETHUSDT", KlineInterval1s)
 	props.PanicIfNotNil(err)
 	for {
 		msg := <-sub.Chan()
@@ -178,7 +178,7 @@ func TestWsClient_SubMarkPrice1s(t *testing.T) {
 	props.PanicIfNotNil(err)
 	err = ws.SubMarkPriceStream3s("ETHUSD_PERP", "BTCUSD_PERP")
 	props.PanicIfNotNil(err)
-	sub, err := ws.SubMarkPrice3s("")
+	sub, err := ws.SubMarkPrice3s("ETHUSD_PERP")
 	props.PanicIfNotNil(err)
 	for {
 		msg := <-sub.Chan()
@@ -214,7 +214,7 @@ func TestWsClient_SubCMIndexPrice1s(t *testing.T) {
 	props.PanicIfNotNil(err)
 	err = ws.SubCMIndexPriceStream3s("ETHUSD", "BTCUSD")
 	props.PanicIfNotNil(err)
-	sub, err := ws.SubCMIndexPrice3s("")
+	sub, err := ws.SubCMIndexPrice3s("ETHUSD")
 	props.PanicIfNotNil(err)
 	for {
 		msg := <-sub.Chan()
