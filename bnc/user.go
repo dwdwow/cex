@@ -797,7 +797,8 @@ func (u *User) makePublicReq(config cex.ReqBaseConfig, reqData any, opts ...cex.
 }
 
 func (u *User) makePrivateReq(config cex.ReqBaseConfig, reqData any, opts ...cex.CltOpt) (*resty.Request, error) {
-	// wired
+	// WIRED
+	// Can Get Listen Key Just Using Public Key !!!!!
 	if slices.Contains([]string{SpotListenKeyUrl, PortfolioMarginListenKeyUrl}, config.BaseUrl) {
 		req, err := u.makePublicReq(config, reqData, opts...)
 		if err != nil {

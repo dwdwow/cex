@@ -1,6 +1,7 @@
 package bnc
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -97,5 +98,149 @@ func TestCmFuturesPublicWsClient(t *testing.T) {
 			break
 		}
 		t.Log(msg.Data)
+	}
+}
+
+func TestWsClient_SubTrade(t *testing.T) {
+	ws := NewWsClient(SpotPublicWsCfg, nil, nil)
+	err := ws.Start()
+	props.PanicIfNotNil(err)
+	err = ws.SubTradeStream("ETHUSDT", "BTCUSDT")
+	props.PanicIfNotNil(err)
+	sub, err := ws.SubTrade("ETHUSDT")
+	props.PanicIfNotNil(err)
+	for {
+		msg := <-sub.Chan()
+		if msg.Err != nil {
+			t.Error(msg.Err)
+			break
+		}
+		fmt.Printf("%+v\n", msg.Data)
+	}
+}
+
+func TestWsClient_SubAggTrade(t *testing.T) {
+	ws := NewWsClient(CmFuturesWsCfg, nil, nil)
+	err := ws.start()
+	props.PanicIfNotNil(err)
+	err = ws.SubAggTradeStream("BTCUSD_PERP", "ETHUSD_PERP")
+	props.PanicIfNotNil(err)
+	sub, err := ws.SubAggTrade("ETHUSD_PERP")
+	props.PanicIfNotNil(err)
+	for {
+		msg := <-sub.Chan()
+		if msg.Err != nil {
+			t.Error(msg.Err)
+			break
+		}
+		t.Log(msg.Data)
+	}
+}
+
+func TestWsClient_SubKline(t *testing.T) {
+	ws := NewWsClient(SpotPublicWsCfg, nil, nil)
+	err := ws.start()
+	props.PanicIfNotNil(err)
+	err = ws.SubKlineStream(KlineInterval1s, "ETHUSDT", "BTCUSDT")
+	props.PanicIfNotNil(err)
+	sub, err := ws.SubKline("", "")
+	props.PanicIfNotNil(err)
+	for {
+		msg := <-sub.Chan()
+		if msg.Err != nil {
+			t.Error(msg.Err)
+			break
+		}
+		t.Log(fmt.Sprintf("%+v", msg.Data))
+	}
+}
+
+func TestWsClient_SubDepthUpdate(t *testing.T) {
+	ws := NewWsClient(SpotPublicWsCfg, nil, nil)
+	err := ws.start()
+	props.PanicIfNotNil(err)
+	err = ws.SubDepthUpdateStream100ms("ETHUSDT", "BTCUSDT")
+	props.PanicIfNotNil(err)
+	sub, err := ws.SubDepthUpdate100ms("BTCUSDT")
+	props.PanicIfNotNil(err)
+	for {
+		msg := <-sub.Chan()
+		if msg.Err != nil {
+			t.Error(msg.Err)
+			break
+		}
+		t.Log(fmt.Sprintf("%+v", msg.Data))
+	}
+}
+
+func TestWsClient_SubMarkPrice1s(t *testing.T) {
+	ws := NewWsClient(CmFuturesWsCfg, nil, nil)
+	err := ws.start()
+	props.PanicIfNotNil(err)
+	err = ws.SubMarkPriceStream3s("ETHUSD_PERP", "BTCUSD_PERP")
+	props.PanicIfNotNil(err)
+	sub, err := ws.SubMarkPrice3s("")
+	props.PanicIfNotNil(err)
+	for {
+		msg := <-sub.Chan()
+		if msg.Err != nil {
+			t.Error(msg.Err)
+			break
+		}
+		t.Log(fmt.Sprintf("%+v", msg.Data))
+	}
+}
+
+func TestWsClient_SubCMIndexPrice1s(t *testing.T) {
+	ws := NewWsClient(CmFuturesWsCfg, nil, nil)
+	err := ws.start()
+	props.PanicIfNotNil(err)
+	err = ws.SubCMIndexPriceStream3s("ETHUSD", "BTCUSD")
+	props.PanicIfNotNil(err)
+	sub, err := ws.SubCMIndexPrice3s("")
+	props.PanicIfNotNil(err)
+	for {
+		msg := <-sub.Chan()
+		if msg.Err != nil {
+			t.Error(msg.Err)
+			break
+		}
+		t.Log(fmt.Sprintf("%+v", msg.Data))
+	}
+}
+
+func TestWsClient_SubLiquidationOrder(t *testing.T) {
+	ws := NewWsClient(CmFuturesWsCfg, nil, nil)
+	err := ws.start()
+	props.PanicIfNotNil(err)
+	err = ws.SubLiquidationOrderStream("ETHUSD_PERP", "BTCUSD_PERP")
+	props.PanicIfNotNil(err)
+	sub, err := ws.SubLiquidationOrder("")
+	props.PanicIfNotNil(err)
+	for {
+		msg := <-sub.Chan()
+		if msg.Err != nil {
+			t.Error(msg.Err)
+			break
+		}
+		t.Log(fmt.Sprintf("%+v", msg.Data))
+	}
+}
+
+func TestWsClient_SubAllMarketLiquidationOrder(t *testing.T) {
+	ws := NewWsClient(CmFuturesWsCfg, nil, nil)
+	err := ws.start()
+	props.PanicIfNotNil(err)
+	err = ws.SubAllMarketLiquidationOrderStream()
+	props.PanicIfNotNil(err)
+	sub, err := ws.SubAllMarketLiquidationOrder()
+	props.PanicIfNotNil(err)
+	for {
+		msg := <-sub.Chan()
+		if msg.Err != nil {
+			t.Error(msg.Err)
+			break
+		}
+		t.Log(fmt.Sprintf("%+v", msg.Data))
 	}
 }

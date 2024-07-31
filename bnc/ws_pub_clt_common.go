@@ -97,8 +97,8 @@ type WsOrderExecutionReport struct {
 	SelfTradePreventionMode SelfTradePreventionMode `json:"V"`
 
 	// just for margin order
-	TrailingDelta      float64 `json:"d"` // Trailing Delta; This is only visible if the order was a trailing stop order.
-	TrailingTime       int64   `json:"D"` // Trailing Time; This is only visible if the trailing stop order has been activated.
+	TrailingDelta      float64 `json:"d"`    // Trailing Delta; This is only visible if the order was a trailing stop order.
+	TrailingTime       int64   `json:"Data"` // Trailing Time; This is only visible if the trailing stop order has been activated.
 	MarginStrategyId   int64   `json:"j"`
 	MarginStrategyType int64   `json:"J"`
 	TradeGroupId       int64   `json:"u"`
