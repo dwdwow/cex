@@ -1,7 +1,6 @@
 package bnc
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -63,7 +62,7 @@ func TestSpotPublicWsClient(t *testing.T) {
 			t.Error(msg.Err)
 			break
 		}
-		t.Log(msg.Data)
+		t.Logf("%+v", msg.Data)
 	}
 }
 
@@ -80,7 +79,7 @@ func TestUmFuturesPublicWsClient(t *testing.T) {
 			t.Error(msg.Err)
 			break
 		}
-		t.Log(msg.Data)
+		t.Logf("%+v", msg.Data)
 	}
 }
 
@@ -97,7 +96,7 @@ func TestCmFuturesPublicWsClient(t *testing.T) {
 			t.Error(msg.Err)
 			break
 		}
-		t.Log(msg.Data)
+		t.Logf("%+v", msg.Data)
 	}
 }
 
@@ -115,7 +114,7 @@ func TestWsClient_SubTrade(t *testing.T) {
 			t.Error(msg.Err)
 			break
 		}
-		fmt.Printf("%+v\n", msg.Data)
+		t.Logf("%+v", msg.Data)
 	}
 }
 
@@ -133,7 +132,7 @@ func TestWsClient_SubAggTrade(t *testing.T) {
 			t.Error(msg.Err)
 			break
 		}
-		t.Log(msg.Data)
+		t.Logf("%+v", msg.Data)
 	}
 }
 
@@ -151,7 +150,7 @@ func TestWsClient_SubKline(t *testing.T) {
 			t.Error(msg.Err)
 			break
 		}
-		t.Log(fmt.Sprintf("%+v", msg.Data))
+		t.Logf("%+v", msg.Data)
 	}
 }
 
@@ -169,7 +168,7 @@ func TestWsClient_SubDepthUpdate(t *testing.T) {
 			t.Error(msg.Err)
 			break
 		}
-		t.Log(fmt.Sprintf("%+v", msg.Data))
+		t.Logf("%+v", msg.Data)
 	}
 }
 
@@ -187,7 +186,25 @@ func TestWsClient_SubMarkPrice1s(t *testing.T) {
 			t.Error(msg.Err)
 			break
 		}
-		t.Log(fmt.Sprintf("%+v", msg.Data))
+		t.Logf("%+v", msg.Data)
+	}
+}
+
+func TestWsClient_SubAllMarkPrice1s(t *testing.T) {
+	ws := NewWsClient(CmFuturesWsCfg, nil, nil)
+	err := ws.start()
+	props.PanicIfNotNil(err)
+	err = ws.SubAllMarkPriceStream1s()
+	props.PanicIfNotNil(err)
+	sub, err := ws.SubAllMarkPrice1s()
+	props.PanicIfNotNil(err)
+	for {
+		msg := <-sub.Chan()
+		if msg.Err != nil {
+			t.Error(msg.Err)
+			break
+		}
+		t.Logf("%+v", msg.Data)
 	}
 }
 
@@ -205,7 +222,7 @@ func TestWsClient_SubCMIndexPrice1s(t *testing.T) {
 			t.Error(msg.Err)
 			break
 		}
-		t.Log(fmt.Sprintf("%+v", msg.Data))
+		t.Logf("%+v", msg.Data)
 	}
 }
 
@@ -223,7 +240,7 @@ func TestWsClient_SubLiquidationOrder(t *testing.T) {
 			t.Error(msg.Err)
 			break
 		}
-		t.Log(fmt.Sprintf("%+v", msg.Data))
+		t.Logf("%+v", msg.Data)
 	}
 }
 
@@ -241,6 +258,6 @@ func TestWsClient_SubAllMarketLiquidationOrder(t *testing.T) {
 			t.Error(msg.Err)
 			break
 		}
-		t.Log(fmt.Sprintf("%+v", msg.Data))
+		t.Logf("%+v", msg.Data)
 	}
 }

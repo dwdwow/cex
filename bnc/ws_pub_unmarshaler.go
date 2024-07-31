@@ -38,6 +38,9 @@ func UmFuturesWsPublicMsgUnmarshaler(e WsEvent, isArray bool, data []byte) (any,
 		}
 		return unmarshal[WsMarkPriceStream](data)
 	case WsEventForceOrder:
+		if isArray {
+			return unmarshal[[]WsLiquidationOrderStream](data)
+		}
 		return unmarshal[WsLiquidationOrderStream](data)
 	case WsEventKline:
 		return unmarshal[WsKlineStream](data)
@@ -63,8 +66,14 @@ func CmFuturesWsPublicMsgUnmarshaler(e WsEvent, isArray bool, data []byte) (any,
 	case WsEventIndexPriceUpdate:
 		return unmarshal[WsCMIndexPriceStream](data)
 	case WsEventMarkPriceUpdate:
+		if isArray {
+			return unmarshal[[]WsMarkPriceStream](data)
+		}
 		return unmarshal[WsMarkPriceStream](data)
 	case WsEventForceOrder:
+		if isArray {
+			return unmarshal[[]WsLiquidationOrderStream](data)
+		}
 		return unmarshal[WsLiquidationOrderStream](data)
 	case WsEventKline:
 		return unmarshal[WsKlineStream](data)
