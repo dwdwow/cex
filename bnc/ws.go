@@ -654,18 +654,15 @@ func (w *WsClient) specFans(e WsEvent, isArray bool, d any) (fans []*props.Fanou
 			fans = append(fans, fan)
 		}
 	case WsEventForceOrder:
-		if isArray {
-			fan := w.mfan["!forceOrder@arr"]
-			if fan != nil {
-				fans = append(fans, fan)
-			}
-			return
-		}
 		s, ok := d.(WsLiquidationOrderStream)
 		if !ok {
 			return
 		}
 		fan := w.mfan[strings.ToLower(s.Order.Symbol)+"@"+string(WsEventForceOrder)]
+		if fan != nil {
+			fans = append(fans, fan)
+		}
+		fan = w.mfan["!forceOrder@arr"]
 		if fan != nil {
 			fans = append(fans, fan)
 		}
