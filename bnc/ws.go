@@ -990,8 +990,8 @@ func (w *WsClient) SubAllMarketLiquidationOrderStream() error {
 	return w.SubStream([]string{"!forceOrder@arr"})
 }
 
-func (w *WsClient) SubAllMarketLiquidationOrder() (*WsClientSubscription[[]WsLiquidationOrderStream], error) {
-	return wsClientSubEvent[[]WsLiquidationOrderStream](func() (<-chan WsClientMsg, error) {
+func (w *WsClient) SubAllMarketLiquidationOrder() (*WsClientSubscription[WsLiquidationOrderStream], error) {
+	return wsClientSubEvent[WsLiquidationOrderStream](func() (<-chan WsClientMsg, error) {
 		return w.Sub("!forceOrder@arr")
 	})
 }
