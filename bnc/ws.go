@@ -243,6 +243,9 @@ func (w *RawWsClient) Unsub(c <-chan RawWsClientMsg) {
 }
 
 func (w *RawWsClient) SubStream(params []string) error {
+	if w.conn == nil {
+		return errors.New("bnc_ws: nil conn, may not be started")
+	}
 	w.muxStream.Lock()
 	oldStream := w.stream
 	w.muxStream.Unlock()
