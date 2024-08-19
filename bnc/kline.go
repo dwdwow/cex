@@ -117,3 +117,47 @@ func (k SimpleKline) TakerBuyBaseAssetVolume() float64 {
 func (k SimpleKline) TakerBuyQuoteAssetVolume() float64 {
 	return k[10]
 }
+
+func (k SimpleKline) SetOpenTime(value int64) {
+	k[0] = float64(value)
+}
+
+func (k SimpleKline) SetCloseTime(value int64) {
+	k[6] = float64(value)
+}
+
+func (k SimpleKline) SetTradesNumber(value int64) {
+	k[8] = float64(value)
+}
+
+func (k SimpleKline) SetOpenPrice(value float64) {
+	k[1] = value
+}
+
+func (k SimpleKline) SetHighPrice(value float64) {
+	k[2] = value
+}
+
+func (k SimpleKline) SetLowPrice(value float64) {
+	k[3] = value
+}
+
+func (k SimpleKline) SetClosePrice(value float64) {
+	k[4] = value
+}
+
+func (k SimpleKline) SetVolume(value float64) {
+	k[5] = value
+}
+
+func (k SimpleKline) SetQuoteAssetVolume(value float64) {
+	k[7] = value
+}
+
+func (k SimpleKline) SetTakerBuyBaseAssetVolume(value float64) {
+	k[9] = value
+}
+
+func (k SimpleKline) SetTakerBuyQuoteAssetVolume(value float64) {
+	k[10] = value
+}
