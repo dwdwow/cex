@@ -153,3 +153,211 @@ func TestSimpleKlineJson(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+// TestSimpleKlineToCSVRow tests the ToCSVRow function of SimpleKline
+func TestSimpleKlineToCSVRow(t *testing.T) {
+	tests := []struct {
+		name     string
+		kline    SimpleKline
+		expected string
+	}{
+		{
+			name: "Standard kline",
+			kline: SimpleKline{
+				1609459200000, // OpenTime (2021-01-01 00:00:00 UTC)
+				30000.0,       // OpenPrice
+				31000.0,       // HighPrice
+				29500.0,       // LowPrice
+				30500.0,       // ClosePrice
+				100.5,         // Volume
+				1609462800000, // CloseTime (2021-01-01 01:00:00 UTC)
+				3065250.0,     // QuoteAssetVolume
+				1000,          // TradesNumber
+				60.3,          // TakerBuyBaseAssetVolume
+				1839150.0,     // TakerBuyQuoteAssetVolume
+			},
+			expected: "1609459200000,30000,31000,29500,30500,100.5,1609462800000,3065250,1000,60.3,1839150",
+		},
+		{
+			name: "Kline with zero values",
+			kline: SimpleKline{
+				1609459200000, // OpenTime
+				0,             // OpenPrice
+				0,             // HighPrice
+				0,             // LowPrice
+				0,             // ClosePrice
+				0,             // Volume
+				1609462800000, // CloseTime
+				0,             // QuoteAssetVolume
+				0,             // TradesNumber
+				0,             // TakerBuyBaseAssetVolume
+				0,             // TakerBuyQuoteAssetVolume
+			},
+			expected: "1609459200000,0,0,0,0,0,1609462800000,0,0,0,0",
+		},
+		{
+			name: "Kline with large numbers",
+			kline: SimpleKline{
+				1609459200000,    // OpenTime
+				1000000.123456,   // OpenPrice
+				2000000.234567,   // HighPrice
+				500000.345678,    // LowPrice
+				1500000.456789,   // ClosePrice
+				1000000000.56789, // Volume
+				1609462800000,    // CloseTime
+				1500000000.67891, // QuoteAssetVolume
+				1000000,          // TradesNumber
+				500000000.78912,  // TakerBuyBaseAssetVolume
+				750000000.89123,  // TakerBuyQuoteAssetVolume
+			},
+			expected: "1609459200000,1000000.123456,2000000.234567,500000.345678,1500000.456789,1000000000.56789,1609462800000,1500000000.67891,1000000,500000000.78912,750000000.89123",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := tt.kline.ToCSVRow()
+			if result != tt.expected {
+				t.Errorf("ToCSVRow() = %v, want %v", result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestCSVDataToSimpleKlines(t *testing.T) {
+	tests := []struct {
+		name     string
+		csvData  []byte
+		expected []SimpleKline
+		wantErr  bool
+	}{
+		{
+			name: "Valid CSV data with header",
+			csvData: []byte(`openTime,openPrice,highPrice,lowPrice,closePrice,volume,closeTime,quoteAssetVolume,tradesNumber,takerBuyBaseAssetVolume,takerBuyQuoteAssetVolume,unused
+1609459200000,30000,31000,29500,30500,100.5,1609462800000,3065250,1000,60.3,1839150,
+1609462800000,30500,32000,30000,31500,150.75,1609466400000,4748625,1500,90.45,2848725,`),
+			expected: []SimpleKline{
+				{1609459200000, 30000, 31000, 29500, 30500, 100.5, 1609462800000, 3065250, 1000, 60.3, 1839150},
+				{1609462800000, 30500, 32000, 30000, 31500, 150.75, 1609466400000, 4748625, 1500, 90.45, 2848725},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Valid CSV data without header",
+			csvData: []byte(`1609459200000,30000,31000,29500,30500,100.5,1609462800000,3065250,1000,60.3,1839150,
+1609462800000,30500,32000,30000,31500,150.75,1609466400000,4748625,1500,90.45,2848725,`),
+			expected: []SimpleKline{
+				{1609459200000, 30000, 31000, 29500, 30500, 100.5, 1609462800000, 3065250, 1000, 60.3, 1839150},
+				{1609462800000, 30500, 32000, 30000, 31500, 150.75, 1609466400000, 4748625, 1500, 90.45, 2848725},
+			},
+			wantErr: false,
+		},
+		{
+			name:     "Empty CSV data",
+			csvData:  []byte(``),
+			expected: nil,
+			wantErr:  true,
+		},
+		{
+			name: "Invalid CSV data (missing column)",
+			csvData: []byte(`1609459200000,30000,31000,29500,30500,100.5,1609462800000,3065250,1000,60.3,
+1609462800000,30500,32000,30000,31500,150.75,1609466400000,4748625,1500,90.45,2848725,`),
+			expected: nil,
+			wantErr:  true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := CSVDataToSimpleKlines(tt.csvData)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("CSVDataToSimpleKlines() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.expected) {
+				t.Errorf("CSVDataToSimpleKlines() = %v, want %v", got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestSimpleKlinesToCSVData(t *testing.T) {
+	tests := []struct {
+		name     string
+		klines   []SimpleKline
+		expected string
+	}{
+		{
+			name: "Valid SimpleKlines",
+			klines: []SimpleKline{
+				{1609459200000, 30000, 31000, 29500, 30500, 100.5, 1609462800000, 3065250, 1000, 60.3, 1839150},
+				{1609462800000, 30500, 32000, 30000, 31500, 150.75, 1609466400000, 4748625, 1500, 90.45, 2848725},
+			},
+			expected: "1609459200000,30000,31000,29500,30500,100.5,1609462800000,3065250,1000,60.3,1839150\n1609462800000,30500,32000,30000,31500,150.75,1609466400000,4748625,1500,90.45,2848725",
+		},
+		{
+			name:     "Empty SimpleKlines",
+			klines:   []SimpleKline{},
+			expected: "",
+		},
+		{
+			name: "Single SimpleKline",
+			klines: []SimpleKline{
+				{1609459200000, 30000, 31000, 29500, 30500, 100.5, 1609462800000, 3065250, 1000, 60.3, 1839150},
+			},
+			expected: "1609459200000,30000,31000,29500,30500,100.5,1609462800000,3065250,1000,60.3,1839150",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := SimpleKlinesToCSVData(tt.klines)
+			if string(got) != tt.expected {
+				t.Errorf("SimpleKlinesToCSVData() = %v, want %v", string(got), tt.expected)
+			}
+		})
+	}
+}
+
+func TestSimpleKlinesToCSVDataAndBack(t *testing.T) {
+	tests := []struct {
+		name   string
+		klines []SimpleKline
+	}{
+		{
+			name: "Multiple klines",
+			klines: []SimpleKline{
+				{1609459200000, 30000, 31000, 29500, 30500, 100.5, 1609462800000, 3065250, 1000, 60.3, 1839150},
+				{1609462800000, 30500, 32000, 30000, 31500, 150.75, 1609466400000, 4748625, 1500, 90.45, 2848725},
+			},
+		},
+		{
+			name:   "Empty klines",
+			klines: []SimpleKline{},
+		},
+		{
+			name: "Single kline",
+			klines: []SimpleKline{
+				{1609459200000, 30000, 31000, 29500, 30500, 100.5, 1609462800000, 3065250, 1000, 60.3, 1839150},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Convert SimpleKlines to CSV data
+			csvData := SimpleKlinesToCSVData(tt.klines)
+
+			// Convert CSV data back to SimpleKlines
+			gotKlines, err := CSVDataToSimpleKlines(csvData)
+			if err != nil {
+				t.Errorf("CSVDataToSimpleKlines() error = %v", err)
+				return
+			}
+
+			// Compare original klines with the ones converted back from CSV
+			if !reflect.DeepEqual(gotKlines, tt.klines) {
+				t.Errorf("Conversion mismatch. Got %v, want %v", gotKlines, tt.klines)
+			}
+		})
+	}
+}

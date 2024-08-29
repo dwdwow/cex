@@ -1,8 +1,13 @@
 package bnc
 
 import (
+	"bufio"
+	"bytes"
+	"errors"
 	"fmt"
+	"io"
 	"strconv"
+	"strings"
 )
 
 var klineMapKeys = []string{
@@ -160,4 +165,87 @@ func (k SimpleKline) SetTakerBuyBaseAssetVolume(value float64) {
 
 func (k SimpleKline) SetTakerBuyQuoteAssetVolume(value float64) {
 	k[10] = value
+}
+
+// ToCSVRow converts SimpleKline to a CSV row string
+func (k SimpleKline) ToCSVRow() string {
+	return fmt.Sprintf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+		// OpenTime: Unix timestamp in milliseconds
+		strconv.FormatInt(int64(k.OpenTime()), 10),
+		// OpenPrice: Opening price of the interval
+		strconv.FormatFloat(k.OpenPrice(), 'f', -1, 64),
+		// HighPrice: Highest price during the interval
+		strconv.FormatFloat(k.HighPrice(), 'f', -1, 64),
+		// LowPrice: Lowest price during the interval
+		strconv.FormatFloat(k.LowPrice(), 'f', -1, 64),
+		// ClosePrice: Closing price of the interval
+		strconv.FormatFloat(k.ClosePrice(), 'f', -1, 64),
+		// Volume: Total trading volume during the interval
+		strconv.FormatFloat(k.Volume(), 'f', -1, 64),
+		// CloseTime: Unix timestamp in milliseconds for interval close
+		strconv.FormatInt(int64(k.CloseTime()), 10),
+		// QuoteAssetVolume: Total quote asset volume during the interval
+		strconv.FormatFloat(k.QuoteAssetVolume(), 'f', -1, 64),
+		// TradesNumber: Number of trades during the interval
+		strconv.FormatInt(int64(k.TradesNumber()), 10),
+		// TakerBuyBaseAssetVolume: Taker buy base asset volume
+		strconv.FormatFloat(k.TakerBuyBaseAssetVolume(), 'f', -1, 64),
+		// TakerBuyQuoteAssetVolume: Taker buy quote asset volume
+		strconv.FormatFloat(k.TakerBuyQuoteAssetVolume(), 'f', -1, 64),
+	)
+}
+
+// CSVDataToSimpleKlines converts CSV data to SimpleKline
+// CSV data should be in the format:
+// "openTime,openPrice,highPrice,lowPrice,closePrice,volume,closeTime,quoteAssetVolume,tradesNumber,takerBuyBaseAssetVolume,takerBuyQuoteAssetVolume,unused"
+// if the first line is the header, it will be skipped
+func CSVDataToSimpleKlines(data []byte) (klines []SimpleKline, err error) {
+	if len(data) == 0 {
+		return
+	}
+	buf := bufio.NewReader(bytes.NewReader(data))
+	var line int64
+	for {
+		l, _, err := buf.ReadLine()
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				break
+			}
+			return nil, err
+		}
+		if len(l) == 0 {
+			return nil, errors.New("empty line")
+		}
+		line++
+		parts := strings.Split(string(l), ",")
+		_, err = strconv.ParseInt(parts[0], 10, 64)
+		if err != nil {
+			if line == 1 {
+				continue
+			}
+			return nil, err
+		}
+		var raw RawKline
+		for i, p := range parts {
+			raw[i] = p
+		}
+		kline, err := NewSimpleKlineFromRaw(raw)
+		if err != nil {
+			return nil, err
+		}
+		klines = append(klines, kline)
+	}
+	return
+}
+
+// SimpleKlinesToCSVData converts a slice of SimpleKline to CSV data without headers
+func SimpleKlinesToCSVData(klines []SimpleKline) []byte {
+	var buf bytes.Buffer
+	for _, kline := range klines {
+		buf.WriteString(kline.ToCSVRow() + "\n")
+	}
+	if buf.Len() > 0 {
+		buf.Truncate(buf.Len() - 1)
+	}
+	return buf.Bytes()
 }
