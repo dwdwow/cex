@@ -361,3 +361,52 @@ func TestSimpleKlinesToCSVDataAndBack(t *testing.T) {
 		})
 	}
 }
+
+func TestSimpleKlineSetters(t *testing.T) {
+	tests := []struct {
+		name     string
+		initial  SimpleKline
+		setters  func(SimpleKline) SimpleKline
+		expected SimpleKline
+	}{
+		{
+			name:    "Set all fields",
+			initial: SimpleKline{1609459200000, 30000, 31000, 29500, 30500, 100.5, 1609462800000, 3065250, 1000, 60.3, 1839150},
+			setters: func(k SimpleKline) SimpleKline {
+				return k.SetOpenTime(1609459300000).
+					SetOpenPrice(30100).
+					SetHighPrice(31100).
+					SetLowPrice(29600).
+					SetClosePrice(30600).
+					SetVolume(101.5).
+					SetCloseTime(1609462900000).
+					SetQuoteAssetVolume(3065350).
+					SetTradesNumber(1001).
+					SetTakerBuyBaseAssetVolume(61.3).
+					SetTakerBuyQuoteAssetVolume(1839250)
+			},
+			expected: SimpleKline{1609459300000, 30100, 31100, 29600, 30600, 101.5, 1609462900000, 3065350, 1001, 61.3, 1839250},
+		},
+		{
+			name:    "Set individual fields",
+			initial: SimpleKline{1609459200000, 30000, 31000, 29500, 30500, 100.5, 1609462800000, 3065250, 1000, 60.3, 1839150},
+			setters: func(k SimpleKline) SimpleKline {
+				k = k.SetOpenTime(1609459300000)
+				k = k.SetClosePrice(30600)
+				k = k.SetTradesNumber(1001)
+				return k
+			},
+			expected: SimpleKline{1609459300000, 30000, 31000, 29500, 30600, 100.5, 1609462800000, 3065250, 1001, 60.3, 1839150},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := tt.setters(tt.initial)
+			if !reflect.DeepEqual(result, tt.expected) {
+				t.Errorf("Expected %v, but got %v", tt.expected, result)
+			}
+		})
+	}
+}
+

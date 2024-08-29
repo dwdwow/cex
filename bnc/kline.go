@@ -60,6 +60,10 @@ func NewSimpleKlineFromRaw(k RawKline) (kline SimpleKline, err error) {
 	return kline, nil
 }
 
+func NewEmptySimpleKline() SimpleKline {
+	return SimpleKline{}
+}
+
 func NewSimpleKlineFromStruct(k Kline) (kline SimpleKline) {
 	kline[0] = float64(k.OpenTime)
 	kline[1] = k.OpenPrice
@@ -123,48 +127,59 @@ func (k SimpleKline) TakerBuyQuoteAssetVolume() float64 {
 	return k[10]
 }
 
-func (k SimpleKline) SetOpenTime(value int64) {
+func (k SimpleKline) SetOpenTime(value int64) SimpleKline {
 	k[0] = float64(value)
+	return k
 }
 
-func (k SimpleKline) SetCloseTime(value int64) {
+func (k SimpleKline) SetCloseTime(value int64) SimpleKline {
 	k[6] = float64(value)
+	return k
 }
 
-func (k SimpleKline) SetTradesNumber(value int64) {
+func (k SimpleKline) SetTradesNumber(value int64) SimpleKline {
 	k[8] = float64(value)
+	return k
 }
 
-func (k SimpleKline) SetOpenPrice(value float64) {
+func (k SimpleKline) SetOpenPrice(value float64) SimpleKline {
 	k[1] = value
+	return k
 }
 
-func (k SimpleKline) SetHighPrice(value float64) {
+func (k SimpleKline) SetHighPrice(value float64) SimpleKline {
 	k[2] = value
+	return k
 }
 
-func (k SimpleKline) SetLowPrice(value float64) {
+func (k SimpleKline) SetLowPrice(value float64) SimpleKline {
 	k[3] = value
+	return k
 }
 
-func (k SimpleKline) SetClosePrice(value float64) {
+func (k SimpleKline) SetClosePrice(value float64) SimpleKline {
 	k[4] = value
+	return k
 }
 
-func (k SimpleKline) SetVolume(value float64) {
+func (k SimpleKline) SetVolume(value float64) SimpleKline {
 	k[5] = value
+	return k
 }
 
-func (k SimpleKline) SetQuoteAssetVolume(value float64) {
+func (k SimpleKline) SetQuoteAssetVolume(value float64) SimpleKline {
 	k[7] = value
+	return k
 }
 
-func (k SimpleKline) SetTakerBuyBaseAssetVolume(value float64) {
+func (k SimpleKline) SetTakerBuyBaseAssetVolume(value float64) SimpleKline {
 	k[9] = value
+	return k
 }
 
-func (k SimpleKline) SetTakerBuyQuoteAssetVolume(value float64) {
+func (k SimpleKline) SetTakerBuyQuoteAssetVolume(value float64) SimpleKline {
 	k[10] = value
+	return k
 }
 
 // ToCSVRow converts SimpleKline to a CSV row string
