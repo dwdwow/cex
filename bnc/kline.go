@@ -80,7 +80,7 @@ func NewSimpleKlineFromStruct(k Kline) (kline SimpleKline) {
 }
 
 func (k SimpleKline) NotExist() bool {
-	return k[1] == 0
+	return k[0] == 0
 }
 
 func (k SimpleKline) OpenTime() int64 {

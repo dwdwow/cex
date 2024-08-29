@@ -409,4 +409,3 @@ func TestSimpleKlineSetters(t *testing.T) {
 		})
 	}
 }
-
