@@ -127,56 +127,67 @@ func (k SimpleKline) TakerBuyQuoteAssetVolume() float64 {
 	return k[10]
 }
 
+// deprecated
 func (k SimpleKline) SetOpenTime(value int64) SimpleKline {
 	k[0] = float64(value)
 	return k
 }
 
+// deprecated
 func (k SimpleKline) SetCloseTime(value int64) SimpleKline {
 	k[6] = float64(value)
 	return k
 }
 
+// deprecated
 func (k SimpleKline) SetTradesNumber(value int64) SimpleKline {
 	k[8] = float64(value)
 	return k
 }
 
+// deprecated
 func (k SimpleKline) SetOpenPrice(value float64) SimpleKline {
 	k[1] = value
 	return k
 }
 
+// deprecated
 func (k SimpleKline) SetHighPrice(value float64) SimpleKline {
 	k[2] = value
 	return k
 }
 
+// deprecated
 func (k SimpleKline) SetLowPrice(value float64) SimpleKline {
 	k[3] = value
 	return k
 }
 
+// deprecated
 func (k SimpleKline) SetClosePrice(value float64) SimpleKline {
 	k[4] = value
 	return k
 }
 
+// deprecated
 func (k SimpleKline) SetVolume(value float64) SimpleKline {
 	k[5] = value
 	return k
 }
 
+// deprecated
 func (k SimpleKline) SetQuoteAssetVolume(value float64) SimpleKline {
 	k[7] = value
 	return k
 }
 
+// deprecated
 func (k SimpleKline) SetTakerBuyBaseAssetVolume(value float64) SimpleKline {
 	k[9] = value
 	return k
 }
 
+// deprecated
 func (k SimpleKline) SetTakerBuyQuoteAssetVolume(value float64) SimpleKline {
 	k[10] = value
 	return k
