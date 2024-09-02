@@ -128,8 +128,8 @@ func QueryAllFundingRateInfos() ([]FuturesFundingRateInfo, error) {
 				FundingIntervalHours:     8,
 				Disclaimer:               false,
 			}
-			result = append(result, info)
 		}
+		result = append(result, info)
 	}
 	return result, nil
 }
