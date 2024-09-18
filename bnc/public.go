@@ -200,3 +200,19 @@ func QueryCMPremiumIndex(symbol, pair string) ([]CMPremiumIndex, error) {
 	}
 	return data, nil
 }
+
+func QuerySpotTrades(symbol string) ([]SpotTrade, error) {
+	_, data, reqErr := cex.Request(emptyUser, SpotTradesConfig, SpotTradesParams{Symbol: symbol, Limit: 1000})
+	if reqErr.IsNotNil() {
+		return nil, reqErr.Err
+	}
+	return data, nil
+}
+
+func QuerySpotAggTrades(symbol string) ([]SpotAggTrades, error) {
+	_, data, reqErr := cex.Request(emptyUser, SpotAggTradesConfig, SpotAggTradesParams{Symbol: symbol, Limit: 1000})
+	if reqErr.IsNotNil() {
+		return nil, reqErr.Err
+	}
+	return data, nil
+}

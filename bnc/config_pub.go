@@ -396,3 +396,63 @@ var CMPremiumIndexConfig = cex.ReqConfig[CMPremiumIndexParams, []CMPremiumIndex]
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]CMPremiumIndex]),
 }
+
+type SpotTrade struct {
+	Id           int64   `json:"id"`
+	Price        float64 `json:"price,string"`
+	Qty          float64 `json:"qty,string"`
+	QuoteQty     float64 `json:"quoteQty,string"`
+	Time         int64   `json:"time,string"`
+	IsBuyerMaker bool    `json:"isBuyerMaker"`
+	IsBestMatch  bool    `json:"isBestMatch"`
+}
+
+type SpotTradesParams struct {
+	Symbol string `s2m:"symbol,omitempty"`
+	Limit  int    `s2m:"limit,omitempty"` // default 500; max 1000
+}
+
+var SpotTradesConfig = cex.ReqConfig[SpotTradesParams, []SpotTrade]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             ApiV3 + "/trades",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotTrade]),
+}
+
+type SpotAggTrades struct {
+	Id           int64   `json:"a"`
+	Price        float64 `json:"p,string"`
+	Qty          float64 `json:"q,string"`
+	FirstTradeId int64   `json:"f,string"`
+	LastTradeId  int64   `json:"l,string"`
+	Time         int64   `json:"T"`
+	IsBuyerMaker bool    `json:"m"`
+	IsBestMatch  bool    `json:"M"`
+}
+
+type SpotAggTradesParams struct {
+	Symbol    string `s2m:"symbol,omitempty"`
+	FromId    int64  `s2m:"fromId,omitempty"`
+	StartTime int64  `s2m:"startTime,omitempty"`
+	EndTime   int64  `s2m:"endTime,omitempty"`
+	Limit     int    `s2m:"limit,omitempty"` // default 500; max 1000
+}
+
+var SpotAggTradesConfig = cex.ReqConfig[SpotAggTradesParams, []SpotAggTrades]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          ApiBaseUrl,
+		Path:             ApiV3 + "/aggTrades",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotAggTrades]),
+}
