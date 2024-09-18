@@ -166,3 +166,11 @@ func TestQueryFuturesPrices(t *testing.T) {
 func TestQueryCMPremiumIndex(t *testing.T) {
 	publicTestChecker(QueryCMPremiumIndex("", "BTCUSD"))
 }
+
+func TestQuerySpotTrades(t *testing.T) {
+	publicTestChecker(QuerySpotTrades("ETHUSDT"))
+}
+
+func TestQuerySpotAggTrades(t *testing.T) {
+	publicTestChecker(QuerySpotAggTrades("ETHUSDT"))
+}

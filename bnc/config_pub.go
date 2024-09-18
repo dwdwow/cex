@@ -402,7 +402,7 @@ type SpotTrade struct {
 	Price        float64 `json:"price,string"`
 	Qty          float64 `json:"qty,string"`
 	QuoteQty     float64 `json:"quoteQty,string"`
-	Time         int64   `json:"time,string"`
+	Time         int64   `json:"time"`
 	IsBuyerMaker bool    `json:"isBuyerMaker"`
 	IsBestMatch  bool    `json:"isBestMatch"`
 }
@@ -429,8 +429,8 @@ type SpotAggTrades struct {
 	Id           int64   `json:"a"`
 	Price        float64 `json:"p,string"`
 	Qty          float64 `json:"q,string"`
-	FirstTradeId int64   `json:"f,string"`
-	LastTradeId  int64   `json:"l,string"`
+	FirstTradeId int64   `json:"f"`
+	LastTradeId  int64   `json:"l"`
 	Time         int64   `json:"T"`
 	IsBuyerMaker bool    `json:"m"`
 	IsBestMatch  bool    `json:"M"`
