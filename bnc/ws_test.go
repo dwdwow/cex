@@ -66,6 +66,24 @@ func TestSpotPublicWsClient(t *testing.T) {
 	}
 }
 
+func TestSpotPublicWsClientAggTrade(t *testing.T) {
+	ws := NewWsClient(SpotPublicWsCfg, nil, nil)
+	err := ws.Start()
+	props.PanicIfNotNil(err)
+	err = ws.SubAggTradeStream("BTCUSDT")
+	props.PanicIfNotNil(err)
+	sub, err := ws.SubAggTrade("BTCUSDT")
+	props.PanicIfNotNil(err)
+	for {
+		msg := <-sub.Chan()
+		if msg.Err != nil {
+			t.Error(msg.Err)
+			break
+		}
+		t.Logf("%+v", msg.Data)
+	}
+}
+
 func TestUmFuturesPublicWsClient(t *testing.T) {
 	ws := NewWsClient(UmFuturesWsCfg, nil, nil)
 	err := ws.start()
