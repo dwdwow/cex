@@ -456,3 +456,20 @@ var SpotAggTradesConfig = cex.ReqConfig[SpotAggTradesParams, []SpotAggTrades]{
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotAggTrades]),
 }
+
+type UmFuturesAggTradesParams SpotAggTradesParams
+
+type UmFuturesAggTrades SpotAggTrades
+
+var UmFuturesAggTradesConfig = cex.ReqConfig[UmFuturesAggTradesParams, []UmFuturesAggTrades]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FapiV1 + "/aggTrades",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]UmFuturesAggTrades]),
+}
