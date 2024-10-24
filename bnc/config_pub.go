@@ -1,10 +1,14 @@
 package bnc
 
 import (
+	"errors"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/dwdwow/cex"
 	"github.com/dwdwow/cex/ob"
+	"github.com/dwdwow/mathy"
 )
 
 type OrderBookParams struct {
@@ -302,6 +306,77 @@ type Kline struct {
 	TakerBuyBaseAssetVolume  float64 `json:"takerBuyBaseAssetVolume,string" bson:"takerBuyBaseAssetVolume,string"`
 	TakerBuyQuoteAssetVolume float64 `json:"takerBuyQuoteAssetVolume,string" bson:"takerBuyQuoteAssetVolume,string"`
 	Unused                   any     `json:"unused" bson:"unused"`
+}
+
+func (k *Kline) CSVRow() string {
+	cells := []string{
+		strconv.FormatInt(k.OpenTime, 10),
+		mathy.BN(k.OpenPrice).Round(8).String(),
+		mathy.BN(k.HighPrice).Round(8).String(),
+		mathy.BN(k.LowPrice).Round(8).String(),
+		mathy.BN(k.ClosePrice).Round(8).String(),
+		mathy.BN(k.Volume).Round(8).String(),
+		strconv.FormatInt(k.CloseTime, 10),
+		mathy.BN(k.QuoteAssetVolume).Round(8).String(),
+		strconv.FormatInt(k.TradesNumber, 10),
+		mathy.BN(k.TakerBuyBaseAssetVolume).Round(8).String(),
+		mathy.BN(k.TakerBuyQuoteAssetVolume).Round(8).String(),
+		"unused",
+	}
+	return strings.Join(cells, ",")
+}
+
+func (k *Kline) FromCSVRow(row string) error {
+	raw := strings.Split(row, ",")
+	if len(raw) < 12 {
+		return errors.New("invalid kline csv raw")
+	}
+	var err error
+	k.OpenTime, err = strconv.ParseInt(raw[0], 10, 64)
+	if err != nil {
+		return err
+	}
+	k.OpenPrice, err = strconv.ParseFloat(raw[1], 64)
+	if err != nil {
+		return err
+	}
+	k.HighPrice, err = strconv.ParseFloat(raw[2], 64)
+	if err != nil {
+		return err
+	}
+	k.LowPrice, err = strconv.ParseFloat(raw[3], 64)
+	if err != nil {
+		return err
+	}
+	k.ClosePrice, err = strconv.ParseFloat(raw[4], 64)
+	if err != nil {
+		return err
+	}
+	k.Volume, err = strconv.ParseFloat(raw[5], 64)
+	if err != nil {
+		return err
+	}
+	k.CloseTime, err = strconv.ParseInt(raw[6], 10, 64)
+	if err != nil {
+		return err
+	}
+	k.QuoteAssetVolume, err = strconv.ParseFloat(raw[7], 64)
+	if err != nil {
+		return err
+	}
+	k.TradesNumber, err = strconv.ParseInt(raw[8], 10, 64)
+	if err != nil {
+		return err
+	}
+	k.TakerBuyBaseAssetVolume, err = strconv.ParseFloat(raw[9], 64)
+	if err != nil {
+		return err
+	}
+	k.TakerBuyQuoteAssetVolume, err = strconv.ParseFloat(raw[10], 64)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 var SpotKlineConfig = cex.ReqConfig[KlineParams, []Kline]{
