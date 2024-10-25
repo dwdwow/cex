@@ -311,10 +311,28 @@ type Kline struct {
 func (k *Kline) CSVRow() string {
 	cells := []string{
 		strconv.FormatInt(k.OpenTime, 10),
-		mathy.BN(k.OpenPrice).Round(8).String(),
-		mathy.BN(k.HighPrice).Round(8).String(),
-		mathy.BN(k.LowPrice).Round(8).String(),
-		mathy.BN(k.ClosePrice).Round(8).String(),
+		mathy.BN(k.OpenPrice).Round(20).String(),
+		mathy.BN(k.HighPrice).Round(20).String(),
+		mathy.BN(k.LowPrice).Round(20).String(),
+		mathy.BN(k.ClosePrice).Round(20).String(),
+		mathy.BN(k.Volume).Round(8).String(),
+		strconv.FormatInt(k.CloseTime, 10),
+		mathy.BN(k.QuoteAssetVolume).Round(8).String(),
+		strconv.FormatInt(k.TradesNumber, 10),
+		mathy.BN(k.TakerBuyBaseAssetVolume).Round(8).String(),
+		mathy.BN(k.TakerBuyQuoteAssetVolume).Round(8).String(),
+		"unused",
+	}
+	return strings.Join(cells, ",")
+}
+
+func (k *Kline) CSVRowWithPriceRoundPlaces(roundPlaces int32) string {
+	cells := []string{
+		strconv.FormatInt(k.OpenTime, 10),
+		mathy.BN(k.OpenPrice).Round(roundPlaces).String(),
+		mathy.BN(k.HighPrice).Round(roundPlaces).String(),
+		mathy.BN(k.LowPrice).Round(roundPlaces).String(),
+		mathy.BN(k.ClosePrice).Round(roundPlaces).String(),
 		mathy.BN(k.Volume).Round(8).String(),
 		strconv.FormatInt(k.CloseTime, 10),
 		mathy.BN(k.QuoteAssetVolume).Round(8).String(),
