@@ -217,6 +217,14 @@ func QuerySpotAggTrades(symbol string) ([]SpotAggTrades, error) {
 	return data, nil
 }
 
+func QuerySpotAggTradesWithParams(params SpotAggTradesParams) ([]SpotAggTrades, error) {
+	_, data, reqErr := cex.Request(emptyUser, SpotAggTradesConfig, params)
+	if reqErr.IsNotNil() {
+		return nil, reqErr.Err
+	}
+	return data, nil
+}
+
 func QueryUmFuturesAggTrades(params UmFuturesAggTradesParams) ([]UmFuturesAggTrades, error) {
 	_, data, reqErr := cex.Request(emptyUser, UmFuturesAggTradesConfig, params)
 	if reqErr.IsNotNil() {

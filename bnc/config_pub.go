@@ -518,7 +518,7 @@ var SpotTradesConfig = cex.ReqConfig[SpotTradesParams, []SpotTrade]{
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotTrade]),
 }
 
-type SpotAggTrades struct {
+type AggTrades struct {
 	Id           int64   `json:"a"`
 	Price        float64 `json:"p,string"`
 	Qty          float64 `json:"q,string"`
@@ -529,13 +529,17 @@ type SpotAggTrades struct {
 	IsBestMatch  bool    `json:"M"`
 }
 
-type SpotAggTradesParams struct {
+type AggTradesParams struct {
 	Symbol    string `s2m:"symbol,omitempty"`
 	FromId    int64  `s2m:"fromId,omitempty"`
 	StartTime int64  `s2m:"startTime,omitempty"`
 	EndTime   int64  `s2m:"endTime,omitempty"`
 	Limit     int    `s2m:"limit,omitempty"` // default 500; max 1000
 }
+
+type SpotAggTrades AggTrades
+
+type SpotAggTradesParams AggTradesParams
 
 var SpotAggTradesConfig = cex.ReqConfig[SpotAggTradesParams, []SpotAggTrades]{
 	ReqBaseConfig: cex.ReqBaseConfig{
@@ -550,9 +554,9 @@ var SpotAggTradesConfig = cex.ReqConfig[SpotAggTradesParams, []SpotAggTrades]{
 	RespBodyUnmarshaler:   spotBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]SpotAggTrades]),
 }
 
-type UmFuturesAggTradesParams SpotAggTradesParams
+type UmFuturesAggTradesParams AggTradesParams
 
-type UmFuturesAggTrades SpotAggTrades
+type UmFuturesAggTrades AggTrades
 
 var UmFuturesAggTradesConfig = cex.ReqConfig[UmFuturesAggTradesParams, []UmFuturesAggTrades]{
 	ReqBaseConfig: cex.ReqBaseConfig{
