@@ -178,3 +178,7 @@ func TestQuerySpotAggTrades(t *testing.T) {
 func TestQueryUmFuturesAggTrades(t *testing.T) {
 	publicTestChecker(QueryUmFuturesAggTrades(UmFuturesAggTradesParams{Symbol: "ETHUSDT", Limit: 1000}))
 }
+
+func TestQueryAggTrades(t *testing.T) {
+	publicTestChecker(QueryAggTrades(AggTradesParams{Symbol: "ETHUSDT", Limit: 1000}, AggTradesTypeSpot))
+}

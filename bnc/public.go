@@ -232,3 +232,38 @@ func QueryUmFuturesAggTrades(params UmFuturesAggTradesParams) ([]UmFuturesAggTra
 	}
 	return data, nil
 }
+
+type AggTradesType string
+
+const (
+	AggTradesTypeSpot      AggTradesType = "spot"
+	AggTradesTypeUmFutures AggTradesType = "um_futures"
+)
+
+func QueryAggTrades(params AggTradesParams, tradesType AggTradesType) ([]AggTrades, error) {
+	switch tradesType {
+	case AggTradesTypeSpot:
+		p := SpotAggTradesParams(params)
+		r, err := QuerySpotAggTradesWithParams(p)
+		if err != nil {
+			return nil, err
+		}
+		var result []AggTrades
+		for _, t := range r {
+			result = append(result, AggTrades(t))
+		}
+		return result, nil
+	case AggTradesTypeUmFutures:
+		p := UmFuturesAggTradesParams(params)
+		r, err := QueryUmFuturesAggTrades(p)
+		if err != nil {
+			return nil, err
+		}
+		var result []AggTrades
+		for _, t := range r {
+			result = append(result, AggTrades(t))
+		}
+		return result, nil
+	}
+	return nil, errors.New("invalid agg trades type")
+}
