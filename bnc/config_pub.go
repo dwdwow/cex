@@ -529,6 +529,63 @@ type AggTrades struct {
 	IsBestMatch  bool    `json:"M"`
 }
 
+func (a *AggTrades) CSVRow() string {
+	cells := []string{
+		strconv.FormatInt(a.Id, 10),
+		mathy.BN(a.Price).Round(20).String(),
+		mathy.BN(a.Qty).Round(20).String(),
+		strconv.FormatInt(a.FirstTradeId, 10),
+		strconv.FormatInt(a.LastTradeId, 10),
+		strconv.FormatInt(a.Time, 10),
+		strconv.FormatBool(a.IsBuyerMaker),
+		strconv.FormatBool(a.IsBestMatch),
+	}
+	return strings.Join(cells, ",")
+}
+
+func (a *AggTrades) FromCSVRow(row string) error {
+	raw := strings.Split(row, ",")
+	if len(raw) < 7 {
+		return errors.New("invalid agg trades csv raw")
+	}
+	var err error
+	a.Id, err = strconv.ParseInt(raw[0], 10, 64)
+	if err != nil {
+		return err
+	}
+	a.Price, err = strconv.ParseFloat(raw[1], 64)
+	if err != nil {
+		return err
+	}
+	a.Qty, err = strconv.ParseFloat(raw[2], 64)
+	if err != nil {
+		return err
+	}
+	a.FirstTradeId, err = strconv.ParseInt(raw[3], 10, 64)
+	if err != nil {
+		return err
+	}
+	a.LastTradeId, err = strconv.ParseInt(raw[4], 10, 64)
+	if err != nil {
+		return err
+	}
+	a.Time, err = strconv.ParseInt(raw[5], 10, 64)
+	if err != nil {
+		return err
+	}
+	a.IsBuyerMaker, err = strconv.ParseBool(raw[6])
+	if err != nil {
+		return err
+	}
+	if len(raw) > 7 {
+		a.IsBestMatch, err = strconv.ParseBool(raw[7])
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 type AggTradesParams struct {
 	Symbol    string `s2m:"symbol,omitempty"`
 	FromId    int64  `s2m:"fromId,omitempty"`
