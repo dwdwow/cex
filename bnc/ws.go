@@ -225,9 +225,10 @@ func (w *RawWsClient) write(data []byte) error {
 }
 
 func (w *RawWsClient) read() (msgType int, data []byte, err error) {
+	// TODO
 	// cannot read and write concurrently
-	w.muxConn.Lock()
-	defer w.muxConn.Unlock()
+	// w.muxConn.Lock()
+	// defer w.muxConn.Unlock()
 	if w.conn == nil {
 		return -1, nil, errors.New("bnc_ws: nil conn")
 	}
