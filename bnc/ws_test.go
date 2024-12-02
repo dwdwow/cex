@@ -1,6 +1,7 @@
 package bnc
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -73,6 +74,33 @@ func TestSpotPublicWsClientAggTrade(t *testing.T) {
 	err = ws.SubAggTradeStream("BTCUSDT")
 	props.PanicIfNotNil(err)
 	sub, err := ws.SubAggTrade("BTCUSDT")
+	props.PanicIfNotNil(err)
+	for {
+		msg := <-sub.Chan()
+		if msg.Err != nil {
+			t.Error(msg.Err)
+			break
+		}
+		t.Logf("%+v", msg.Data)
+	}
+}
+
+func TestSpotPublicWsClientKline(t *testing.T) {
+	pairs, _, err := QuerySpotPairs()
+	props.PanicIfNotNil(err)
+	symbols := []string{}
+	for _, p := range pairs {
+		if p.Tradable && p.Quote == "USDT" {
+			symbols = append(symbols, p.PairSymbol)
+		}
+	}
+	fmt.Println("symbols", symbols)
+	ws := NewWsClient(SpotPublicWsCfg, nil, nil)
+	err = ws.Start()
+	props.PanicIfNotNil(err)
+	err = ws.SubKlineStream(KlineInterval1s, symbols[:10]...)
+	props.PanicIfNotNil(err)
+	sub, err := ws.SubKline(symbols[5], KlineInterval1s)
 	props.PanicIfNotNil(err)
 	for {
 		msg := <-sub.Chan()

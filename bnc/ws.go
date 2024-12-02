@@ -252,28 +252,44 @@ func (w *RawWsClient) SubStream(params []string) error {
 	if len(oldStream)+len(params) > w.cfg.MaxStream {
 		return fmt.Errorf("bnc_ws: too many streams, max is %d", w.cfg.MaxStream)
 	}
-	if !w.muxConn.TryLock() {
-		return errors.New("bnc_ws: conn is busy")
-	}
+	// if !w.muxConn.TryLock() {
+	// 	return errors.New("bnc_ws: conn is busy")
+	// }
 
 	var err error
+	var data []byte
 
 	if strings.Contains(w.cfg.Url, "dstream.binance.com") {
-		err = w.conn.WriteJSON(WsSubMsgInt64Id{
+		data, err = json.Marshal(WsSubMsgInt64Id{
 			Method: WsMethodSub,
 			Params: params,
 			Id:     1,
 		})
+		// err = w.conn.WriteJSON(WsSubMsgInt64Id{
+		// 	Method: WsMethodSub,
+		// 	Params: params,
+		// 	Id:     1,
+		// })
 	} else {
-		err = w.conn.WriteJSON(WsSubMsg{
+		data, err = json.Marshal(WsSubMsg{
 			Method: WsMethodSub,
 			Params: params,
 			Id:     "1",
 		})
+		// err = w.conn.WriteJSON(WsSubMsg{
+		// 	Method: WsMethodSub,
+		// 	Params: params,
+		// 	Id:     "1",
+		// })
 	}
 
-	w.muxConn.Unlock()
+	// w.muxConn.Unlock()
 
+	if err != nil {
+		return err
+	}
+
+	err = w.write(data)
 	if err != nil {
 		return err
 	}
