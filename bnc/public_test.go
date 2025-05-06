@@ -193,3 +193,11 @@ func TestQueryUmTopLongShortPositionRatio(t *testing.T) {
 func TestQueryUmGlobalLongShortAccountRatio(t *testing.T) {
 	publicTestChecker(QueryUmGlobalLongShortAccountRatio("BTCUSDT", FuturesStaticPeriod1h, 0, 0))
 }
+
+func TestQueryUm24hrTicker(t *testing.T) {
+	publicTestChecker(QueryUm24hrTicker("BTCUSDT"))
+}
+
+func TestQueryUm24hrTickers(t *testing.T) {
+	publicTestChecker(QueryUm24hrTickers())
+}

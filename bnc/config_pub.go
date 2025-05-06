@@ -724,3 +724,46 @@ var UmGlobalLongShortAccountRatioConfig = cex.ReqConfig[UmLongShortRatioParams, 
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]UmLongShortRatio]),
 }
+
+type Um24hrTicker struct {
+	Symbol             string  `json:"symbol"`
+	PriceChange        float64 `json:"priceChange,string"`
+	PriceChangePercent float64 `json:"priceChangePercent,string"`
+	WeightedAvgPrice   float64 `json:"weightedAvgPrice,string"`
+	LastPrice          float64 `json:"lastPrice,string"`
+	LastQty            float64 `json:"lastQty,string"`
+	OpenPrice          float64 `json:"openPrice,string"`
+	HighPrice          float64 `json:"highPrice,string"`
+	LowPrice           float64 `json:"lowPrice,string"`
+	Volume             float64 `json:"volume,string"`
+	QuoteVolume        float64 `json:"quoteVolume,string"`
+	OpenTime           int64   `json:"openTime"`
+	CloseTime          int64   `json:"closeTime"`
+	FirstId            int64   `json:"firstId"`
+	LastId             int64   `json:"lastId"`
+	Count              int64   `json:"count"`
+}
+
+type Um24hrTickerParams struct {
+	Symbol string `s2m:"symbol"`
+}
+
+var Um24hrTickerConfig = cex.ReqConfig[Um24hrTickerParams, Um24hrTicker]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl: FapiBaseUrl,
+		Path:    FapiV1 + "/ticker/24hr",
+		Method:  http.MethodGet,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[Um24hrTicker]),
+}
+
+var Um24hrTickersConfig = cex.ReqConfig[cex.NilReqData, []Um24hrTicker]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl: FapiBaseUrl,
+		Path:    FapiV1 + "/ticker/24hr",
+		Method:  http.MethodGet,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]Um24hrTicker]),
+}

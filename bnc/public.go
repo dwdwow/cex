@@ -331,3 +331,19 @@ func QueryUmGlobalLongShortAccountRatio(symbol string, period FuturesStaticPerio
 	}
 	return data, nil
 }
+
+func QueryUm24hrTicker(symbol string) (Um24hrTicker, error) {
+	_, data, reqErr := cex.Request(emptyUser, Um24hrTickerConfig, Um24hrTickerParams{Symbol: symbol})
+	if reqErr.IsNotNil() {
+		return Um24hrTicker{}, reqErr.Err
+	}
+	return data, nil
+}
+
+func QueryUm24hrTickers() ([]Um24hrTicker, error) {
+	_, data, reqErr := cex.Request(emptyUser, Um24hrTickersConfig, nil)
+	if reqErr.IsNotNil() {
+		return nil, reqErr.Err
+	}
+	return data, nil
+}
