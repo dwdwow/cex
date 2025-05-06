@@ -182,3 +182,23 @@ func TestQueryUmFuturesAggTrades(t *testing.T) {
 func TestQueryAggTrades(t *testing.T) {
 	publicTestChecker(QueryAggTrades(AggTradesParams{Symbol: "ETHUSDT", Limit: 1000}, AggTradesTypeSpot))
 }
+
+func TestQueryUmOpenInterest(t *testing.T) {
+	publicTestChecker(QueryUmOpenInterest("BTCUSDT"))
+}
+
+func TestQueryUmOpenInterestStatistics(t *testing.T) {
+	publicTestChecker(QueryUmOpenInterestStatistics("BTCUSDT", FuturesStaticPeriod1h, 0, 0))
+}
+
+func TestQueryUmTopLongShortAccountRatio(t *testing.T) {
+	publicTestChecker(QueryUmTopLongShortAccountRatio("BTCUSDT", FuturesStaticPeriod1h, 0, 0))
+}
+
+func TestQueryUmTopLongShortPositionRatio(t *testing.T) {
+	publicTestChecker(QueryUmTopLongShortPositionRatio("BTCUSDT", FuturesStaticPeriod1h, 0, 0))
+}
+
+func TestQueryUmGlobalLongShortAccountRatio(t *testing.T) {
+	publicTestChecker(QueryUmGlobalLongShortAccountRatio("BTCUSDT", FuturesStaticPeriod1h, 0, 0))
+}

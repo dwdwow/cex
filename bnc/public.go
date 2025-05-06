@@ -267,3 +267,67 @@ func QueryAggTrades(params AggTradesParams, tradesType AggTradesType) ([]AggTrad
 	}
 	return nil, errors.New("invalid agg trades type")
 }
+
+func QueryUmOpenInterest(symbol string) (UmOpenInterest, error) {
+	_, data, reqErr := cex.Request(emptyUser, UmOpenInterestConfig, UmOpenInterestParams{Symbol: symbol})
+	if reqErr.IsNotNil() {
+		return UmOpenInterest{}, reqErr.Err
+	}
+	return data, nil
+}
+
+func QueryUmOpenInterestStatistics(symbol string, period FuturesStaticPeriod, startTime, endTime int64) ([]UmOpenInterestStatistics, error) {
+	_, data, reqErr := cex.Request(emptyUser, UmOpenInterestStatisticsConfig, UmOpenInterestStatisticsParams{
+		Symbol:    symbol,
+		Period:    period,
+		Limit:     500,
+		StartTime: startTime,
+		EndTime:   endTime,
+	})
+	if reqErr.IsNotNil() {
+		return nil, reqErr.Err
+	}
+	return data, nil
+}
+
+func QueryUmTopLongShortAccountRatio(symbol string, period FuturesStaticPeriod, startTime, endTime int64) ([]UmLongShortRatio, error) {
+	_, data, reqErr := cex.Request(emptyUser, UmTopLongShortAccountRatioConfig, UmLongShortRatioParams{
+		Symbol:    symbol,
+		Period:    period,
+		Limit:     500,
+		StartTime: startTime,
+		EndTime:   endTime,
+	})
+	if reqErr.IsNotNil() {
+		return nil, reqErr.Err
+	}
+	return data, nil
+}
+
+func QueryUmTopLongShortPositionRatio(symbol string, period FuturesStaticPeriod, startTime, endTime int64) ([]UmLongShortRatio, error) {
+	_, data, reqErr := cex.Request(emptyUser, UmTopLongShortPositionRatioConfig, UmLongShortRatioParams{
+		Symbol:    symbol,
+		Period:    period,
+		Limit:     500,
+		StartTime: startTime,
+		EndTime:   endTime,
+	})
+	if reqErr.IsNotNil() {
+		return nil, reqErr.Err
+	}
+	return data, nil
+}
+
+func QueryUmGlobalLongShortAccountRatio(symbol string, period FuturesStaticPeriod, startTime, endTime int64) ([]UmLongShortRatio, error) {
+	_, data, reqErr := cex.Request(emptyUser, UmGlobalLongShortAccountRatioConfig, UmLongShortRatioParams{
+		Symbol:    symbol,
+		Period:    period,
+		Limit:     500,
+		StartTime: startTime,
+		EndTime:   endTime,
+	})
+	if reqErr.IsNotNil() {
+		return nil, reqErr.Err
+	}
+	return data, nil
+}

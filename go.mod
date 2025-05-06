@@ -3,6 +3,7 @@ module github.com/dwdwow/cex
 go 1.22.1
 
 require (
+	github.com/dwdwow/mathy v0.0.2
 	github.com/dwdwow/props v0.0.7
 	github.com/dwdwow/s2m v0.0.4
 	github.com/dwdwow/spub v0.0.1
@@ -19,7 +20,6 @@ require (
 require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/dwdwow/mathy v0.0.2 // indirect
 	github.com/richardlehane/mscfb v1.0.4 // indirect
 	github.com/richardlehane/msoleps v1.0.3 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect

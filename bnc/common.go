@@ -8,6 +8,7 @@ const (
 	FapiBaseUrl = "https://fapi.binance.com"
 	FapiV1      = "/fapi/v1"
 	FapiV2      = "/fapi/v2"
+	FuturesData = "/futures/data"
 	PapiBaseUrl = "https://papi.binance.com"
 	PapiV1      = "/papi/v1"
 	DapiBaseUrl = "https://dapi.binance.com"
@@ -401,6 +402,20 @@ type PortfolioMarginBNBTransferSide string
 const (
 	PortfolioMarginBNBTransferToUm   PortfolioMarginBNBTransferSide = "TO_UM"
 	PortfolioMarginBNBTransferFromUm PortfolioMarginBNBTransferSide = "FROM_UM"
+)
+
+type FuturesStaticPeriod string
+
+const (
+	FuturesStaticPeriod5m  FuturesStaticPeriod = "5m"
+	FuturesStaticPeriod15m FuturesStaticPeriod = "15m"
+	FuturesStaticPeriod30m FuturesStaticPeriod = "30m"
+	FuturesStaticPeriod1h  FuturesStaticPeriod = "1h"
+	FuturesStaticPeriod2h  FuturesStaticPeriod = "2h"
+	FuturesStaticPeriod4h  FuturesStaticPeriod = "4h"
+	FuturesStaticPeriod6h  FuturesStaticPeriod = "6h"
+	FuturesStaticPeriod12h FuturesStaticPeriod = "12h"
+	FuturesStaticPeriod1d  FuturesStaticPeriod = "1d"
 )
 
 type CodeMsg struct {

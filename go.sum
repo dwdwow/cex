@@ -11,12 +11,6 @@ github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f h1:lO4WD4F/r
 github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f/go.mod h1:cuUVRXasLTGF7a8hSLbxyZXjz+1KgoB3wDUb6vlszIc=
 github.com/dwdwow/mathy v0.0.2 h1:gEkj8itDB75VnecU+lOEosQmg8WI8wD9i+48HwPu0js=
 github.com/dwdwow/mathy v0.0.2/go.mod h1:h0IWHqLQ3ys+9xgNstJQeaFTexAgVfldHz+FSAruYCc=
-github.com/dwdwow/props v0.0.4 h1:4d/zbuaYRTTHwRmIWNDahjMYUUAMH3WDz84wcQVmvB0=
-github.com/dwdwow/props v0.0.4/go.mod h1:dWhnhFKeTzqSbKlYuNzY6QhJv93eE9Yq/t3O61QMybA=
-github.com/dwdwow/props v0.0.5 h1:jcAS2eFqmsd42oNJ0+jgInwr2AMz6n53+1VuBm7W90o=
-github.com/dwdwow/props v0.0.5/go.mod h1:dWhnhFKeTzqSbKlYuNzY6QhJv93eE9Yq/t3O61QMybA=
-github.com/dwdwow/props v0.0.6 h1:IFen3xExqcdEEJKf365p382roiyeFVWXlUDeHa0/J70=
-github.com/dwdwow/props v0.0.6/go.mod h1:dWhnhFKeTzqSbKlYuNzY6QhJv93eE9Yq/t3O61QMybA=
 github.com/dwdwow/props v0.0.7 h1:TGXjUGps4HSxHz6IvalDzg9QD+8SbDtKTKr7wWJEXZs=
 github.com/dwdwow/props v0.0.7/go.mod h1:dWhnhFKeTzqSbKlYuNzY6QhJv93eE9Yq/t3O61QMybA=
 github.com/dwdwow/s2m v0.0.4 h1:ruYKpX9u6PR8+YIggR1H224JTjYhtqaj8Dtl6mqIp+8=

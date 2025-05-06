@@ -627,3 +627,100 @@ var UmFuturesAggTradesConfig = cex.ReqConfig[UmFuturesAggTradesParams, []UmFutur
 	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
 	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]UmFuturesAggTrades]),
 }
+
+type UmOpenInterestParams struct {
+	Symbol string `s2m:"symbol"`
+}
+
+type UmOpenInterest struct {
+	Symbol       string  `json:"symbol"`
+	OpenInterest float64 `json:"openInterest,string"`
+	Time         int64   `json:"time"`
+}
+
+var UmOpenInterestConfig = cex.ReqConfig[UmOpenInterestParams, UmOpenInterest]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl: FapiBaseUrl,
+		Path:    FapiV1 + "/openInterest",
+		Method:  http.MethodGet,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[UmOpenInterest]),
+}
+
+type UmOpenInterestStatisticsParams struct {
+	Symbol    string              `s2m:"symbol"`
+	Period    FuturesStaticPeriod `s2m:"period"`
+	Limit     int64               `s2m:"limit,omitempty"`
+	StartTime int64               `s2m:"startTime,omitempty"`
+	EndTime   int64               `s2m:"endTime,omitempty"`
+}
+
+type UmOpenInterestStatistics struct {
+	Symbol               string  `json:"symbol"`
+	SumOpenInterest      float64 `json:"sumOpenInterest,string"`
+	SumOpenInterestValue float64 `json:"sumOpenInterestValue,string"`
+	Timestamp            int64   `json:"timestamp"`
+}
+
+var UmOpenInterestStatisticsConfig = cex.ReqConfig[UmOpenInterestStatisticsParams, []UmOpenInterestStatistics]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl: FapiBaseUrl,
+		Path:    FuturesData + "/openInterestHist",
+		Method:  http.MethodGet,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]UmOpenInterestStatistics]),
+}
+
+type UmLongShortRatioParams struct {
+	Symbol    string              `s2m:"symbol"`
+	Period    FuturesStaticPeriod `s2m:"period"`
+	Limit     int64               `s2m:"limit,omitempty"`
+	StartTime int64               `s2m:"startTime,omitempty"`
+	EndTime   int64               `s2m:"endTime,omitempty"`
+}
+
+type UmLongShortRatio struct {
+	Symbol         string  `json:"symbol"`
+	LongShortRatio float64 `json:"longShortRatio,string"`
+	LongAccount    float64 `json:"longAccount,string"`
+	ShortAccount   float64 `json:"shortAccount,string"`
+	Timestamp      int64   `json:"timestamp"`
+}
+
+var UmTopLongShortPositionRatioConfig = cex.ReqConfig[UmLongShortRatioParams, []UmLongShortRatio]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FuturesData + "/topLongShortPositionRatio",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]UmLongShortRatio]),
+}
+
+var UmTopLongShortAccountRatioConfig = cex.ReqConfig[UmLongShortRatioParams, []UmLongShortRatio]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl: FapiBaseUrl,
+		Path:    FuturesData + "/topLongShortAccountRatio",
+		Method:  http.MethodGet,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]UmLongShortRatio]),
+}
+
+var UmGlobalLongShortAccountRatioConfig = cex.ReqConfig[UmLongShortRatioParams, []UmLongShortRatio]{
+	ReqBaseConfig: cex.ReqBaseConfig{
+		BaseUrl:          FapiBaseUrl,
+		Path:             FuturesData + "/globalLongShortAccountRatio",
+		Method:           http.MethodGet,
+		IsUserData:       false,
+		UserTimeInterval: 0,
+		IpTimeInterval:   0,
+	},
+	HTTPStatusCodeChecker: HTTPStatusCodeChecker,
+	RespBodyUnmarshaler:   fuBodyUnmshWrapper(cex.StdBodyUnmarshaler[[]UmLongShortRatio]),
+}
